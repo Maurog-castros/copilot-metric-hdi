@@ -1,0 +1,36 @@
+/**
+ * src/styles/settings.scss
+ *
+ * Configures SASS variables and Vuetify overwrites
+ */
+
+// Colores corporativos oficiales de HDI
+$hdi-primary: #65A518;      // Verde universal HDI
+$hdi-secondary: #006729;    // Verde logo HDI
+$hdi-accent: #00A3A8;       // Azul claro HDI
+$hdi-success: #65A518;      // Verde universal HDI
+$hdi-warning: #FF9900;      // Naranja HDI
+$hdi-error: #E60018;        // Rojo HDI
+$hdi-info: #00A3A8;         // Azul claro HDI
+$hdi-light: #F9F9FA;        // Gris muy claro HDI
+$hdi-dark: #6C6F70;         // Gris oscuro HDI
+$hdi-text: #000000;         // Negro HDI
+
+// Variables SASS de Vuetify
+@use 'vuetify/settings' with (
+  $color-pack: false
+);
+
+// Variables personalizadas para componentes
+:root {
+  --hdi-primary: #{$hdi-primary};
+  --hdi-secondary: #{$hdi-secondary};
+  --hdi-accent: #{$hdi-accent};
+  --hdi-success: #{$hdi-success};
+  --hdi-warning: #{$hdi-warning};
+  --hdi-error: #{$hdi-error};
+  --hdi-info: #{$hdi-info};
+  --hdi-light: #{$hdi-light};
+  --hdi-dark: #{$hdi-dark};
+  --hdi-text: #{$hdi-text};
+}

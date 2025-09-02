@@ -1,0 +1,158 @@
+/* HDI Corporate Theme - Colores corporativos personalizados */
+
+/* Variables CSS personalizadas */
+:root {
+  --hdi-primary: #65A518;      /* Verde universal HDI */
+  --hdi-secondary: #006729;    /* Verde logo HDI */
+  --hdi-accent: #00A3A8;      /* Azul claro HDI */
+  --hdi-success: #65A518;      /* Verde universal HDI */
+  --hdi-warning: #FF9900;      /* Naranja HDI */
+  --hdi-error: #E60018;        /* Rojo HDI */
+  --hdi-info: #00A3A8;         /* Azul claro HDI */
+  --hdi-light: #F9F9FA;        /* Gris muy claro HDI */
+  --hdi-dark: #6C6F70;         /* Gris oscuro HDI */
+  --hdi-text: #000000;         /* Negro HDI */
+}
+
+/* Estilos personalizados para componentes principales */
+.v-toolbar {
+  background: linear-gradient(135deg, var(--hdi-primary) 0%, var(--hdi-secondary) 100%) !important;
+}
+
+.v-toolbar-title {
+  color: white !important;
+  font-weight: 600;
+}
+
+/* Botones principales */
+.v-btn--variant-outlined.v-btn--color-primary {
+  border-color: var(--hdi-primary) !important;
+  color: var(--hdi-primary) !important;
+}
+
+.v-btn--variant-outlined.v-btn--color-primary:hover {
+  background-color: var(--hdi-primary) !important;
+  color: white !important;
+}
+
+.v-btn--color-primary {
+  background-color: var(--hdi-primary) !important;
+  color: white !important;
+}
+
+.v-btn--color-primary:hover {
+  background-color: var(--hdi-secondary) !important;
+}
+
+/* Tarjetas */
+.v-card {
+  border-left: 4px solid var(--hdi-primary);
+}
+
+.v-card-title {
+  color: var(--hdi-primary);
+  font-weight: 600;
+}
+
+/* Barra de progreso */
+.v-progress-linear--indeterminate {
+  background-color: var(--hdi-primary) !important;
+}
+
+/* Pestañas */
+.v-tab--selected {
+  color: var(--hdi-primary) !important;
+}
+
+.v-tab--selected .v-tab__slider {
+  background-color: var(--hdi-primary) !important;
+}
+
+/* Campos de entrada */
+.v-text-field--variant-outlined .v-field--focused {
+  border-color: var(--hdi-primary) !important;
+}
+
+.v-text-field--variant-outlined .v-field--focused .v-field__outline__start,
+.v-text-field--variant-outlined .v-field--focused .v-field__outline__end {
+  border-color: var(--hdi-primary) !important;
+}
+
+/* Checkbox */
+.v-checkbox .v-selection-control__input {
+  color: var(--hdi-primary) !important;
+}
+
+/* Alertas */
+.v-alert--type-warning {
+  background-color: var(--hdi-warning) !important;
+  color: var(--hdi-dark) !important;
+}
+
+.v-alert--type-error {
+  background-color: var(--hdi-error) !important;
+  color: white !important;
+}
+
+.v-alert--type-info {
+  background-color: var(--hdi-info) !important;
+  color: white !important;
+}
+
+/* Tabla de datos */
+.v-data-table {
+  border: 1px solid var(--hdi-light);
+}
+
+.v-data-table th {
+  background-color: var(--hdi-primary) !important;
+  color: white !important;
+}
+
+.v-data-table tr:nth-child(even) {
+  background-color: var(--hdi-light);
+}
+
+/* Gráficos */
+.chart-container {
+  border: 2px solid var(--hdi-light);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+/* Mensajes de estado */
+.status-message {
+  color: var(--hdi-primary);
+  font-weight: 500;
+}
+
+/* Enlaces */
+a {
+  color: var(--hdi-secondary);
+}
+
+a:hover {
+  color: var(--hdi-primary);
+}
+
+/* Iconos */
+.v-icon {
+  color: var(--hdi-primary);
+}
+
+/* Tooltips */
+.v-tooltip .v-card {
+  background-color: var(--hdi-light) !important;
+  border: 1px solid var(--hdi-primary);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .v-toolbar-title {
+    font-size: 1.2rem !important;
+  }
+  
+  .v-card {
+    margin: 8px !important;
+  }
+}

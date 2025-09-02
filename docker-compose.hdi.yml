@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  copilot-metrics-viewer:
+    build:
+      context: .
+      dockerfile: Dockerfile.hdi
+    container_name: copilot-metrics-hdi
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      # Configuración de la aplicación
+      - NODE_ENV=production
+      - NITRO_PORT=3000
+      - NITRO_HOST=0.0.0.0
+      
+      # Configuración de GitHub (ajustar según necesidades)
+      - NUXT_PUBLIC_SCOPE=organization
+      - NUXT_PUBLIC_GITHUB_ORG=hdicl
+      - NUXT_PUBLIC_IS_DATA_MOCKED=false
+      
+      # Token de GitHub (requerido para datos reales)
+      - NUXT_GITHUB_TOKEN=${GITHUB_TOKEN}
+      
+      # Contraseña de sesión (mínimo 32 caracteres)
+      - NUXT_SESSION_PASSWORD=${SESSION_PASSWORD}
+      
+      # Autenticación OAuth (opcional)
+      - NUXT_OAUTH_GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+      - NUXT_OAUTH_GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+      
+    volumes:
+      # Logs persistentes
+      - ./logs:/app/logs
+      
+    networks:
+      - copilot-network
+      
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  copilot-network:
+    driver: bridge
+
+volumes:
+  logs:
+    driver: local

@@ -1,0 +1,62 @@
+# Dockerfile optimizado para producción en HDI
+# Build multi-stage para reducir el tamaño final de la imagen
+
+# Stage 1: Build de la aplicación Nuxt.js
+FROM node:18-alpine AS builder
+
+# Instalar dependencias del sistema
+RUN apk add --no-cache python3 make g++
+
+# Crear directorio de trabajo
+WORKDIR /app
+
+# Copiar archivos de dependencias
+COPY package*.json ./
+COPY nuxt.config.ts ./
+COPY tsconfig.json ./
+
+# Instalar dependencias
+RUN npm ci --only=production && npm cache clean --force
+
+# Copiar código fuente
+COPY . .
+
+# Build de la aplicación
+RUN npm run build
+
+# Stage 2: Imagen de producción
+FROM node:18-alpine AS production
+
+# Instalar dependencias del sistema necesarias
+RUN apk add --no-cache dumb-init
+
+# Crear usuario no-root para seguridad
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nuxt -u 1001
+
+# Crear directorio de trabajo
+WORKDIR /app
+
+# Copiar archivos construidos desde el stage anterior
+COPY --from=builder --chown=nuxt:nodejs /app/.output ./
+
+# Copiar archivos estáticos
+COPY --from=builder --chown=nuxt:nodejs /app/public ./public
+
+# Exponer puerto
+EXPOSE 3000
+
+# Variables de entorno por defecto
+ENV NODE_ENV=production
+ENV NITRO_PORT=3000
+ENV NITRO_HOST=0.0.0.0
+
+# Cambiar al usuario no-root
+USER nuxt
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:3000/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
+
+# Comando de inicio
+CMD ["node", "server/index.mjs"]

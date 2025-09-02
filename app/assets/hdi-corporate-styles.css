@@ -1,0 +1,344 @@
+/* HDI Corporate Styles - Estilos corporativos oficiales */
+
+/* Variables CSS corporativas */
+:root {
+  --hdi-universal-green: #65A518;
+  --hdi-logo-green: #006729;
+  --hdi-text-link: #008080;
+  --hdi-light-blue: #00A3A8;
+  --hdi-dark-gray: #6C6F70;
+  --hdi-light-gray: #EEEEEF;
+  --hdi-lighter-gray: #F9F9FA;
+  --hdi-gray: #C6C7C8;
+  --hdi-red: #E60018;
+  --hdi-warning: #FF9900;
+  --hdi-white: #ffffff;
+  --hdi-black: #000000;
+}
+
+/* Estilos base */
+body {
+  margin: 0;
+  padding: 0;
+  z-index: -1;
+  font-family: "Arial";
+}
+
+input, button, select, optgroup, textarea {
+  font-family: "Arial" !important;
+}
+
+/* Clases de fondo */
+.bg-white {
+  background-color: #ffffff !important;
+}
+
+.bg-hdi-universal-green {
+  background-color: #65A518 !important;
+}
+
+.bg-hdi-logo-green {
+  background-color: #006729 !important;
+}
+
+.bg-hdi-text-link {
+  background-color: #008080 !important;
+}
+
+.bg-hdi-light-blue {
+  background-color: #00A3A8 !important;
+}
+
+.bg-hdi-dark-gray {
+  background-color: #6C6F70 !important;
+}
+
+.bg-hdi-light-gray {
+  background-color: #EEEEEF !important;
+}
+
+.bg-hdi-lighter-gray {
+  background-color: #F9F9FA !important;
+}
+
+.bg-hdi-gray {
+  background-color: #C6C7C8 !important;
+}
+
+.bg-hdi-red {
+  background-color: #E60018 !important;
+}
+
+.bg-hdi-warning {
+  background-color: #FF9900 !important;
+}
+
+/* Clases de color */
+.hdi-color-primary {
+  color: #65A518 !important;
+}
+
+.hdi-color-logoGreen {
+  color: #006729 !important;
+}
+
+.hdi-color-black {
+  color: #000000 !important;
+}
+
+.hdi-color-lightblue {
+  color: #00A3A8 !important;
+}
+
+.hdi-color-warning {
+  color: #FF9900 !important;
+}
+
+.hdi-color-danger {
+  color: #E60018 !important;
+}
+
+.hdi-color-white {
+  color: #ffffff !important;
+}
+
+.hdi-color-lightgray {
+  color: #EEEEEF !important;
+}
+
+.hdi-color-gray {
+  color: #C6C7C8 !important;
+}
+
+.hdi-color-darkgray {
+  color: #6C6F70 !important;
+}
+
+/* Utilidades de texto */
+.text-bold {
+  font-weight: bold;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-justify {
+  text-align: justify;
+}
+
+/* Botones corporativos */
+.hdi-btn-primary {
+  background-color: #65A518 !important;
+  border: 2px solid #65A518 !important;
+  color: #ffffff !important;
+  transition: background-color .3s;
+  border-radius: 0;
+  padding: 14px 32px 16px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 19px;
+  line-height: 26px;
+  font-family: "Arial";
+  display: block;
+  text-align: center;
+}
+
+.hdi-btn-primary:hover {
+  background-color: #558817 !important;
+  border: 2px solid #558817 !important;
+  color: #ffffff !important;
+}
+
+.hdi-btn-secondary {
+  border: 2px solid #65A518 !important;
+  background-color: transparent !important;
+  color: #000000 !important;
+  transition: background-color .5s;
+  border-radius: 0;
+  padding: 14px 32px 16px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 19px;
+  line-height: 26px;
+  font-family: "Arial";
+  display: block;
+  text-align: center;
+}
+
+.hdi-btn-secondary:hover {
+  border: 2px solid #65A518 !important;
+  background-color: #65A518 !important;
+  color: #ffffff !important;
+}
+
+/* Tarjetas corporativas */
+.hdi-card {
+  background-color: #ffffff !important;
+  border: 1px solid #6C6F70 !important;
+  border-radius: 0 !important;
+  margin-bottom: 24px;
+}
+
+.hdi-card .card-title {
+  font-family: "Arial";
+  color: #000000 !important;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 19px;
+  line-height: 24px;
+  margin-bottom: 20px;
+}
+
+/* Tablas corporativas */
+.hdi-table {
+  width: 100%;
+  margin-bottom: 1rem;
+  color: #000000;
+  font-family: Arial, Helvetica, sans-serif;
+  border: 1px solid #EEEEEF;
+  background: #ffffff;
+}
+
+.hdi-table thead th {
+  vertical-align: middle;
+  border: 1px solid #E0EDD1;
+  background-color: #E0EDD1;
+  font-family: "Arial";
+  font-size: 14px;
+  padding: 16px 32px 16px 24px;
+  text-align: center;
+}
+
+.hdi-table tbody tr td {
+  font-family: "Arial";
+  font-size: 14px;
+  padding: 15px 32px 15px 24px;
+  vertical-align: top;
+  text-align: left;
+  border-bottom: 1px solid #EEEEEF;
+}
+
+/* Formularios corporativos */
+.hdi-form-input {
+  display: block;
+  width: 100%;
+  padding: 15px 35px 17px 16px;
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #000;
+  background-color: #F9F9FA;
+  border: 0;
+  border-bottom: 2px solid #000;
+  outline: 0;
+  position: relative;
+  box-sizing: border-box;
+  margin: 8px 0;
+  font-family: "Arial";
+}
+
+.hdi-form-input:focus {
+  border-bottom: 2px solid #65A518;
+  transition: all .1s;
+}
+
+/* Alertas corporativas */
+.hdi-alert {
+  background-color: transparent;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: 0;
+  border-radius: 0.375rem;
+  position: relative;
+  font-family: "Arial";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #000000;
+}
+
+.hdi-alert-warning {
+  background: #FFF4E5 !important;
+  border-radius: 0px 0px 4px 4px !important;
+}
+
+.hdi-alert-danger {
+  background: #FCE5E7 !important;
+  border-radius: 0px 0px 4px 4px !important;
+}
+
+.hdi-alert-success {
+  background: #EFF6E7 !important;
+  border-radius: 0px 0px 4px 4px !important;
+}
+
+.hdi-alert-info {
+  background: #E5F6F6 !important;
+  border-radius: 0px 0px 4px 4px !important;
+}
+
+/* Pestañas corporativas */
+.hdi-tabs .nav-link {
+  display: block;
+  padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x);
+  font-size: var(--bs-nav-link-font-size);
+  font-weight: var(--bs-nav-link-font-weight);
+  color: #000000;
+  text-decoration: none;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+.hdi-tabs .nav-tabs {
+  border-bottom: 2px solid #C6C7C8;
+}
+
+.hdi-tabs .nav-tabs .nav-link.active, .hdi-tabs .nav-tabs .nav-item.show .nav-link {
+  color: var(--bs-nav-tabs-link-active-color);
+  background-color: var(--bs-nav-tabs-link-active-bg);
+  border: 0;
+  border-bottom: 2px solid #65A518;
+}
+
+.hdi-tabs .nav-link:hover, .hdi-tabs .nav-link:focus, .hdi-tabs .nav-link.active {
+  color: #65A518 !important;
+}
+
+/* Badges corporativos */
+.hdi-badge {
+  padding: 5px 16px 7px 16px;
+  font-family: "Arial";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  border-radius: 20px;
+  display: inline-block;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hdi-btn-primary,
+  .hdi-btn-secondary {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+  
+  .hdi-table thead th,
+  .hdi-table tbody tr td {
+    padding: 10px 16px;
+    font-size: 12px;
+  }
+}
