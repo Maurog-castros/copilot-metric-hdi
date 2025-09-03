@@ -23,7 +23,7 @@ WORKDIR /app
 COPY --chown=1000:1000 --from=build-stage /app/.output /app
 
 # Expose the port your API will run on
-EXPOSE 80
+EXPOSE 8080
 
 # Set port to 80 for backwards compatibility
 ENV NITRO_PORT=8080
