@@ -4,6 +4,7 @@
  */
 import type { QueryObject } from 'ufo';
 import type { RouteLocationNormalizedLoadedGeneric } from 'vue-router';
+import { validateGitHubCopilotDateRange, type DateValidationResult } from '../utils/dateValidation';
 
 export type Scope = 'organization' | 'enterprise' | 'team-organization' | 'team-enterprise';
 
@@ -427,8 +428,9 @@ export class Options {
     /**
      * Validate the options
      */
-    validate(): { isValid: boolean; errors: string[] } {
+    validate(): { isValid: boolean; errors: string[]; warnings: string[] } {
         const errors: string[] = [];
+        const warnings: string[] = [];
 
         // Validate scope-specific requirements
         if (this.scope === 'team-organization' || this.scope === 'team-enterprise') {
@@ -449,20 +451,63 @@ export class Options {
             }
         }
 
-        // Validate date range
+        // Validate date range using GitHub Copilot API limits
         if (this.since && this.until) {
-            const sinceDate = new Date(this.since);
-            const untilDate = new Date(this.until);
+            const dateValidation = validateGitHubCopilotDateRange(this.since, this.until, {
+                strictMode: true,
+                allowFutureDates: false
+            });
 
-            if (sinceDate > untilDate) {
-                errors.push('Since date must be before until date');
+            if (!dateValidation.isValid) {
+                errors.push(...dateValidation.errors);
+            }
+
+            if (dateValidation.warnings.length > 0) {
+                warnings.push(...dateValidation.warnings);
             }
         }
 
         return {
             isValid: errors.length === 0,
-            errors
+            errors,
+            warnings
         };
+    }
+
+    /**
+     * Validate date range specifically for GitHub Copilot API
+     */
+    validateDateRange(): DateValidationResult {
+        if (!this.since || !this.until) {
+            return {
+                isValid: false,
+                errors: ['Both since and until dates are required'],
+                warnings: []
+            };
+        }
+
+        return validateGitHubCopilotDateRange(this.since, this.until, {
+            strictMode: true,
+            allowFutureDates: false
+        });
+    }
+
+    /**
+     * Get date range validation with suggestions for adjustment
+     */
+    getDateRangeValidationWithSuggestions(): DateValidationResult {
+        if (!this.since || !this.until) {
+            return {
+                isValid: false,
+                errors: ['Both since and until dates are required'],
+                warnings: []
+            };
+        }
+
+        return validateGitHubCopilotDateRange(this.since, this.until, {
+            strictMode: false, // Allow suggestions for adjustment
+            allowFutureDates: false
+        });
     }
 
     /**

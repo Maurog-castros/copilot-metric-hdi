@@ -5,10 +5,18 @@ import { getMetricsData } from '../../shared/utils/metrics-util';
 // TODO: use for storage https://unstorage.unjs.io/drivers/azure
 
 export default defineEventHandler(async (event) => {
-
     const logger = console;
+    const query = getQuery(event);
 
     try {
+        // Check if organization parameter is provided
+        const githubOrg = query.githubOrg as string;
+        if (githubOrg) {
+            logger.info(`Fetching metrics for organization: ${githubOrg}`);
+            // Store the organization in the event context for use in getMetricsData
+            event.context.githubOrg = githubOrg;
+        }
+
         // usage is the new API Format
         const usageData = await getMetricsData(event);
 

@@ -68,6 +68,13 @@ export default defineEventHandler(async (event) => {
   const query = getQuery(event);
   const options = Options.fromQuery(query);
 
+  // Check if organization parameter is provided in query
+  const githubOrg = query.githubOrg as string;
+  if (githubOrg && !isBad(githubOrg)) {
+    logger.info(`Using organization from query parameter: ${githubOrg}`);
+    options.githubOrg = githubOrg;
+  }
+
   // Normalizamos scope/org/ent si vienen mal desde el front
   const envScope = (process.env.METRICS_SCOPE || 'organization') as Options['scope'];
   options.scope = (options.scope || envScope) as any;

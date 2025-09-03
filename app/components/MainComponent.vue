@@ -34,15 +34,58 @@
 
       <template #extension>
 
-        <v-tabs v-model="tab" align-tabs="title">
-          <v-tab v-for="item in tabItems" :key="item" :value="item">
-            {{ item }}
-          </v-tab>
-        </v-tabs>
+                 <v-tabs 
+           v-model="tab" 
+           align-tabs="title"
+           class="custom-tabs"
+           color="success"
+           height="60"
+           background-color="rgba(255, 255, 255, 0.1)"
+         >
+           <v-tab 
+             v-for="item in tabItems" 
+             :key="item" 
+             :value="item"
+             class="custom-tab"
+             :ripple="false"
+           >
+             <div class="tab-content">
+               <v-icon class="tab-icon mr-2">{{ getTabIcon(item) }}</v-icon>
+               <span class="tab-text">{{ item }}</span>
+             </div>
+           </v-tab>
+         </v-tabs>
 
       </template>
 
     </v-toolbar>
+
+         <!-- Organization Selector with Toggle -->
+     <div class="org-selector-wrapper">
+       <div class="org-selector-toggle" @click="toggleOrgSelector">
+         <v-icon 
+           :class="['toggle-icon', { 'rotated': !showOrgSelector }]"
+           color="success"
+           size="24"
+         >
+           mdi-chevron-up
+         </v-icon>
+         <span class="toggle-text">
+           {{ showOrgSelector ? 'Ocultar Selector' : 'Mostrar Selector de Organización' }}
+         </span>
+       </div>
+       
+       <v-slide-y-transition>
+         <div v-show="showOrgSelector">
+           <OrganizationSelector 
+             :organizations="['hdicl', 'HDISeguros-cl']"
+             :current-org="currentOrg"
+             @organization-changed="handleOrganizationChange"
+             @refresh-requested="handleRefreshRequested"
+           />
+         </div>
+       </v-slide-y-transition>
+     </div>
 
     <!-- Date Range Selector - Hidden for seats tab -->
          <DateRangeSelector 
@@ -54,7 +97,7 @@
          <div v-if="tab === 'análisis de asientos'" class="organization-info">
       <v-card flat class="pa-3 mb-2">
         <div class="text-body-2 text-center">
-          Displaying data for organization: <strong>{{ displayName }}</strong>
+          Displaying data for organization: <strong>{{ currentOrg }}</strong>
         </div>
       </v-card>
     </div>
@@ -123,8 +166,10 @@ import TeamsComponent from './TeamsComponent.vue'
 import ApiResponse from './ApiResponse.vue'
 import AgentModeViewer from './AgentModeViewer.vue'
 import DateRangeSelector from './DateRangeSelector.vue'
+import OrganizationSelector from './OrganizationSelector.vue'
 import { Options } from '@/model/Options';
 import { useRoute } from 'vue-router';
+import { useOrganizations } from '../composables/useOrganizations';
 
 export default defineNuxtComponent({
   name: 'MainComponent',
@@ -136,7 +181,8 @@ export default defineNuxtComponent({
     TeamsComponent,
     ApiResponse,
     AgentModeViewer,
-    DateRangeSelector
+    DateRangeSelector,
+    OrganizationSelector
   },
   methods: {
     logout() {
@@ -145,19 +191,45 @@ export default defineNuxtComponent({
       this.seats = [];
       clear();
     },
-    getDisplayTabName(itemName: string): string {
-      // Transform scope names to display names for tabs
-      switch (itemName) {
-        case 'team-organization':
-        case 'team-enterprise':
-          return 'team';
-        case 'organization':
-        case 'enterprise':
-          return itemName;
-        default:
-          return itemName;
-      }
-    },
+         getDisplayTabName(itemName: string): string {
+       // Transform scope names to display names for tabs
+       switch (itemName) {
+         case 'team-organization':
+         case 'team-enterprise':
+           return 'team';
+         case 'organization':
+         case 'enterprise':
+           return itemName;
+         default:
+           return itemName;
+       }
+     },
+
+     getTabIcon(tabName: string): string {
+       // Return appropriate icons for each tab
+       switch (tabName) {
+         case 'lenguajes':
+           return 'mdi-language-typescript';
+         case 'editores':
+           return 'mdi-code-braces';
+         case 'chat copilot':
+           return 'mdi-robot';
+         case 'github.com':
+           return 'mdi-github';
+         case 'análisis de asientos':
+           return 'mdi-account-group';
+         case 'respuesta api':
+           return 'mdi-api';
+         case 'teams':
+           return 'mdi-account-multiple';
+         default:
+           return 'mdi-tab';
+       }
+     },
+
+     toggleOrgSelector() {
+       this.showOrgSelector = !this.showOrgSelector;
+     },
     async handleDateRangeChange(newDateRange: { 
       since?: string; 
       until?: string; 
@@ -177,6 +249,69 @@ export default defineNuxtComponent({
 
       await this.fetchMetrics();
     },
+
+    handleOrganizationChange(newOrg: string) {
+      console.log(`Cambiando a organización: ${newOrg}`);
+      
+      // Recargar datos para la nueva organización
+      this.refreshDataForOrganization(newOrg);
+    },
+
+    handleRefreshRequested(org: string) {
+      console.log(`Solicitando actualización para: ${org}`);
+      this.refreshDataForOrganization(org);
+    },
+
+    async refreshDataForOrganization(org: string) {
+      try {
+        console.log(`Recargando datos para: ${org}`);
+        
+        // Actualizar la organización actual usando el composable
+        this.changeOrganization(org);
+        
+        // Limpiar datos anteriores
+        this.metrics = [];
+        this.originalMetrics = [];
+        this.seats = [];
+        this.metricsReady = false;
+        this.seatsReady = false;
+        
+        // Recargar métricas para la nueva organización
+        if (this.dateRange.since && this.dateRange.until) {
+          await this.fetchMetrics();
+        }
+        
+        // Recargar seats para la nueva organización
+        if (!this.signInRequired) {
+          await this.fetchSeatsForOrganization(org);
+        }
+        
+      } catch (error) {
+        console.error(`Error recargando datos para ${org}:`, error);
+      }
+    },
+
+    async fetchSeatsForOrganization(org: string) {
+      try {
+        console.log(`Recargando seats para: ${org}`);
+        
+        // Construir URL con parámetros de organización
+        const params = new URLSearchParams();
+        if (this.currentOrg) {
+          params.append('githubOrg', this.currentOrg);
+        }
+        
+        const apiUrl = `/api/seats?${params.toString()}`;
+        const response = await $fetch(apiUrl) as Seat[];
+        
+        this.seats = response || [];
+        this.seatsReady = true;
+        
+      } catch (error) {
+        console.error(`Error recargando seats para ${org}:`, error);
+        this.processError(error);
+      }
+    },
     async fetchMetrics() {
       if (this.signInRequired || !this.dateRange.since || !this.dateRange.until || this.isLoading) {
         return;
@@ -191,11 +326,16 @@ export default defineNuxtComponent({
         const options = Options.fromRoute(this.route, this.dateRange.since, this.dateRange.until);
         
         // Add holiday options if they're set
-        if (this.holidayOptions?.excludeHolidays) {
+        if (this.holidayOptions && typeof this.holidayOptions.excludeHolidays === 'boolean') {
           options.excludeHolidays = this.holidayOptions.excludeHolidays;
         }
         
         const params = options.toParams();
+        
+        // Add organization parameter if selected
+        if (this.currentOrg) {
+          params.githubOrg = this.currentOrg;
+        }
 
         const queryString = new URLSearchParams(params).toString();
         const apiUrl = queryString ? `/api/metrics?${queryString}` : '/api/metrics';
@@ -211,7 +351,11 @@ export default defineNuxtComponent({
         }
 
       } catch (error: any) {
-        this.processError(error);
+        if (error && typeof error === 'object' && 'statusCode' in error) {
+          this.processError(error as H3Error);
+        } else {
+          console.error('Error desconocido:', error);
+        }
       } finally {
         this.isLoading = false;
       }
@@ -241,24 +385,25 @@ export default defineNuxtComponent({
     }
   },
 
-  data() {
-    return {
-      tabItems: ['lenguajes', 'editores', 'chat copilot', 'github.com', 'análisis de asientos', 'respuesta api'],
-      tab: null,
-      dateRangeDescription: 'Durante los últimos 28 días',
-      isLoading: false,
-      metricsReady: false,
-      metrics: [] as Metrics[],
-      originalMetrics: [] as CopilotMetrics[],
-      seatsReady: false,
-      seats: [] as Seat[],
-      apiError: undefined as string | undefined,
-      config: null as ReturnType<typeof useRuntimeConfig> | null,
-      holidayOptions: {
-        excludeHolidays: false,
+           data() {
+      return {
+        tabItems: ['lenguajes', 'editores', 'chat copilot', 'github.com', 'análisis de asientos', 'respuesta api'],
+        tab: null,
+        dateRangeDescription: 'Durante los últimos 28 días',
+        isLoading: false,
+        metricsReady: false,
+        metrics: [] as Metrics[],
+        originalMetrics: [] as CopilotMetrics[],
+        seatsReady: false,
+        seats: [] as Seat[],
+        apiError: undefined as string | undefined,
+        config: null as ReturnType<typeof useRuntimeConfig> | null,
+        holidayOptions: {
+          excludeHolidays: false,
+        },
+        showOrgSelector: false
       }
-    }
-  },
+    },
   created() {
     this.tabItems.unshift(this.getDisplayTabName(this.itemName));
     
@@ -295,6 +440,8 @@ export default defineNuxtComponent({
   async setup() {
     const { loggedIn, user } = useUserSession()
     const config = useRuntimeConfig();
+    const { currentOrg, changeOrganization } = useOrganizations();
+    
     const showLogoutButton = computed(() => config.public.usingGithubAuth && loggedIn.value);
     const mockedDataMessage = computed(() => config.public.isDataMocked ? 'Using mock data - see README if unintended' : '');
     const itemName = computed(() => config.public.scope);
@@ -313,7 +460,12 @@ export default defineNuxtComponent({
       immediate: !signInRequired.value,
       query: computed(() => {
         const options = Options.fromRoute(route.value);
-        return options.toParams();
+        const params = options.toParams();
+        // Agregar organización actual a los parámetros
+        if (currentOrg.value) {
+          params.githubOrg = currentOrg.value;
+        }
+        return params;
       })
     });
 
@@ -328,6 +480,8 @@ export default defineNuxtComponent({
       dateRange,
       isLoading,
       route,
+      currentOrg,
+      changeOrganization,
     };
   },
 })
@@ -430,34 +584,272 @@ export default defineNuxtComponent({
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* Responsive para el título */
-@media (max-width: 768px) {
-  .hdi-logo-svg {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .main-title {
-    font-size: 20px;
-  }
-  
-  .subtitle {
-    font-size: 12px;
-  }
-}
+ /* Responsive para el título */
+ @media (max-width: 768px) {
+   .hdi-logo-svg {
+     width: 50px;
+     height: 50px;
+   }
+   
+   .main-title {
+     font-size: 20px;
+   }
+   
+   .subtitle {
+     font-size: 12px;
+   }
+ }
 
-@media (max-width: 480px) {
-  .hdi-logo-svg {
-    width: 45px;
-    height: 45px;
-  }
-  
-  .main-title {
-    font-size: 18px;
-  }
-  
-  .subtitle {
-    font-size: 11px;
-  }
-}
+ @media (max-width: 480px) {
+   .hdi-logo-svg {
+     width: 45px;
+     height: 45px;
+   }
+   
+   .main-title {
+     font-size: 18px;
+   }
+   
+   .subtitle {
+     font-size: 11px;
+   }
+ }
+
+ /* Estilos personalizados para las pestañas */
+ .custom-tabs {
+   border-radius: 0 0 16px 16px;
+   overflow: hidden;
+   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+ }
+
+ .custom-tabs .v-tab {
+   text-transform: none !important;
+   font-weight: 600 !important;
+   letter-spacing: 0.5px !important;
+   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+   position: relative !important;
+   overflow: hidden !important;
+ }
+
+ .custom-tabs .v-tab:hover {
+   background-color: rgba(255, 255, 255, 0.15) !important;
+   transform: translateY(-2px) !important;
+ }
+
+ .custom-tabs .v-tab--selected {
+   background: linear-gradient(135deg, #28a745, #20c997) !important;
+   color: white !important;
+   box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4) !important;
+   transform: translateY(-2px) !important;
+ }
+
+ .custom-tabs .v-tab--selected::before {
+   content: '';
+   position: absolute;
+   bottom: 0;
+   left: 50%;
+   transform: translateX(-50%);
+   width: 30px;
+   height: 3px;
+   background: white;
+   border-radius: 2px;
+   box-shadow: 0 2px 8px rgba(255, 255, 255, 0.5);
+ }
+
+ .custom-tabs .v-tab--selected .tab-icon {
+   color: white !important;
+   transform: scale(1.1) !important;
+ }
+
+ .custom-tabs .v-tab:not(.v-tab--selected) {
+   color: rgba(255, 255, 255, 0.8) !important;
+   background: rgba(255, 255, 255, 0.05) !important;
+ }
+
+ .custom-tabs .v-tab:not(.v-tab--selected):hover {
+   color: white !important;
+   background: rgba(255, 255, 255, 0.1) !important;
+ }
+
+ .tab-content {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   padding: 8px 16px;
+   min-height: 44px;
+ }
+
+ .tab-icon {
+   font-size: 20px !important;
+   transition: all 0.3s ease !important;
+ }
+
+ .tab-text {
+   font-size: 14px !important;
+   font-weight: 600 !important;
+   white-space: nowrap;
+ }
+
+ /* Indicador de pestaña activa */
+ .custom-tabs .v-tabs-slider {
+   background: white !important;
+   height: 4px !important;
+   border-radius: 2px !important;
+   box-shadow: 0 2px 8px rgba(255, 255, 255, 0.6) !important;
+ }
+
+ /* Efectos adicionales para las pestañas */
+ .custom-tabs .v-tab::after {
+   content: '';
+   position: absolute;
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.02), transparent);
+   transform: translateX(-100%);
+   transition: transform 0.6s ease;
+   opacity: 0;
+ }
+
+ .custom-tabs .v-tab:hover::after {
+   transform: translateX(100%);
+   opacity: 0.3;
+ }
+
+ /* Animación para el cambio de pestaña */
+ .custom-tabs .v-tab--selected .tab-content {
+   animation: tabSelected 0.3s ease-out;
+ }
+
+ @keyframes tabSelected {
+   0% {
+     transform: scale(0.95);
+     opacity: 0.8;
+   }
+   50% {
+     transform: scale(1.05);
+     opacity: 0.9;
+   }
+   100% {
+     transform: scale(1);
+     opacity: 1;
+   }
+ }
+
+ /* Responsive para las pestañas */
+ @media (max-width: 768px) {
+   .custom-tabs {
+     height: 50px !important;
+   }
+   
+   .tab-content {
+     padding: 6px 12px;
+     min-height: 38px;
+   }
+   
+   .tab-icon {
+     font-size: 18px !important;
+   }
+   
+   .tab-text {
+     font-size: 13px !important;
+   }
+ }
+
+ @media (max-width: 480px) {
+   .custom-tabs {
+     height: 45px !important;
+   }
+   
+   .tab-content {
+     padding: 4px 8px;
+     min-height: 35px;
+   }
+   
+   .tab-icon {
+     font-size: 16px !important;
+   }
+   
+   .tab-text {
+     font-size: 12px !important;
+   }
+   
+   .custom-tabs .v-tab {
+     min-width: auto !important;
+   }
+ }
+
+ /* Estilos para el toggle del selector de organizaciones */
+ .org-selector-wrapper {
+   margin: 16px 0;
+   position: relative;
+ }
+
+ .org-selector-toggle {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+   border: 2px solid #dee2e6;
+   border-radius: 12px;
+   padding: 12px 20px;
+   cursor: pointer;
+   transition: all 0.3s ease;
+   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+   margin-bottom: 8px;
+ }
+
+ .org-selector-toggle:hover {
+   background: linear-gradient(135deg, #e9ecef, #dee2e6);
+   border-color: #28a745;
+   box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+   transform: translateY(-1px);
+ }
+
+ .org-selector-toggle:active {
+   transform: translateY(0);
+   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+ }
+
+ .toggle-icon {
+   margin-right: 8px;
+   transition: transform 0.3s ease;
+ }
+
+ .toggle-icon.rotated {
+   transform: rotate(180deg);
+ }
+
+ .toggle-text {
+   font-weight: 600;
+   color: #495057;
+   font-size: 14px;
+   user-select: none;
+ }
+
+ /* Responsive para el toggle */
+ @media (max-width: 768px) {
+   .org-selector-toggle {
+     padding: 10px 16px;
+   }
+   
+   .toggle-text {
+     font-size: 13px;
+   }
+ }
+
+ @media (max-width: 480px) {
+   .org-selector-toggle {
+     padding: 8px 12px;
+   }
+   
+   .toggle-text {
+     font-size: 12px;
+   }
+   
+   .toggle-icon {
+     margin-right: 6px;
+   }
+ }
 </style>

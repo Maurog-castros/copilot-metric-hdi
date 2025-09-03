@@ -20,6 +20,12 @@ The GitHub Copilot Metrics Viewer provides comprehensive analytics through an in
 ### Date Range Filtering (up to 100 days)
 Users can now filter metrics for custom date ranges up to 100 days, with an intuitive calendar picker interface. The system also supports excluding weekends and holidays from calculations.
 
+**⚠️ Important API Limits:**
+- **Maximum range**: 100 days (GitHub Copilot API restriction)
+- **No future dates**: API only provides historical data
+- **Historical limit**: Data available from 2022 onwards
+- **Recommended range**: 28 days for optimal performance
+
 <p align="center">
   <img width="800" alt="Date Range Filter" src="./images/date-range-filter.png">
 </p>
@@ -124,6 +130,12 @@ The language breakdown analysis tab also displays a table showing the Accepted P
 
 ### Flexible Date Range Selection
 The application supports flexible date range selection allowing users to analyze metrics for any period up to 100 days. The date picker provides an intuitive calendar interface with options to exclude weekends and holidays from the analysis.
+
+**📅 Smart Date Validation:**
+- **Real-time validation** against GitHub Copilot API limits
+- **Visual feedback** for date range status
+- **Automatic adjustments** for invalid ranges
+- **Clear error messages** explaining API restrictions
 
 ### Data Export Capabilities
 Multiple export options are available in the API Response tab:
