@@ -614,7 +614,7 @@ export default defineComponent({
                 let val: unknown = usageDay
                 for (const segment of path) {
                   // Dynamic traversal through nested objects using optional chaining
-                  val = val?.[segment]
+                  val = (val as Record<string, unknown>)?.[segment]
                   if (val == null) break
                 }
                 return (typeof val === 'number') ? val : 0
@@ -641,8 +641,8 @@ export default defineComponent({
           (m.breakdown || []).forEach((b) => {
             if (b.language) {
               if (!langAgg[b.language]) langAgg[b.language] = { suggestions: 0, acceptances: 0 }
-              langAgg[b.language].suggestions += b.suggestions_count || 0
-              langAgg[b.language].acceptances += b.acceptances_count || 0
+              langAgg[b.language]!.suggestions += b.suggestions_count || 0
+              langAgg[b.language]!.acceptances += b.acceptances_count || 0
             }
             if (b.editor) {
               editorAgg[b.editor] = (editorAgg[b.editor] || 0) + (b.active_users || 0)

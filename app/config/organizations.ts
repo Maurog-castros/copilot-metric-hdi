@@ -48,5 +48,9 @@ export const getOrganizationByGitHubOrg = (githubOrg: string): Organization | un
 };
 
 export const getDefaultOrganization = (): Organization => {
-  return ORGANIZATIONS['hdicl'];
+  const org = ORGANIZATIONS['hdicl'];
+  if (!org) {
+    throw new Error('Default organization "hdicl" not found');
+  }
+  return org;
 };

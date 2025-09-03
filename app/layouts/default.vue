@@ -33,7 +33,7 @@ useHead({
 
 .site-container {
   width: 95%;
-  max-width: 1400px;
+  max-width: 95%;
   margin: 0 auto;
   padding: 0 20px;
 }

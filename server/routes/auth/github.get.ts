@@ -1,4 +1,4 @@
-import type FetchError from 'ofetch';
+import type { FetchError } from 'ofetch';
 
 export default defineOAuthGitHubEventHandler({
   config: {
@@ -16,7 +16,7 @@ export default defineOAuthGitHubEventHandler({
       },
       secure: {
         tokens,
-        expires_at: new Date(Date.now() + tokens.expires_in * 1000)
+        expires_at: new Date(Date.now() + 3600 * 1000) // Default 1 hour expiration
       }
     }
     )
@@ -47,7 +47,7 @@ export default defineOAuthGitHubEventHandler({
 
         return sendRedirect(event, `/orgs/${organizations[0]}`);
       }
-      catch (error: FetchError) {
+      catch (error: unknown) {
         logger.error('Error fetching installations:', error);
       }
     }

@@ -1,141 +1,153 @@
 <template>
-  <v-card class="date-range-card" elevation="2">
-    <v-card-title class="text-h6 pb-2">
-      Filtro de Rango de Fechas
-      <v-chip 
-        color="info" 
-        variant="tonal" 
-        size="small" 
-        class="ml-2"
-        @click="showLimitsInfo = !showLimitsInfo"
-      >
-        <v-icon start size="16">mdi-information</v-icon>
-        Límites API
-      </v-chip>
+  <v-card class="date-range-card" elevation="3">
+    <v-card-title class="text-h6 pa-4 pb-2">
+      <div class="d-flex align-center">
+        <v-icon start size="20" color="success" class="mr-2">mdi-calendar-range</v-icon>
+        Filtro de Rango de Fechas
+        <v-chip 
+          color="info" 
+          variant="tonal" 
+          size="small" 
+          class="ml-3"
+          @click="showLimitsInfo = !showLimitsInfo"
+        >
+          <v-icon start size="16">mdi-information</v-icon>
+          Límites API
+        </v-chip>
+      </div>
     </v-card-title>
 
     <!-- Información sobre límites de la API -->
-    <v-expand-transition>
-      <div v-show="showLimitsInfo" class="mb-4">
-        <v-alert 
-          type="info" 
-          variant="tonal" 
-          density="compact"
-          class="mb-2"
-        >
-          <template #title>
-            <strong>Límites de GitHub Copilot API:</strong>
-          </template>
-          <ul class="mt-2 mb-0">
-            <li>📅 <strong>Máximo:</strong> 100 días de rango histórico</li>
-            <li>🚫 <strong>No permite:</strong> Fechas futuras</li>
-            <li>📊 <strong>Recomendado:</strong> Últimos 28 días</li>
-            <li>⚠️ <strong>Histórico:</strong> Datos limitados antes de 2022</li>
-          </ul>
-        </v-alert>
-      </div>
-    </v-expand-transition>
+    <client-only>
+      <v-expand-transition>
+        <div v-show="showLimitsInfo" class="px-4 mb-4">
+          <v-alert 
+            type="info" 
+            variant="tonal" 
+            density="compact"
+            class="mb-2"
+          >
+            <template #title>
+              <strong>Límites de GitHub Copilot API:</strong>
+            </template>
+            <ul class="mt-2 mb-0">
+              <li>📅 <strong>Máximo:</strong> 100 días de rango histórico</li>
+              <li>🚫 <strong>No permite:</strong> Fechas futuras</li>
+              <li>📊 <strong>Recomendado:</strong> Últimos 28 días</li>
+              <li>⚠️ <strong>Histórico:</strong> Datos limitados antes de 2022</li>
+            </ul>
+          </v-alert>
+        </div>
+      </v-expand-transition>
+    </client-only>
 
-    <v-row align="end">
-      <v-col cols="6" sm="3">
-        <v-text-field
-          v-model="fromDate"
-          label="Fecha Desde"
-          type="date"
-          variant="outlined"
-          density="compact"
-          :min="getMinAllowedDate()"
-          :max="getMaxAllowedDate()"
-          @update:model-value="updateDateRange"
-          :error="!!validationErrors.from"
-          :error-messages="validationErrors.from"
-        />
-      </v-col>
-      <v-col cols="6" sm="3">
-        <v-text-field
-          v-model="toDate"
-          label="Fecha Hasta"
-          type="date"
-          variant="outlined"
-          density="compact"
-          :min="fromDate"
-          :max="getMaxAllowedDate()"
-          @update:model-value="updateDateRange"
-          :error="!!validationErrors.to"
-          :error-messages="validationErrors.to"
-        />
-      </v-col>
-      <v-col cols="6" sm="2">
-        <v-checkbox
-          v-model="excludeHolidays"
-          label="Excluir feriados"
-          density="compact"
-        />
-      </v-col>
-             <v-col cols="12" sm="4" class="d-flex align-center justify-center flex-wrap">
-         <div class="button-group">
-           <v-btn
-             class="hdi-btn-secondary mr-3 mb-2"
-             size="default"
-             @click="resetToDefault"
-           >
-             Últimos 28 Días
-           </v-btn>
-           <v-btn
-             class="hdi-btn-primary mr-2 mb-2"
-             size="default"
-             @click="setMaxRange"
-           >
-             Máximo (100 días)
-           </v-btn>
-           <v-btn
-             class="hdi-btn-primary mb-2"
-             size="default"
-             :loading="loading"
-             :disabled="!isDateRangeValid"
-             @click="applyDateRange"
-           >
-             Aplicar
-           </v-btn>
-         </div>
-       </v-col>
-    </v-row>
-
-    <!-- Mensajes de validación -->
-    <v-expand-transition>
-      <div v-show="validationResult && (!validationResult.isValid || validationResult.warnings.length > 0)">
-        <v-alert 
-          :type="validationResult?.isValid ? 'warning' : 'error'" 
-          variant="tonal" 
-          density="compact"
-          class="mt-3"
-        >
-          <template #title>
-            <strong>{{ validationResult?.isValid ? 'Advertencias' : 'Errores de validación' }}</strong>
-          </template>
-          <div v-if="validationResult && !validationResult.isValid">
-            <div v-for="error in validationResult.errors" :key="error" class="mb-1">
-              ❌ {{ error }}
-            </div>
-          </div>
-          <div v-if="validationResult && validationResult.warnings.length > 0">
-            <div v-for="warning in validationResult.warnings" :key="warning" class="mb-1">
-              ⚠️ {{ warning }}
-            </div>
-          </div>
-          <div v-if="validationResult && validationResult.adjustedDates" class="mt-2">
-            <v-btn 
-              size="small" 
-              color="primary" 
-              variant="outlined"
-              @click="applyAdjustedDates"
+    <v-card-text class="pa-4 pt-0">
+      <v-row align="end" class="g-0">
+        <v-col cols="12" sm="3" class="pa-2">
+          <v-text-field
+            v-model="fromDate"
+            label="Fecha Desde"
+            type="date"
+            variant="outlined"
+            density="compact"
+            :min="getMinAllowedDate()"
+            :max="getMaxAllowedDate()"
+            @update:model-value="updateDateRange"
+            :error="!!validationErrors.from"
+            :error-messages="validationErrors.from"
+            hide-details="auto"
+          />
+        </v-col>
+        <v-col cols="12" sm="3" class="pa-2">
+          <v-text-field
+            v-model="toDate"
+            label="Fecha Hasta"
+            type="date"
+            variant="outlined"
+            density="compact"
+            :min="fromDate"
+            :max="getMaxAllowedDate()"
+            @update:model-value="updateDateRange"
+            :error="!!validationErrors.to"
+            :error-messages="validationErrors.to"
+            hide-details="auto"
+          />
+        </v-col>
+        <v-col cols="12" sm="2" class="pa-2 d-flex align-center">
+          <v-checkbox
+            v-model="excludeHolidays"
+            label="Excluir feriados"
+            density="compact"
+            hide-details
+          />
+        </v-col>
+        <v-col cols="12" sm="4" class="pa-2 d-flex align-center justify-center">
+          <div class="button-group">
+            <v-btn
+              class="hdi-btn-secondary mr-2 mb-2"
+              size="small"
+              @click="resetToDefault"
             >
-              Aplicar fechas ajustadas
+              Últimos 28 Días
+            </v-btn>
+            <v-btn
+              class="hdi-btn-primary mr-2 mb-2"
+              size="small"
+              @click="setMaxRange"
+            >
+              Máximo (100 días)
+            </v-btn>
+            <v-btn
+              class="hdi-btn-primary mb-2"
+              size="small"
+              :loading="loading"
+              :disabled="!isDateRangeValid"
+              @click="applyDateRange"
+            >
+              Aplicar
             </v-btn>
           </div>
-        </v-alert>
-      </div>
-    </v-expand-transition>
+        </v-col>
+      </v-row>
+    </v-card-text>
+
+    <!-- Mensajes de validación -->
+    <client-only>
+      <v-expand-transition>
+        <div v-show="validationResult && (!validationResult.isValid || validationResult.warnings.length > 0)">
+          <v-alert 
+            :type="validationResult?.isValid ? 'warning' : 'error'" 
+            variant="tonal" 
+            density="compact"
+            class="mt-3"
+          >
+            <template #title>
+              <strong>{{ validationResult?.isValid ? 'Advertencias' : 'Errores de validación' }}</strong>
+            </template>
+            <div v-if="validationResult && !validationResult.isValid">
+              <div v-for="error in validationResult.errors" :key="error" class="mb-1">
+                ❌ {{ error }}
+              </div>
+            </div>
+            <div v-if="validationResult && validationResult.warnings.length > 0">
+              <div v-for="warning in validationResult.warnings" :key="warning" class="mb-1">
+                ⚠️ {{ warning }}
+              </div>
+            </div>
+            <div v-if="validationResult && validationResult.adjustedDates" class="mt-2">
+              <v-btn 
+                size="small" 
+                color="primary" 
+                variant="outlined"
+                @click="applyAdjustedDates"
+              >
+                Aplicar fechas ajustadas
+              </v-btn>
+            </div>
+          </v-alert>
+        </div>
+      </v-expand-transition>
+    </client-only>
     
     <v-card-text class="pt-2">
       <span class="text-caption text-medium-emphasis">
@@ -167,6 +179,7 @@ import {
   type DateRange,
   GITHUB_COPILOT_LIMITS
 } from '../utils/dateValidation'
+import { useHydration } from '../composables/useHydration'
 
 interface Props {
   loading?: boolean
@@ -187,6 +200,9 @@ withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<Emits>()
 
+// Composable de hidratación
+const { isHydrated, isClient } = useHydration()
+
 // Estado del componente
 const showLimitsInfo = ref(false)
 const fromDate = ref('')
@@ -195,10 +211,16 @@ const excludeHolidays = ref(false)
 const validationResult = ref<DateValidationResult | null>(null)
 const validationErrors = ref({ from: '', to: '' })
 
-// Calcular fechas por defecto
-const defaultRange = getDefaultDateRange()
-fromDate.value = defaultRange.since
-toDate.value = defaultRange.until
+// Calcular fechas por defecto solo en el cliente
+onMounted(() => {
+  if (isClient.value) {
+    const defaultRange = getDefaultDateRange()
+    fromDate.value = defaultRange.since
+    toDate.value = defaultRange.until
+    validateCurrentDateRange()
+    applyDateRange()
+  }
+})
 
 // Computed properties
 const daysDifference = computed(() => {
@@ -258,12 +280,12 @@ function isLast28Days(): boolean {
 function getMinAllowedDate(): string {
   const today = new Date()
   const minDate = new Date(today.getTime() - GITHUB_COPILOT_LIMITS.MAX_HISTORICAL_DAYS * 24 * 60 * 60 * 1000)
-  return minDate.toISOString().split('T')[0]
+  return minDate.toISOString().split('T')[0] || ''
 }
 
 function getMaxAllowedDate(): string {
   const today = new Date()
-  return today.toISOString().split('T')[0]
+  return today.toISOString().split('T')[0] || ''
 }
 
 function getDaysChipColor(): string {
@@ -391,6 +413,95 @@ onMounted(() => {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Estilos para el fallback del servidor */
+.date-range-card-server {
+  margin: 16px 0;
+  border-radius: 12px;
+  border: 2px solid #dee2e6;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+}
+
+.date-range-card-server .text-h6 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.date-range-card-server .d-flex {
+  display: flex;
+  align-items: center;
+}
+
+.date-range-card-server .mr-2 {
+  margin-right: 8px;
+}
+
+.date-range-card-server .ml-3 {
+  margin-left: 12px;
+}
+
+.date-range-card-server .chip-info {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 4px 8px;
+  border-radius: 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.date-range-card-server .row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -8px;
+}
+
+.date-range-card-server .col-3,
+.date-range-card-server .col-2,
+.date-range-card-server .col-4 {
+  padding: 0 8px;
+}
+
+.date-range-card-server .col-3 {
+  flex: 0 0 25%;
+  max-width: 25%;
+}
+
+.date-range-card-server .col-2 {
+  flex: 0 0 16.666667%;
+  max-width: 16.666667%;
+}
+
+.date-range-card-server .col-4 {
+  flex: 0 0 33.333333%;
+  max-width: 33.333333%;
+}
+
+.date-range-card-server .pa-2 {
+  padding: 8px;
+}
+
+.date-range-card-server .text-center {
+  text-align: center;
+}
+
+.date-range-card-server .input-placeholder,
+.date-range-card-server .checkbox-placeholder,
+.date-range-card-server .button-placeholder {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 12px;
+  text-align: center;
+  color: #6c757d;
+  font-size: 0.875rem;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* Estilos para los botones */
 .hdi-btn-primary {
   background: linear-gradient(135deg, #28a745, #20c997) !important;
@@ -435,6 +546,14 @@ onMounted(() => {
   .button-group .v-btn {
     margin: 4px 0 !important;
     min-width: 200px;
+  }
+  
+  .date-range-card-server .col-3,
+  .date-range-card-server .col-2,
+  .date-range-card-server .col-4 {
+    flex: 0 0 100%;
+    max-width: 100%;
+    margin-bottom: 8px;
   }
 }
 

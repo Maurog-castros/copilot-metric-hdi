@@ -1,7 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import { readFileSync } from 'fs';
-const packageJson = readFileSync('package.json', 'utf8');
-const version = JSON.parse(packageJson).version;
+// Read package.json version at build time
+let version = '0.0.0';
+try {
+  const packageJson = await import('./package.json', { assert: { type: 'json' } });
+  version = packageJson.default.version;
+} catch (error) {
+  console.warn('Could not read package.json version:', error);
+}
 
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
@@ -66,16 +71,29 @@ export default defineNuxtConfig({
       styles: {
         configFile: 'assets/settings.scss',
       },
+      
+      // Configuración adicional para mejorar la hidratación
+      treeshaking: true,
+      autoImport: true,
+    },
+    
+    // Configuración global de Vuetify
+    vuetifyOptions: {
+      defaults: {
+        VCard: {
+          elevation: 3,
+        },
+        VCardTitle: {
+          class: 'text-h6 pa-4 pb-2',
+        },
+        VCardText: {
+          class: 'pa-4 pt-0',
+        },
+      },
     },
   },
 
-  auth: {
-    github: {
-      enabled: true,
-      clientId: '',
-      clientSecret: ''
-    }
-  },
+  // Auth configuration moved to runtimeConfig
   nitro: {
     plugins: [
       'plugins/http-agent',

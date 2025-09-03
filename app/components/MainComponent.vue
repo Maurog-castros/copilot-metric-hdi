@@ -1,9 +1,7 @@
 <template>
   <div>
           <v-toolbar class="bg-hdi-universal-green" elevation="4">
-      <v-btn icon>
-        <v-icon>mdi-github</v-icon>
-      </v-btn>
+      
 
              <v-toolbar-title class="toolbar-title">
          <div class="d-flex align-center">
@@ -244,7 +242,7 @@ export default defineNuxtComponent({
 
       // Store holiday options
       this.holidayOptions = {
-        excludeHolidays: newDateRange.excludeHolidays,
+        excludeHolidays: newDateRange.excludeHolidays ?? false,
       };
 
       await this.fetchMetrics();
@@ -309,7 +307,11 @@ export default defineNuxtComponent({
         
       } catch (error) {
         console.error(`Error recargando seats para ${org}:`, error);
-        this.processError(error);
+        if (error && typeof error === 'object' && 'statusCode' in error) {
+          this.processError(error as H3Error);
+        } else {
+          console.error('Error desconocido:', error);
+        }
       }
     },
     async fetchMetrics() {
