@@ -1,34 +1,42 @@
-# Stage 1: Build the Vue.js application
-# mode can be 'prod' - default or 'playwright'
-# for 'playwright' mode, the final image will be base-playwright
-# for 'prod' mode, the final image will be base-prod
-# build with 'docker build -t copilot-metrics-pw --build-arg mode=playwright .'
-# build with 'docker build -t copilot-metrics .' for production
+# -----------------------------------
+# Stage 1: Build the Nuxt application
+# mode puede ser 'prod' (default) o 'playwright'
+# Ejemplo build prod: docker build -t copilot-metrics .
+# Ejemplo build pw:   docker build -t copilot-metrics-pw --build-arg mode=playwright .
+# -----------------------------------
 ARG mode=prod
 
-FROM node:24-alpine AS build-stage
+FROM node:20-slim AS build-stage
 
-USER node
+# Crear usuario sin privilegios
+RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nuxt
+
 WORKDIR /app
+USER nuxt
 
-COPY --chown=1000:1000 package*.json ./
-RUN npm ci
-COPY --chown=1000:1000 . .
+# Copiar dependencias primero
+COPY --chown=nuxt:nodejs package*.json ./
+RUN npm install --omit=dev
+
+# Copiar el resto del código y compilar
+COPY --chown=nuxt:nodejs . .
 RUN npm run build
 
-# Stage 2: Prepare the Node.js API
-FROM node:23-alpine AS base-prod
+# -----------------------------------
+# Stage 2: Base image para producción
+# -----------------------------------
+FROM node:20-slim AS base-prod
 
 WORKDIR /app
-COPY --chown=1000:1000 --from=build-stage /app/.output /app
 
-# Expose the port your API will run on
-EXPOSE 8080
+# Copiar solo la salida de build
+COPY --chown=1001:1001 --from=build-stage /app/.output /app
 
-# Set port to 80 for backwards compatibility
-ENV NITRO_PORT=8080
+# Exponer puerto (80 para compatibilidad)
+EXPOSE 80
+ENV NITRO_PORT=80
 
-# Re-map the environment variables for the Vue.js app for backwards compatibility
+# Script de entrypoint para mapear variables de entorno
 RUN echo '#!/bin/sh' > /entrypoint.sh && \
     echo 'export NUXT_PUBLIC_IS_DATA_MOCKED=${NUXT_PUBLIC_IS_DATA_MOCKED:-$VUE_APP_MOCKED_DATA}' >> /entrypoint.sh && \
     echo 'export NUXT_PUBLIC_SCOPE=${NUXT_PUBLIC_SCOPE:-$VUE_APP_SCOPE}' >> /entrypoint.sh && \
@@ -36,23 +44,20 @@ RUN echo '#!/bin/sh' > /entrypoint.sh && \
     echo 'export NUXT_PUBLIC_GITHUB_ENT=${NUXT_PUBLIC_GITHUB_ENT:-$VUE_APP_GITHUB_ENT}' >> /entrypoint.sh && \
     echo 'export NUXT_PUBLIC_GITHUB_TEAM=${NUXT_PUBLIC_GITHUB_TEAM:-$VUE_APP_GITHUB_TEAM}' >> /entrypoint.sh && \
     echo 'export NUXT_GITHUB_TOKEN=${NUXT_GITHUB_TOKEN:-$VUE_APP_GITHUB_TOKEN}' >> /entrypoint.sh && \
-    echo 'export NUXT_SESSION_PASSWORD=${NUXT_SESSION_PASSWORD:-$SESSION_SECRET$SESSION_SECRET$SESSION_SECRET$SESSION_SECRET}' >> /entrypoint.sh && \
-    # in case SESSION_SECRET is not set, use NUXT_GITHUB_TOKEN as a fallback
+    echo 'export NUXT_SESSION_PASSWORD=${NUXT_SESSION_PASSWORD:-$SESSION_SECRET$SESSION_SECRET}' >> /entrypoint.sh && \
     echo 'export NUXT_SESSION_PASSWORD=${NUXT_SESSION_PASSWORD:-$NUXT_GITHUB_TOKEN$NUXT_GITHUB_TOKEN}' >> /entrypoint.sh && \
     echo 'export NUXT_OAUTH_GITHUB_CLIENT_ID=${NUXT_OAUTH_GITHUB_CLIENT_ID:-$GITHUB_CLIENT_ID}' >> /entrypoint.sh && \
     echo 'export NUXT_OAUTH_GITHUB_CLIENT_SECRET=${NUXT_OAUTH_GITHUB_CLIENT_SECRET:-$GITHUB_CLIENT_SECRET}' >> /entrypoint.sh && \
-    # Conditionally set NUXT_PUBLIC_USING_GITHUB_AUTH if GITHUB_CLIENT_ID is provided
-    echo 'if [ -n "$GITHUB_CLIENT_ID" ]; then' >> /entrypoint.sh && \
-    echo 'export NUXT_PUBLIC_USING_GITHUB_AUTH=true' >> /entrypoint.sh && \
-    echo 'fi' >> /entrypoint.sh && \
-    echo 'node /app/server/index.mjs' >> /entrypoint.sh && \
+    echo 'if [ -n "$GITHUB_CLIENT_ID" ]; then export NUXT_PUBLIC_USING_GITHUB_AUTH=true; fi' >> /entrypoint.sh && \
+    echo 'exec node /app/server/index.mjs' >> /entrypoint.sh && \
     chmod +x /entrypoint.sh
 
-
-USER node
+USER 1001
 ENTRYPOINT [ "/entrypoint.sh" ]
 
-#----------------------------------- PW layer - not used in production
+# -----------------------------------
+# Stage 3: Playwright layer (solo para tests)
+# -----------------------------------
 FROM mcr.microsoft.com/playwright:v1.54.2 AS base-playwright
 
 WORKDIR /pw
@@ -70,5 +75,5 @@ RUN NODE_ENV=development npm install
 
 ENTRYPOINT [ "npx", "playwright", "test", "-c", "playwright.docker.config.ts", "--workers", "2"]
 
-#-----------------------------------
+# -----------------------------------
 FROM base-${mode} AS final
