@@ -25,9 +25,20 @@ export default defineNuxtConfig({
   ssr: true,
 
   app: {
+    // baseURL y assets desde .env
+    baseURL: process.env.NUXT_APP_BASE_URL || '/',
+    buildAssetsDir: process.env.NUXT_APP_BUILD_ASSETS_DIR || '/_nuxt/',
+
+
     head: {
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.svg' }
+        { 
+		rel: 'icon', 
+		type: 'image/x-icon', 
+	        href: `${process.env.NUXT_APP_BASE_URL || ''}favicon.svg`
+
+		
+       	}
       ]
     }
   },
@@ -66,18 +77,15 @@ export default defineNuxtConfig({
         },
       },
 
-      // /* If customizing sass global variables ($utilities, $reset, $color-pack, $body-font-family, etc) */
-      // disableVuetifyStyles: true,
       styles: {
         configFile: 'assets/settings.scss',
       },
-      
+
       // Configuración adicional para mejorar la hidratación
       treeshaking: true,
       autoImport: true,
     },
-    
-    // Configuración global de Vuetify
+
     vuetifyOptions: {
       defaults: {
         VCard: {
@@ -93,7 +101,6 @@ export default defineNuxtConfig({
     },
   },
 
-  // Auth configuration moved to runtimeConfig
   nitro: {
     plugins: [
       'plugins/http-agent',
@@ -102,7 +109,6 @@ export default defineNuxtConfig({
   runtimeConfig: {
     githubToken: '',
     session: {
-      // set to 6h - same as the GitHub token
       maxAge: 60 * 60 * 6,
       password: '',
     },
@@ -113,8 +119,8 @@ export default defineNuxtConfig({
       }
     },
     public: {
-      isDataMocked: false,  // can be overridden by NUXT_PUBLIC_IS_DATA_MOCKED environment variable
-      scope: 'organization',  // can be overridden by NUXT_PUBLIC_SCOPE environment variable
+      isDataMocked: false,
+      scope: 'organization',
       githubOrg: '',
       githubEnt: '',
       githubTeam: '',
@@ -124,3 +130,4 @@ export default defineNuxtConfig({
     }
   }
 })
+
