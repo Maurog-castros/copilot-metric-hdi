@@ -2,6 +2,26 @@ import type { H3Event, EventHandlerRequest } from 'h3'
 
 // https://www.telerik.com/blogs/implementing-sso-vue-nuxt-auth-github-comprehensive-guide
 
+// Mock getUserSession para cuando la autenticación está deshabilitada
+async function getUserSession(event: H3Event<EventHandlerRequest>) {
+    const config = useRuntimeConfig(event);
+    
+    // Si la autenticación GitHub está deshabilitada, devolver sesión mock
+    if (!config.public.usingGithubAuth) {
+        return {
+            secure: {
+                tokens: {
+                    access_token: 'mock-token'
+                },
+                expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 horas desde ahora
+            }
+        };
+    }
+    
+    // Si la autenticación está habilitada pero no hay implementación real, lanzar error
+    throw new Error('GitHub authentication is enabled but getUserSession is not properly configured');
+}
+
 /**
  * Authenticates the user and retrieves GitHub headers.
  * 

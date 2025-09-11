@@ -1,5 +1,25 @@
 import { authenticateAndGetGitHubHeaders } from '../modules/authentication';
 
+// Mock getUserSession para cuando la autenticación está deshabilitada
+async function getUserSession(event: any) {
+    const config = useRuntimeConfig(event);
+    
+    // Si la autenticación GitHub está deshabilitada, devolver sesión mock
+    if (!config.public.usingGithubAuth) {
+        return {
+            secure: {
+                tokens: {
+                    access_token: 'mock-token'
+                },
+                expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 horas desde ahora
+            }
+        };
+    }
+    
+    // Si la autenticación está habilitada pero no hay implementación real, lanzar error
+    throw new Error('GitHub authentication is enabled but getUserSession is not properly configured');
+}
+
 /**
  * Middleware de autenticación para proteger rutas específicas
  * Verifica si el usuario está autenticado antes de permitir el acceso
