@@ -8,18 +8,17 @@ ARG mode=prod
 
 FROM node:20-slim AS build-stage
 
-# Crear usuario sin privilegios
-RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nuxt
-
+# Establecer directorio de trabajo
 WORKDIR /app
-USER nuxt
 
 # Copiar dependencias primero
-COPY --chown=nuxt:nodejs package*.json ./
+COPY package*.json ./
+
+# Instalar dependencias
 RUN npm install --omit=dev
 
 # Copiar el resto del código y compilar
-COPY --chown=nuxt:nodejs . .
+COPY . .
 RUN npm run build
 
 # -----------------------------------
@@ -30,7 +29,7 @@ FROM node:20-slim AS base-prod
 WORKDIR /app
 
 # Copiar solo la salida de build
-COPY --chown=1001:1001 --from=build-stage /app/.output /app
+COPY --from=build-stage /app/.output /app
 
 # Exponer puerto (80 para compatibilidad)
 EXPOSE 80

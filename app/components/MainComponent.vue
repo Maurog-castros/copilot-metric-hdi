@@ -327,6 +327,7 @@ import OrganizationSelector from './OrganizationSelector.vue'
 import { Options } from '@/model/Options';
 import { useRoute } from 'vue-router';
 import { useOrganizations } from '../composables/useOrganizations';
+import { useUserSession } from '../composables/useUserSession';
 
 export default defineNuxtComponent({
   name: 'MainComponent',
@@ -472,7 +473,7 @@ export default defineNuxtComponent({
       }
     },
     async fetchMetrics() {
-      if (this.signInRequired || !this.dateRange.since || !this.dateRange.until || this.isLoading) {
+      if (this.signInRequired || !this.dateRange || !this.dateRange.since || !this.dateRange.until || this.isLoading) {
         return;
       }
       const config = useRuntimeConfig();
@@ -549,6 +550,7 @@ export default defineNuxtComponent({
         tabItems: ['lenguajes', 'editores', 'chat copilot', 'github.com', 'análisis de asientos', 'respuesta api'],
         tab: null,
         dateRangeDescription: 'Durante los últimos 28 días',
+        dateRange: { since: undefined as string | undefined, until: undefined as string | undefined },
         isLoading: false,
         metricsReady: false,
         metrics: [] as Metrics[],
@@ -604,7 +606,6 @@ export default defineNuxtComponent({
     const itemName = computed(() => config.public.scope);
     const githubInfo = getDisplayName(config.public)
     const displayName = computed(() => githubInfo);
-    const dateRange = ref({ since: undefined as string | undefined, until: undefined as string | undefined });
     const isLoading = ref(false);
     const route = ref(useRoute());
     const authError = ref<string | null>(null);
@@ -647,7 +648,6 @@ export default defineNuxtComponent({
       showLogoutButton,
       authError,
       seatsFetch,
-      dateRange,
       isLoading,
       route,
       currentOrg,
