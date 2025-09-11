@@ -229,25 +229,56 @@ Token is not used in the frontend.
 NUXT_GITHUB_TOKEN=
 ````
 
-#### NUXT_SESSION_PASSWORD (Required!)
+#### NUXT_SESSION_PASSWORD (Required for GitHub Auth!)
 
-This variable is required to encrypt user sessions, it needs to be at least 32 characters long.
+This variable is required to encrypt user sessions when using GitHub authentication, it needs to be at least 32 characters long.
 For more information see [Nuxt Sessions and Authentication](https://nuxt.com/docs/guide/recipes/sessions-and-authentication#cookie-encryption-key).
 
 >[!WARNING]
-> This variable is required starting from version 2.0.0.
+> This variable is required when using GitHub OAuth authentication.
 
 #### NUXT_PUBLIC_USING_GITHUB_AUTH
 
 Default is `false`. When set to `true`, GitHub OAuth App Authentication will be performed to verify users' access to the dashboard.
 
-Variables required for GitHub Auth are:
-1. `NUXT_OAUTH_GITHUB_CLIENT_ID` - client ID of the GitHub App registered and installed in the enterprise/org with permissions listed in [NUXT_GITHUB_TOKEN](#NUXT_GITHUB_TOKEN).
-2. `NUXT_OAUTH_GITHUB_CLIENT_SECRET` - client secret of the GitHub App.
-3. [Optional] `NUXT_OAUTH_GITHUB_CLIENT_SCOPE` for scope requests when using OAuth App instead of GitHub App. See [Github docs](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/differences-between-github-apps-and-oauth-apps) for details.
+**🔐 Configuración de Autenticación GitHub:**
 
->[!WARNING]
-> Only users with permissions (scopes listed in [NUXT_GITHUB_TOKEN](#NUXT_GITHUB_TOKEN)) can view copilot metrics, GitHub uses the authenticated users permissions to make API calls for data.
+1. **Crear una OAuth App en GitHub:**
+   - Ve a GitHub Settings → Developer settings → OAuth Apps
+   - Crea una nueva OAuth App
+   - Establece Authorization callback URL: `http://localhost:3000/auth/github` (para desarrollo)
+
+2. **Variables requeridas para GitHub Auth:**
+   - `NUXT_OAUTH_GITHUB_CLIENT_ID`
+   - `NUXT_OAUTH_GITHUB_CLIENT_SECRET`
+   - `NUXT_SESSION_PASSWORD`
+
+3. **Beneficios de la autenticación GitHub:**
+   - ✅ Verificación automática de permisos de usuario
+   - ✅ No necesidad de gestionar tokens manualmente
+   - ✅ Sesiones seguras con expiración automática
+   - ✅ Interfaz de usuario mejorada
+
+````
+NUXT_PUBLIC_USING_GITHUB_AUTH=true
+````
+
+#### NUXT_OAUTH_GITHUB_CLIENT_ID
+
+GitHub OAuth App Client ID for user authentication.
+
+````
+NUXT_OAUTH_GITHUB_CLIENT_ID=
+````
+
+#### NUXT_OAUTH_GITHUB_CLIENT_SECRET
+
+GitHub OAuth App Client Secret for user authentication.
+
+````
+NUXT_OAUTH_GITHUB_CLIENT_SECRET=
+````
+
 
 #### Support for HTTP Proxy HTTP_PROXY
 
@@ -283,7 +314,7 @@ The application will be accessible at http://localhost:8080
 
 ## Health Check Endpoints
 
-For Kubernetes deployments and health monitoring, the application provides dedicated health check endpoints that don't require authentication and don't make external API calls:
+For Kubernetes deployments and health monitoring, the application provides dedicated health check endpoints that don't make external API calls:
 
 - **`/api/health`** - General health check endpoint
 - **`/api/ready`** - Readiness probe endpoint 

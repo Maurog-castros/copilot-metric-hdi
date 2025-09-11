@@ -1,12 +1,15 @@
 <template>
   <div>
-          <v-toolbar class="bg-hdi-universal-green" elevation="4">
+    <!-- Toolbar: Solo visible cuando el usuario está autenticado o no se requiere autenticación -->
+    <AuthState>
+      <template #default="{ loggedIn }">
+        <v-toolbar v-if="!signInRequired || (signInRequired && loggedIn)" class="bg-hdi-universal-green" elevation="4">
       
 
              <v-toolbar-title class="toolbar-title">
          <div class="d-flex align-center">
            <div class="hdi-logo-container mr-3">
-             <img src="/assets/hdi.svg" alt="HDI Logo" class="hdi-logo-svg" />
+             <img src="/assets/hdi.png" alt="HDI Logo" class="hdi-logo-svg" />
            </div>
            <div class="title-content">
              <div class="main-title">Panel de Métricas de Copilot</div>
@@ -17,49 +20,80 @@
       <h2 class="error-message"> {{ mockedDataMessage }} </h2>
       <v-spacer />
 
-      <!-- Conditionally render the logout button -->
+      <!-- GitHub Authentication State -->
       <AuthState>
         <template #default="{ loggedIn, user }">
           <div v-show="loggedIn" class="user-info">
-            Welcome,
-            <v-avatar class="user-avatar">
-              <v-img :alt="user?.name" :src="user?.avatarUrl" />
-            </v-avatar> {{ user?.name }}
+            <v-menu>
+              <template #activator="{ props }">
+                <v-chip 
+                  color="success" 
+                  variant="elevated" 
+                  class="user-chip"
+                  v-bind="props"
+                  clickable
+                >
+                  <v-avatar size="28" class="user-avatar">
+                    <v-img :alt="user?.name" :src="user?.avatarUrl" />
+                  </v-avatar>
+                  <span class="ml-2 user-name">{{ user?.name }}</span>
+                  <v-icon size="16" class="ml-1">mdi-chevron-down</v-icon>
+                </v-chip>
+              </template>
+              <v-list>
+                <v-list-item>
+                  <template #prepend>
+                    <v-avatar size="32">
+                      <v-img :alt="user?.name" :src="user?.avatarUrl" />
+                    </v-avatar>
+                  </template>
+                  <v-list-item-title>{{ user?.name }}</v-list-item-title>
+                  <v-list-item-subtitle>Usuario autenticado</v-list-item-subtitle>
+                </v-list-item>
+                <v-divider />
+                <v-list-item @click="logout">
+                  <template #prepend>
+                    <v-icon color="error">mdi-logout</v-icon>
+                  </template>
+                  <v-list-item-title>Cerrar Sesión</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </div>
-          <v-btn v-if="showLogoutButton && loggedIn" class="logout-button" @click="logout">Logout</v-btn>
         </template>
       </AuthState>
 
       <template #extension>
-
-                 <v-tabs 
-           v-model="tab" 
-           align-tabs="title"
-           class="custom-tabs"
-           color="success"
-           height="60"
-           background-color="rgba(255, 255, 255, 0.1)"
-         >
-           <v-tab 
-             v-for="item in tabItems" 
-             :key="item" 
-             :value="item"
-             class="custom-tab"
-             :ripple="false"
-           >
-             <div class="tab-content">
-               <v-icon class="tab-icon mr-2">{{ getTabIcon(item) }}</v-icon>
-               <span class="tab-text">{{ item }}</span>
-             </div>
-           </v-tab>
-         </v-tabs>
-
+        <v-tabs 
+          v-model="tab" 
+          align-tabs="title"
+          class="custom-tabs"
+          color="success"
+          height="60"
+          background-color="rgba(255, 255, 255, 0.1)"
+        >
+          <v-tab 
+            v-for="item in tabItems" 
+            :key="item" 
+            :value="item"
+            class="custom-tab"
+            :ripple="false"
+          >
+            <div class="tab-content">
+              <v-icon class="tab-icon mr-2">{{ getTabIcon(item) }}</v-icon>
+              <span class="tab-text">{{ item }}</span>
+            </div>
+          </v-tab>
+        </v-tabs>
       </template>
-
     </v-toolbar>
+  </template>
+</AuthState>
 
-         <!-- Organization Selector with Toggle -->
-     <div class="org-selector-wrapper">
+    <!-- Organization Selector: Solo visible cuando el usuario está autenticado -->
+    <AuthState>
+      <template #default="{ loggedIn }">
+        <div v-if="!signInRequired || (signInRequired && loggedIn)" class="org-selector-wrapper">
        <div class="org-selector-toggle" @click="toggleOrgSelector">
          <v-icon 
            :class="['toggle-icon', { 'rotated': !showOrgSelector }]"
@@ -83,40 +117,164 @@
            />
          </div>
        </v-slide-y-transition>
-     </div>
+        </div>
+      </template>
+    </AuthState>
 
     <!-- Date Range Selector - Hidden for seats tab -->
-         <DateRangeSelector 
-       v-show="tab !== 'análisis de asientos' && !signInRequired" 
-       :loading="isLoading"
-       @date-range-changed="handleDateRangeChange" />
+         <!-- Selector de rango de fechas: Solo visible cuando el usuario está autenticado -->
+         <AuthState>
+           <template #default="{ loggedIn }">
+             <DateRangeSelector 
+               v-show="tab !== 'análisis de asientos' && (!signInRequired || (signInRequired && loggedIn))" 
+               :loading="isLoading"
+               @date-range-changed="handleDateRangeChange" />
+           </template>
+         </AuthState>
 
-    <!-- Organization info for seats tab -->
-         <div v-if="tab === 'análisis de asientos'" class="organization-info">
+    <!-- Organization info for seats tab: Solo visible cuando el usuario está autenticado -->
+         <AuthState>
+           <template #default="{ loggedIn }">
+             <div v-if="tab === 'análisis de asientos' && (!signInRequired || (signInRequired && loggedIn))" class="organization-info">
       <v-card flat class="pa-3 mb-2">
         <div class="text-body-2 text-center">
           Displaying data for organization: <strong>{{ currentOrg }}</strong>
         </div>
       </v-card>
-    </div>
+             </div>
+           </template>
+         </AuthState>
 
     <!-- API Error Message -->
     <div v-show="apiError && !signInRequired" class="error-message" v-text="apiError" />
+    
+    <!-- Authentication Error Message -->
+    <v-alert 
+      v-if="authError" 
+      type="error" 
+      variant="tonal" 
+      class="ma-4"
+      closable
+      @click:close="authError = null"
+    >
+      <v-alert-title>Error de Autenticación</v-alert-title>
+      {{ authError }}
+    </v-alert>
     <AuthState>
       <template #default="{ loggedIn }">
-        <div v-show="signInRequired" class="github-login-container">
-          <NuxtLink v-if="!loggedIn && signInRequired" to="/auth/github" external class="github-login-button"> <v-icon
-              left>mdi-github</v-icon>
-            Sign in with GitHub</NuxtLink>
+        <!-- Sección de login: Solo visible para usuarios NO autenticados -->
+        <div v-if="!loggedIn && signInRequired" class="github-login-container">
+          <v-card class="login-card" elevation="8">
+            <!-- Header con gradiente -->
+            <v-card-title class="login-header">
+              <div class="login-icon-container">
+                <v-icon color="white" size="64" class="login-icon">mdi-shield-check</v-icon>
+              </div>
+              <h2 class="login-title">Acceso Seguro</h2>
+              <p class="login-subtitle">Panel de Métricas HDI</p>
+            </v-card-title>
+            
+            <v-card-text class="login-content">
+              <div class="security-info">
+                <v-icon color="success" size="20" class="mr-2">mdi-lock-check</v-icon>
+                <span class="text-body-2">Conexión segura y encriptada</span>
+              </div>
+              
+              <p class="login-description">
+                Para acceder a las métricas de GitHub Copilot de HDI, necesitas autenticarte con tu cuenta de GitHub.
+              </p>
+              
+              <div class="benefits-list">
+                <div class="benefit-item">
+                  <v-icon color="primary" size="16">mdi-check-circle</v-icon>
+                  <span>Acceso a métricas en tiempo real</span>
+                </div>
+                <div class="benefit-item">
+                  <v-icon color="primary" size="16">mdi-check-circle</v-icon>
+                  <span>Datos seguros y privados</span>
+                </div>
+                <div class="benefit-item">
+                  <v-icon color="primary" size="16">mdi-check-circle</v-icon>
+                  <span>Sesión automática</span>
+                </div>
+              </div>
+              
+              <NuxtLink to="/auth/github" external class="login-link">
+                <v-btn 
+                  color="primary" 
+                  size="x-large" 
+                  variant="elevated"
+                  class="github-login-button"
+                  block
+                >
+                  <v-icon left size="24">mdi-github</v-icon>
+                  Iniciar Sesión con GitHub
+                </v-btn>
+              </NuxtLink>
+              
+              <div class="trust-indicators">
+                <v-chip size="small" color="success" variant="tonal">
+                  <v-icon start size="12">mdi-shield-check</v-icon>
+                  SSL Seguro
+                </v-chip>
+                <v-chip size="small" color="info" variant="tonal">
+                  <v-icon start size="12">mdi-github</v-icon>
+                  OAuth 2.0
+                </v-chip>
+              </div>
+            </v-card-text>
+          </v-card>
         </div>
       </template>
       <template #placeholder>
-        <button disabled>Loading...</button>
+        <!-- Estado de carga: Solo visible durante la verificación de autenticación -->
+        <div v-if="signInRequired" class="github-login-container">
+          <v-card class="login-card loading-card" elevation="8">
+            <v-card-title class="login-header">
+              <div class="login-icon-container">
+                <v-progress-circular 
+                  indeterminate 
+                  color="white" 
+                  size="64" 
+                  width="4"
+                  class="login-icon"
+                />
+              </div>
+              <h2 class="login-title">Verificando Acceso</h2>
+              <p class="login-subtitle">Validando credenciales...</p>
+            </v-card-title>
+            
+            <v-card-text class="login-content text-center">
+              <div class="loading-steps">
+                <div class="loading-step active">
+                  <v-icon color="primary" size="16">mdi-check-circle</v-icon>
+                  <span>Conectando con GitHub</span>
+                </div>
+                <div class="loading-step">
+                  <v-progress-circular indeterminate size="16" width="2" color="primary" />
+                  <span>Verificando permisos</span>
+                </div>
+                <div class="loading-step">
+                  <v-icon color="grey" size="16">mdi-circle-outline</v-icon>
+                  <span>Iniciando sesión</span>
+                </div>
+              </div>
+            </v-card-text>
+          </v-card>
+        </div>
+        
+        <!-- Sección de contenido: Solo visible para usuarios autenticados -->
+        <div v-else-if="loggedIn" class="authenticated-content">
+          <!-- El contenido principal de la aplicación se muestra aquí cuando el usuario está autenticado -->
+        </div>
       </template>
     </AuthState>
 
 
-    <div v-show="!apiError">
+    <!-- Contenido principal: Solo visible cuando el usuario está autenticado o no se requiere autenticación -->
+    <AuthState>
+      <template #default="{ loggedIn }">
+        <div v-show="!apiError && (!signInRequired || (signInRequired && loggedIn))">
              <v-progress-linear v-show="!metricsReady" indeterminate class="bg-hdi-universal-green" />
              <v-window v-show="(metricsReady && metrics.length) || (seatsReady && tab === 'análisis de asientos')" v-model="tab">
                  <v-window-item v-for="item in tabItems" :key="item" :value="item">
@@ -143,8 +301,9 @@
            v-show="(metricsReady && metrics.length == 0 && tab !== 'análisis de asientos') || (seatsReady && seats.length == 0 && tab === 'análisis de asientos')"
            density="compact" text="No hay datos disponibles para mostrar" title="Sin datos" type="warning" />
       </v-window>
-
-    </div>
+        </div>
+      </template>
+    </AuthState>
 
   </div>
 </template>
@@ -280,9 +439,7 @@ export default defineNuxtComponent({
         }
         
         // Recargar seats para la nueva organización
-        if (!this.signInRequired) {
-          await this.fetchSeatsForOrganization(org);
-        }
+        await this.fetchSeatsForOrganization(org);
         
       } catch (error) {
         console.error(`Error recargando datos para ${org}:`, error);
@@ -424,16 +581,14 @@ export default defineNuxtComponent({
 
       const { data: seatsData, error: seatsError, execute: executeSeats } = this.seatsFetch;
 
-      if (!this.signInRequired) {
-        await executeSeats();
+      await executeSeats();
 
-        if (seatsError.value) {
+      if (seatsError.value) {
           this.processError(seatsError.value as H3Error);
         } else {
           this.seats = (seatsData.value as Seat[]) || [];
           this.seatsReady = true;
         }
-      }
 
     } catch (error) {
       console.error('Error loading initial data:', error);
@@ -443,8 +598,8 @@ export default defineNuxtComponent({
     const { loggedIn, user } = useUserSession()
     const config = useRuntimeConfig();
     const { currentOrg, changeOrganization } = useOrganizations();
-    
     const showLogoutButton = computed(() => config.public.usingGithubAuth && loggedIn.value);
+    
     const mockedDataMessage = computed(() => config.public.isDataMocked ? 'Using mock data - see README if unintended' : '');
     const itemName = computed(() => config.public.scope);
     const githubInfo = getDisplayName(config.public)
@@ -452,10 +607,22 @@ export default defineNuxtComponent({
     const dateRange = ref({ since: undefined as string | undefined, until: undefined as string | undefined });
     const isLoading = ref(false);
     const route = ref(useRoute());
+    const authError = ref<string | null>(null);
 
     const signInRequired = computed(() => {
       return config.public.usingGithubAuth && !loggedIn.value;
     });
+
+    // Verificar si hay errores de autenticación en la URL
+    const checkAuthError = () => {
+      const query = route.value.query;
+      if (query.error) {
+        authError.value = decodeURIComponent(query.error as string);
+      }
+    };
+
+    // Ejecutar verificación al montar el componente
+    checkAuthError();
 
     const seatsFetch = useFetch('/api/seats', {
       server: true,
@@ -472,12 +639,13 @@ export default defineNuxtComponent({
     });
 
     return {
-      showLogoutButton,
       mockedDataMessage,
       itemName,
       displayName,
       signInRequired,
       user,
+      showLogoutButton,
+      authError,
       seatsFetch,
       dateRange,
       isLoading,
@@ -501,46 +669,328 @@ export default defineNuxtComponent({
   color: red;
 }
 
-.logout-button {
-  margin-left: auto;
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-chip:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.user-avatar {
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.user-chip:hover .user-avatar {
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: scale(1.05);
+}
+
+.user-name {
+  font-weight: 600;
+  font-size: 0.9rem;
 }
 
 .github-login-container {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.github-login-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.login-card {
+  max-width: 450px;
+  width: 100%;
+  margin: 0 auto;
+  border-radius: 16px;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-header {
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+  color: white;
+  text-align: center;
+  padding: 2rem 1.5rem 1.5rem;
+  position: relative;
+}
+
+.login-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.1));
+}
+
+.login-icon-container {
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.login-icon {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.login-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.login-subtitle {
+  font-size: 1rem;
+  opacity: 0.9;
+  margin: 0.5rem 0 0;
+  font-weight: 400;
+}
+
+.login-content {
+  padding: 2rem 1.5rem;
+}
+
+.security-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  padding: 0.75rem;
+  background: rgba(76, 175, 80, 0.1);
+  border-radius: 8px;
+  border-left: 4px solid #4caf50;
+}
+
+.login-description {
+  text-align: center;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+.benefits-list {
+  margin-bottom: 2rem;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.benefit-item:hover {
+  background: rgba(25, 118, 210, 0.05);
+}
+
+.benefit-item span {
+  margin-left: 0.75rem;
+  font-size: 0.9rem;
+  color: #555;
 }
 
 .github-login-button {
-  display: flex;
-  align-items: center;
-  background-color: #24292e;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 14px;
+  height: 56px;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0.5px;
+  font-size: 1.1rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.github-login-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.github-login-button:hover::before {
+  left: 100%;
 }
 
 .github-login-button:hover {
-  background-color: #444d56;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(25, 118, 210, 0.3);
 }
 
-.github-login-button v-icon {
-  margin-right: 8px;
+.trust-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
 }
 
-.user-info {
+.loading-card .login-header {
+  background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+}
+
+.loading-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.loading-step {
   display: flex;
   align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
 }
 
-.user-avatar {
-  margin-right: 8px;
-  margin-left: 8px;
-  border: 2px solid white;
+.loading-step.active {
+  background: rgba(25, 118, 210, 0.1);
+  color: #1976d2;
+  font-weight: 600;
 }
+
+.loading-step span {
+  font-size: 0.9rem;
+}
+
+.login-link {
+  text-decoration: none;
+  display: block;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .github-login-container {
+    min-height: 100vh;
+    padding: 10px;
+  }
+  
+  .login-card {
+    max-width: 100%;
+    margin: 0;
+    border-radius: 12px;
+  }
+  
+  .login-header {
+    padding: 1.5rem 1rem 1rem;
+  }
+  
+  .login-title {
+    font-size: 1.5rem;
+  }
+  
+  .login-content {
+    padding: 1.5rem 1rem;
+  }
+  
+  .github-login-button {
+    height: 52px;
+    font-size: 1rem;
+  }
+  
+  .trust-indicators {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .user-chip {
+    max-width: 200px;
+  }
+  
+  .user-name {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-header {
+    padding: 1rem 0.75rem 0.75rem;
+  }
+  
+  .login-title {
+    font-size: 1.25rem;
+  }
+  
+  .login-subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .login-content {
+    padding: 1rem 0.75rem;
+  }
+  
+  .benefit-item {
+    padding: 0.25rem;
+  }
+  
+  .benefit-item span {
+    font-size: 0.85rem;
+  }
+}
+
+/* Estilos de autenticación removidos - ya no se necesita login */
 
 .organization-info {
   background-color: #f5f5f5;

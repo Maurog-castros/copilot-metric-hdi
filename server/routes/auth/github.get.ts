@@ -4,7 +4,7 @@ export default defineOAuthGitHubEventHandler({
   config: {
     scope: process.env.NUXT_OAUTH_GITHUB_CLIENT_SCOPE ? process.env.NUXT_OAUTH_GITHUB_CLIENT_SCOPE.split(',') : undefined,
   },
-  async onSuccess(event, { user, tokens }) {
+  async onSuccess(event: any, { user, tokens }: any) {
     const config = useRuntimeConfig(event);
     const logger = console;
 
@@ -16,7 +16,7 @@ export default defineOAuthGitHubEventHandler({
       },
       secure: {
         tokens,
-        expires_at: new Date(Date.now() + 3600 * 1000) // Default 1 hour expiration
+        expires_at: new Date(Date.now() + (tokens.expires_in || 3600) * 1000)
       }
     }
     )
@@ -47,7 +47,7 @@ export default defineOAuthGitHubEventHandler({
 
         return sendRedirect(event, `/orgs/${organizations[0]}`);
       }
-      catch (error: unknown) {
+      catch (error: any) {
         logger.error('Error fetching installations:', error);
       }
     }
@@ -55,8 +55,21 @@ export default defineOAuthGitHubEventHandler({
     return sendRedirect(event, '/')
   },
   // Optional, will return a json error and 401 status code by default
-  onError(event, error) {
+  onError(event: any, error: any) {
     console.error('GitHub OAuth error:', error)
-    return sendRedirect(event, '/')
-  },
+    
+    // Log detailed error information for debugging
+    if (error.message) {
+      console.error('Error message:', error.message)
+    }
+    if (error.status) {
+      console.error('Error status:', error.status)
+    }
+    
+    // Redirect with more specific error information
+    const errorMessage = encodeURIComponent(
+      error.message || 'Error de autenticación con GitHub. Por favor, intenta nuevamente.'
+    )
+    return sendRedirect(event, `/?error=${errorMessage}`)
+  }
 })

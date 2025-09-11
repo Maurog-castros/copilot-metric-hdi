@@ -22,7 +22,13 @@ export default defineNuxtConfig({
     compatibilityVersion: 4
   },
 
-  ssr: true,
+  ssr: false,
+  nitro: {
+    preset: 'static',
+    prerender: {
+      routes: ['/']
+    }
+  },
 
   app: {
     // baseURL y assets desde .env
@@ -82,8 +88,6 @@ export default defineNuxtConfig({
       },
 
       // Configuración adicional para mejorar la hidratación
-      treeshaking: true,
-      autoImport: true,
     },
 
     vuetifyOptions: {
@@ -101,6 +105,14 @@ export default defineNuxtConfig({
     },
   },
 
+  auth: {
+    github: {
+      enabled: true,
+      clientId: '',
+      clientSecret: ''
+    }
+  },
+
   nitro: {
     plugins: [
       'plugins/http-agent',
@@ -109,6 +121,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     githubToken: '',
     session: {
+      // set to 6h - same as the GitHub token
       maxAge: 60 * 60 * 6,
       password: '',
     },

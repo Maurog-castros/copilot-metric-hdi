@@ -46,18 +46,22 @@ export async function authenticateAndGetGitHubHeaders(event: H3Event<EventHandle
 
 function buildHeaders(token: string): Headers {
     if (!token) {
-        throw new Error(
-            `Authentication required but not provided.
+        const errorMessage = `Authentication required but not provided.
             This can happen when:
             1. First call to the API when client checks if user is authenticated - /api/_auth/session.
             2. When App is not configured correctly:
-             - For PAT, set NUXT_PUBLIC_GITHUB_TOKEN environment variable.
-             - For GitHub Auth - ensure NUXT_PUBLIC_USING_GITHUB_AUTH is set to true, NUXT_OAUTH_GITHUB_CLIENT_ID and NUXT_OAUTH_GITHUB_CLIENT_SECRET are provided and user is authenticated.`);
+             - For PAT, set NUXT_GITHUB_TOKEN environment variable.
+             - For GitHub Auth - ensure NUXT_PUBLIC_USING_GITHUB_AUTH is set to true, NUXT_OAUTH_GITHUB_CLIENT_ID and NUXT_OAUTH_GITHUB_CLIENT_SECRET are provided and user is authenticated.
+            3. User session has expired or is invalid.`;
+        
+        console.error('Authentication Error:', errorMessage);
+        throw new Error(errorMessage);
     }
 
     return new Headers({
         Accept: "application/vnd.github+json",
         "X-GitHub-Api-Version": "2022-11-28",
-        Authorization: `token ${token}`
+        Authorization: `token ${token}`,
+        "User-Agent": "HDI-Copilot-Metrics-Viewer/1.0"
     });
 }

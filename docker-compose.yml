@@ -19,7 +19,7 @@ services:
       NUXT_PUBLIC_GITHUB_ORG: hdicl
       NUXT_PUBLIC_IS_DATA_MOCKED: "false"
 
-      # Credenciales y tokens
+      # Token de GitHub
       NUXT_GITHUB_TOKEN: ${GITHUB_TOKEN}
       NUXT_SESSION_PASSWORD: ${SESSION_PASSWORD}
       NUXT_OAUTH_GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}

@@ -6,17 +6,17 @@ export default defineNuxtPlugin((nuxtApp) => {
     }
     
     // Configuración para mejorar la hidratación
-    if (options.defaults) {
-      options.defaults.VCard = {
+    if (options.vuetifyOptions && options.vuetifyOptions.defaults) {
+      options.vuetifyOptions.defaults.VCard = {
         elevation: 3,
         class: 'date-range-card'
       }
       
-      options.defaults.VCardTitle = {
+      options.vuetifyOptions.defaults.VCardTitle = {
         class: 'text-h6 pa-4 pb-2'
       }
       
-      options.defaults.VCardText = {
+      options.vuetifyOptions.defaults.VCardText = {
         class: 'pa-4 pt-0'
       }
     }
