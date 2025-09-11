@@ -179,7 +179,7 @@ import {
   type DateRange,
   GITHUB_COPILOT_LIMITS
 } from '../utils/dateValidation'
-import { useHydration } from '../composables/useHydration'
+import { useClientHydration } from '../composables/useHydration'
 
 interface Props {
   loading?: boolean
@@ -201,7 +201,7 @@ withDefaults(defineProps<Props>(), {
 const emit = defineEmits<Emits>()
 
 // Composable de hidratación
-const { isHydrated, isClient } = useHydration()
+const { isHydrated, isClient } = useClientHydration()
 
 // Estado del componente
 const showLimitsInfo = ref(false)

@@ -22,7 +22,7 @@
     "csv-parse": "^6.1.0",
     "date-holidays": "^3.24.4",
     "eslint": "^9.32.0",
-    "nuxt": "^4.0.3",
+    "nuxt": "^4.1.1",
     "nuxt-auth-utils": "^0.5.7",
     "roboto-fontface": "^0.10.0",
     "undici": ">=7.5.0",

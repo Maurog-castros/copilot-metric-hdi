@@ -1,6 +1,6 @@
 import { ref, onMounted, nextTick } from 'vue'
 
-export function useHydration() {
+export function useClientHydration() {
   const isHydrated = ref(false)
   const isClient = ref(false)
 
