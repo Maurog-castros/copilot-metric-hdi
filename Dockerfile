@@ -48,8 +48,12 @@ RUN echo '#!/bin/sh' > /entrypoint.sh && \
     echo 'export NUXT_SESSION_PASSWORD=${NUXT_SESSION_PASSWORD:-$NUXT_GITHUB_TOKEN$NUXT_GITHUB_TOKEN}' >> /entrypoint.sh && \
     echo 'export NUXT_OAUTH_GITHUB_CLIENT_ID=${NUXT_OAUTH_GITHUB_CLIENT_ID:-$GITHUB_CLIENT_ID}' >> /entrypoint.sh && \
     echo 'export NUXT_OAUTH_GITHUB_CLIENT_SECRET=${NUXT_OAUTH_GITHUB_CLIENT_SECRET:-$GITHUB_CLIENT_SECRET}' >> /entrypoint.sh && \
-    echo 'if [ -n "$GITHUB_CLIENT_ID" ]; then export NUXT_PUBLIC_USING_GITHUB_AUTH=true; fi' >> /entrypoint.sh && \
-    echo 'exec node /app/server/index.mjs' >> /entrypoint.sh && \
+    echo 'export NUXT_PUBLIC_USING_GITHUB_AUTH=${NUXT_PUBLIC_USING_GITHUB_AUTH:-false}' >> /entrypoint.sh && \
+    echo 'export NODE_ENV=development' >> /entrypoint.sh && \
+    echo 'export DEBUG=*' >> /entrypoint.sh && \
+    echo 'export NODE_OPTIONS="--trace-warnings --trace-uncaught"' >> /entrypoint.sh && \
+    echo 'node /app/debug-logger.js' >> /entrypoint.sh && \
+    echo 'exec node --trace-warnings --trace-uncaught /app/server/index.mjs' >> /entrypoint.sh && \
     chmod +x /entrypoint.sh
 
 USER 1001

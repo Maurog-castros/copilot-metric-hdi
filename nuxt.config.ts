@@ -68,7 +68,7 @@ export default defineNuxtConfig({
   css: [
     '@/assets/global.css'
   ],
-  modules: ['@nuxt/fonts', 'vuetify-nuxt-module', '@nuxt/eslint', 'nuxt-auth-utils'],
+  modules: ['@nuxt/fonts', 'vuetify-nuxt-module', '@nuxt/eslint'],
 
   vuetify: {
     moduleOptions: {
@@ -105,13 +105,6 @@ export default defineNuxtConfig({
     },
   },
 
-  auth: {
-    github: {
-      enabled: true,
-      clientId: '',
-      clientSecret: ''
-    }
-  },
 
   nitro: {
     plugins: [
