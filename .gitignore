@@ -13,15 +13,25 @@ node_modules
 logs
 *.log
 
-# Misc
+# IDE/OS
 .DS_Store
 .fleet
 .idea
+.vscode/
 
 # Local env files
 .env
 .env.*
 !.env.example
+
+# Cursor
+.cursor/
+
+# Archivos de configuración local / sensibles
+*.local
+*.secret
+*.key
+*.pem
 
 # Playwright
 playwright-report
@@ -30,3 +40,9 @@ playwright-logs
 # Test results
 test-results
 results.xml
+coverage/
+
+# Package manager caches
+.npm
+.yarn
+.pnp.*
