@@ -237,7 +237,7 @@ v-if="stats.modelUsageChartData.labels.length" :data="stats.modelUsageChartData"
 import { defineComponent, ref, watch, type PropType, shallowRef } from 'vue';
 import type { CopilotMetrics } from '@/model/Copilot_Metrics';
 import { Options } from '@/model/Options';
-import { useRoute } from 'vue-router';
+// useRoute is auto-imported by Nuxt
 import { Line as LineChart, Bar as BarChart } from 'vue-chartjs';
 import {
     Chart as ChartJS,

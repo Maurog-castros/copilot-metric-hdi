@@ -1,329 +1,231 @@
-_NOTE: For information on support and assistance, click [here](https://github.com/github-copilot-resources/copilot-metrics-viewer/tree/main?tab=readme-ov-file#support)._
-
-# GitHub Copilot Metrics Viewer
-<p align="center">
-  <img width="150" alt="image" src="https://github.com/github-copilot-resources/copilot-metrics-viewer/assets/3329307/8473a694-217e-4aa2-a3c7-2222a321c336">
-</p>
-
-This application displays a set of charts with various metrics related to GitHub Copilot for your <i>GitHub Organization</i> or <i>Enterprise Account</i>. These visualizations are designed to provide clear representations of the data, making it easy to understand and analyze the impact and adoption of GitHub Copilot. This app utilizes the [GitHub Copilot Metrics API](https://docs.github.com/en/enterprise-cloud@latest/rest/copilot/copilot-usage?apiVersion=2022-11-28).
-
-## Application Overview
-
-The GitHub Copilot Metrics Viewer provides comprehensive analytics through an intuitive dashboard interface:
+# 🚀 HDI Copilot Metrics Viewer
+## Dashboard Profesional de Métricas GitHub Copilot para HDI Chile
 
 <p align="center">
-  <img width="800" alt="Main Dashboard Overview" src="./images/main-metrics-dashboard.png">
+  <img width="200" alt="HDI Logo" src="https://www.hdi.cl/wp-content/uploads/2021/03/logo-hdi.png">
+  <br>
+  <strong>🏢 HDI Seguros Chile</strong> | <strong>🔧 DevOps & Analytics</strong>
 </p>
 
-## New Features
-
-### Date Range Filtering (up to 100 days)
-Users can now filter metrics for custom date ranges up to 100 days, with an intuitive calendar picker interface. The system also supports excluding weekends and holidays from calculations.
-
-**⚠️ Important API Limits:**
-- **Maximum range**: 100 days (GitHub Copilot API restriction)
-- **No future dates**: API only provides historical data
-- **Historical limit**: Data available from 2022 onwards
-- **Recommended range**: 28 days for optimal performance
-
-<p align="center">
-  <img width="800" alt="Date Range Filter" src="./images/date-range-filter.png">
-</p>
-
-### Teams Comparison
-Compare Copilot metrics across multiple teams within your organization to understand adoption patterns and identify high-performing teams.
-
-<p align="center">
-  <img width="800" alt="Teams Comparison" src="./images/teams-comparison.png">
-</p>
-
-### GitHub.com Integration & Model Analytics
-View comprehensive statistics for GitHub.com features including Chat, PR Summaries, and detailed model usage analytics. Each section provides expandable details showing model types, editors, and usage patterns.
-
-<p align="center">
-  <img width="800" alt="GitHub.com Tab" src="./images/github-com-tab.png">
-</p>
-
-<p align="center">
-  <img width="800" alt="Model Usage Details" src="./images/github-com-models-expanded.png">
-</p>
-
-### CSV Export Functionality
-Export your metrics data in multiple formats for further analysis or reporting. Options include summary reports, full detailed exports, and direct clipboard copying.
-
-<p align="center">
-  <img width="800" alt="CSV Export Options" src="./images/csv-export-functionality.png">
-</p>
-
-## Charts
-
-## Key Metrics
->[!NOTE]
-> Metrics details are described in detail in [GitHub API response schema](https://docs.github.com/en/rest/copilot/copilot-metrics?apiVersion=2022-11-28#get-copilot-metrics-for-an-organization)
-
-Here are the key metrics visualized in these charts:
-<p align="center">
-  <img width="800" alt="Key Metrics Overview" src="./images/main-metrics-dashboard.png">
-</p>
-
-1. **Acceptance Rate:** This metric represents the ratio of accepted lines and suggestions to the total suggested by GitHub Copilot. This rate is an indicator of the relevance and usefulness of Copilot's suggestions. However, as with any metric, it should be used with caution as developers use Copilot in many different ways (research, confirm, verify, etc., not always "inject").
-<p align="center">
-  <img width="800" alt="image" src="./images/Acceptance_rate_bycount.png">
-</p>
-
-2. **Total Suggestions:** This chart illustrates the total number of code suggestions made by GitHub Copilot. It offers a view of the tool's activity and its engagement with users over time.
-
-3. **Total Acceptances:** This visualization focuses on the total number of suggestions accepted by users.
-<p align="center">
-  <img width="800" alt="image" src="./images/Total_suggestions_count.png">
-</p>
-
-4. **Total Lines Suggested:** Showcases the total number of lines of code suggested by GitHub Copilot. This gives an idea of the volume of code generation and assistance provided.
-
-5. **Total Lines Accepted:** As the name suggests, the total lines of code accepted by users (full acceptances) offering insights into how much of the suggested code is actually being utilized and incorporated into the codebase.
-<p align="center">
-  <img width="800" alt="image" src="./images/Total Lines.png">
-</p>
-
-6. **Total Active Users:** Represents the number of active users engaging with GitHub Copilot. This helps in understanding the user base growth and adoption rate.
-<p align="center">
-  <img width="800" alt="image" src="./images/Total_Active_users.png">
-</p>
-
-## Languages Breakdown Analysis
-
-Pie charts with the top 5 languages by accepted prompts and acceptance rate (by count/by lines) are displayed at the top.
-<p align="center">
-  <img width="800" alt="Updated Language breakdown with charts and data table" src="./images/languages-breakdown.png">
-</p>
-
-The language breakdown analysis tab also displays a table showing the Accepted Prompts, Accepted Lines of Code, and Acceptance Rate (%) for each language over the selected time period. The entries are sorted by the number of _accepted lines of code descending_.
-
-## Copilot Chat Metrics
-
-<p align="center">
-  <img width="800" alt="Copilot Chat Metrics Dashboard" src="./images/copilot-chat-metrics.png">
-</p>
-
-1. **Cumulative Number of Turns:** This metric represents the total number of turns (interactions) with the Copilot over the selected time period. A 'turn' includes both user inputs and Copilot's responses.
-
-2. **Cumulative Number of Acceptances:** This metric shows the total number of lines of code suggested by Copilot that have been accepted by users over the selected time period.
-
-3. **Total Turns | Total Acceptances Count:** This is a chart that displays the total number of turns and acceptances.
-
-4. **Total Active Copilot Chat Users:** A bar chart that illustrates the total number of users who have actively interacted with Copilot over the selected time period.
-
-## Seat Analysis
-<p align="center">
-  <img width="800" alt="Seat Analysis Dashboard" src="./images/seat-analysis.png">
-</p>
-
-1. **Total Assigned:** This metric represents the total number of Copilot seats assigned within the current organization/enterprise.
-
-2. **Assigned But Never Used:** This metric shows seats that were assigned but never used within the current organization/enterprise. The assigned timestamp is also displayed in the chart.
-
-3. **No Activity in the Last 7 Days:** Never used seats or seats used, but with no activity in the past 7 days.
-
-4. **No Activity in the Last 7 Days (including never used seats):** A table to display seats that have had no activity in the past 7 days, ordered by the date of last activity. Seats that were used earlier are displayed at the top.
-
-## Advanced Features
-
-### Flexible Date Range Selection
-The application supports flexible date range selection allowing users to analyze metrics for any period up to 100 days. The date picker provides an intuitive calendar interface with options to exclude weekends and holidays from the analysis.
-
-**📅 Smart Date Validation:**
-- **Real-time validation** against GitHub Copilot API limits
-- **Visual feedback** for date range status
-- **Automatic adjustments** for invalid ranges
-- **Clear error messages** explaining API restrictions
-
-### Data Export Capabilities
-Multiple export options are available in the API Response tab:
-- **Download CSV (Summary)**: Exports key metrics in a condensed format
-- **Download CSV (Full)**: Exports comprehensive detailed data
-- **Copy Metrics to Clipboard**: Quick copy functionality for immediate use
-- **Check Metric Data Quality**: Validates data integrity and completeness
-
-### Team Analytics
-Organizations can compare metrics across different teams to:
-- Identify high-performing teams
-- Understand adoption patterns
-- Share best practices across teams
-- Monitor team-specific engagement levels
-
-### Model Usage Analytics
-Detailed insights into AI model usage including:
-- IDE Code Completions by editor and model type
-- IDE Chat interactions and model preferences
-- GitHub.com Chat usage patterns
-- PR Summary generation statistics
-- Custom vs. default model adoption rates
-
-## Setup Instructions
-
-In the `.env` file, you can configure several environment variables that control the behavior of the application.
-
-Public variables:
-- `NUXT_PUBLIC_IS_DATA_MOCKED`
-- `NUXT_PUBLIC_SCOPE`
-- `NUXT_PUBLIC_GITHUB_ENT`
-- `NUXT_PUBLIC_GITHUB_ORG`
-- `NUXT_PUBLIC_GITHUB_TEAM`
-
-can be overriden by route parameters, e.g.
-- `http://localhost:3000/enterprises/octo-demo-ent`
-- `http://localhost:3000/orgs/octo-demo-org`
-- `http://localhost:3000/orgs/octo-demo-org/teams/the-a-team`
-- `http://localhost:3000/enterprises/octo-demo-ent/teams/the-a-team`
-- `http://localhost:3000/orgs/mocked-org?mock=true`
-
-#### NUXT_PUBLIC_SCOPE
-
-The `NUXT_PUBLIC_SCOPE` environment variable in the `.env` file determines the default scope of the API calls made by the application. It can be set to 'enterprise', 'organization', 'team-organization' or 'team-enterprise'.
-
-- If set to 'enterprise', the application will target API calls to the GitHub Enterprise account defined in the `NUXT_PUBLIC_GITHUB_ENT` variable.
-- If set to 'organization', the application will target API calls to the GitHub Organization account defined in the `NUXT_PUBLIC_GITHUB_ORG` variable.
-- If set to 'team', the application will target API calls to GitHub Team defined in the `NUXT_PUBLIC_GITHUB_TEAM` variable under `NUXT_PUBLIC_GITHUB_ORG` GitHub Organization.
-
-For example, if you want to target the API calls to an organization, you would set `NUXT_PUBLIC_SCOPE=organization` in the `.env` file.
-
->[!INFO]
-> Environment variables with `NUXT_PUBLIC` scope are available in the browser (are public).
-> See [Nuxt Runtime Config](https://nuxt.com/docs/guide/going-further/runtime-config) for details.
-
-````
-NUXT_PUBLIC_SCOPE=organization
-
-NUXT_PUBLIC_GITHUB_ORG=<YOUR-ORGANIZATION>
-
-NUXT_PUBLIC_GITHUB_ENT=
-````
-
-#### NUXT_PUBLIC_GITHUB_TEAM
-
-The `NUXT_PUBLIC_GITHUB_TEAM` environment variable filters metrics for a specific GitHub team within an Enterprise or Organization account.
-‼️ Important ‼️ When this variable is set, all displayed metrics will pertain exclusively to the specified team. To view metrics for the entire Organization or Enterprise, remove this environment variable.
-
->[!WARNING]
-> GitHub provides Team metrics [for a given day if the team had five or more members with active Copilot licenses, as evaluated at the end of that day.](https://docs.github.com/en/rest/copilot/copilot-usage?apiVersion=2022-11-28#get-a-summary-of-copilot-usage-for-a-team).
-
-````
-NUXT_PUBLIC_GITHUB_TEAM=
-````
-
-#### NUXT_PUBLIC_IS_DATA_MOCKED
-
-Variable is false by default. To view mocked data switch it to true or use query parameter `?mock=true`.
-
-````
-NUXT_PUBLIC_IS_DATA_MOCKED=false
-````
-
-#### NUXT_GITHUB_TOKEN
-
-Specifies the GitHub Personal Access Token utilized for API requests. Generate this token with the following scopes: _copilot_, _manage_billing:copilot_, _manage_billing:enterprise_, _read:enterprise_, _read:org_.
-
-Token is not used in the frontend.
-
-````
-NUXT_GITHUB_TOKEN=
-````
-
-#### NUXT_SESSION_PASSWORD (Required for GitHub Auth!)
-
-This variable is required to encrypt user sessions when using GitHub authentication, it needs to be at least 32 characters long.
-For more information see [Nuxt Sessions and Authentication](https://nuxt.com/docs/guide/recipes/sessions-and-authentication#cookie-encryption-key).
-
->[!WARNING]
-> This variable is required when using GitHub OAuth authentication.
-
-#### NUXT_PUBLIC_USING_GITHUB_AUTH
-
-Default is `false`. When set to `true`, GitHub OAuth App Authentication will be performed to verify users' access to the dashboard.
-
-**🔐 Configuración de Autenticación GitHub:**
-
-1. **Crear una OAuth App en GitHub:**
-   - Ve a GitHub Settings → Developer settings → OAuth Apps
-   - Crea una nueva OAuth App
-   - Establece Authorization callback URL: `http://localhost:3000/auth/github` (para desarrollo)
-
-2. **Variables requeridas para GitHub Auth:**
-   - `NUXT_OAUTH_GITHUB_CLIENT_ID`
-   - `NUXT_OAUTH_GITHUB_CLIENT_SECRET`
-   - `NUXT_SESSION_PASSWORD`
-
-3. **Beneficios de la autenticación GitHub:**
-   - ✅ Verificación automática de permisos de usuario
-   - ✅ No necesidad de gestionar tokens manualmente
-   - ✅ Sesiones seguras con expiración automática
-   - ✅ Interfaz de usuario mejorada
-
-````
-NUXT_PUBLIC_USING_GITHUB_AUTH=true
-````
-
-#### NUXT_OAUTH_GITHUB_CLIENT_ID
-
-GitHub OAuth App Client ID for user authentication.
-
-````
-NUXT_OAUTH_GITHUB_CLIENT_ID=
-````
-
-#### NUXT_OAUTH_GITHUB_CLIENT_SECRET
-
-GitHub OAuth App Client Secret for user authentication.
-
-````
-NUXT_OAUTH_GITHUB_CLIENT_SECRET=
-````
-
-
-#### Support for HTTP Proxy HTTP_PROXY
-
-Solution supports HTTP Proxy settings when running in corporate environment. Simple set `HTTP_PROXY` environment variable.
-
-For custom CA use environment variable `CUSTOM_CA_PATH` to load the certificate into proxy agent options.
-
-## Install Dependencies
-
+---
+
+## 📊 **Resumen Ejecutivo**
+
+El **HDI Copilot Metrics Viewer** es una aplicación web profesional desarrollada específicamente para **HDI Seguros Chile**, diseñada para monitorear, analizar y optimizar el uso de **GitHub Copilot** en la organización. Esta solución proporciona métricas detalladas, análisis de equipos y reportes ejecutivos para maximizar el ROI de la inversión en IA generativa.
+
+### 🎯 **Objetivos del Proyecto**
+- **Monitoreo Continuo**: Seguimiento en tiempo real del uso de GitHub Copilot
+- **Análisis de ROI**: Medición del impacto y adopción de IA generativa
+- **Optimización de Equipos**: Identificación de patrones de uso y mejores prácticas
+- **Reportes Ejecutivos**: Dashboards para toma de decisiones estratégicas
+
+---
+
+## ✅ **Checklist de Mejoras Implementadas**
+
+### 🔐 **Seguridad y Autenticación**
+- [x] **GitHub Personal Access Token** configurado y validado
+- [x] **Sistema de autenticación OAuth** con `nuxt-auth-utils`
+- [x] **Middleware de autenticación** para rutas protegidas
+- [x] **Validación de sesiones** con expiración automática
+- [x] **Password de sesión** encriptado (32+ caracteres)
+- [x] **Modal de validación** de API keys al inicio
+
+### ⚙️ **Configuración y DevOps**
+- [x] **Variables de entorno** centralizadas en `.env`
+- [x] **Configuración de organizaciones** optimizada (solo `hdicl`)
+- [x] **Dockerfile optimizado** para producción
+- [x] **Scripts de despliegue** para HDI
+- [x] **Configuración de nginx** para HDI
+- [x] **Health check endpoints** para Kubernetes
+
+### 🎨 **Experiencia de Usuario**
+- [x] **Modal de validación** al inicio del proyecto
+- [x] **Checklist visual** de configuración
+- [x] **Manejo de errores** mejorado
+- [x] **Feedback visual** para estados de validación
+- [x] **Interfaz responsive** y profesional
+
+### 📈 **Analytics y Reportes**
+- [x] **Métricas de aceptación** de sugerencias
+- [x] **Análisis de equipos** y comparativas
+- [x] **Exportación CSV** de datos
+- [x] **Filtros de fecha** flexibles (hasta 100 días)
+- [x] **Análisis de lenguajes** de programación
+
+---
+
+## 🏗️ **Arquitectura Técnica**
+
+### **Stack Tecnológico**
+- **Frontend**: Nuxt.js 4.1.1 + Vue.js 3 + Vuetify 3.7.3
+- **Backend**: Node.js + TypeScript
+- **Autenticación**: GitHub OAuth + nuxt-auth-utils
+- **Contenedores**: Docker + Docker Compose
+- **Proxy**: Nginx (producción)
+- **Monitoreo**: Health checks + Logs estructurados
+
+### **Flujo de Datos**
+```mermaid
+graph TD
+    A[Usuario HDI] -->|OAuth| B[GitHub Authentication]
+    B -->|Token| C[HDI Copilot Metrics API]
+    C -->|Datos| D[Dashboard Analytics]
+    D -->|Reportes| E[Equipos HDI]
+    D -->|Export| F[CSV/Excel]
+```
+
+---
+
+## 🚀 **Instalación y Configuración**
+
+### **Prerrequisitos**
+- Node.js 18+ 
+- Docker (opcional)
+- GitHub Personal Access Token con permisos Copilot
+- Acceso a organización `hdicl` en GitHub
+
+### **Configuración Rápida**
+
+1. **Clonar el repositorio:**
+```bash
+git clone https://github.com/Maurog-castros/copilot-metric-hdi.git
+cd copilot-metric-hdi
+```
+
+2. **Instalar dependencias:**
 ```bash
 npm install
 ```
 
-### Compiles and Runs the Application
+3. **Configurar variables de entorno:**
+```bash
+# Copiar archivo de configuración
+cp config.env .env
 
+# Editar .env con tus credenciales
+NUXT_GITHUB_TOKEN=tu_token_aqui
+NUXT_SESSION_PASSWORD=HDI-Copilot-Metrics-2025-Super-Secret-Password-32-Chars-Minimum
+NUXT_PUBLIC_USING_GITHUB_AUTH=true
+```
+
+4. **Ejecutar en desarrollo:**
 ```bash
 npm run dev
 ```
 
-### Docker Build
+### **Despliegue en Producción**
 
+#### **Docker (Recomendado)**
 ```bash
-docker build -t copilot-metrics-viewer .
+# Construir imagen
+docker build -t hdi-copilot-metrics .
+
+# Ejecutar contenedor
+docker run -p 8080:80 --env-file .env hdi-copilot-metrics
 ```
 
-### Docker Run
-
+#### **Scripts de Despliegue HDI**
 ```bash
-docker run -p 8080:80 --env-file ./.env copilot-metrics-viewer
+# Despliegue automático
+./deploy-hdi.sh
+
+# Instalación en Linux HDI
+./install-hdi-linux.sh
 ```
 
-The application will be accessible at http://localhost:8080
+---
 
-## Health Check Endpoints
+## 📊 **Funcionalidades Principales**
 
-For Kubernetes deployments and health monitoring, the application provides dedicated health check endpoints that don't make external API calls:
+### **Dashboard Principal**
+- **Métricas de Aceptación**: Tasa de aceptación de sugerencias de Copilot
+- **Usuarios Activos**: Seguimiento de adopción por equipo
+- **Líneas de Código**: Volumen de código generado y aceptado
+- **Análisis Temporal**: Tendencias y patrones de uso
 
-- **`/api/health`** - General health check endpoint
-- **`/api/ready`** - Readiness probe endpoint 
-- **`/api/live`** - Liveness probe endpoint
+### **Análisis de Equipos**
+- **Comparativa de Equipos**: Métricas por equipo de desarrollo
+- **Identificación de Líderes**: Equipos con mayor adopción
+- **Mejores Prácticas**: Compartir estrategias exitosas
 
-All endpoints return JSON responses with status information and respond in ~200ms, making them ideal for Kubernetes health checks instead of using the root `/` endpoint which triggers GitHub API calls.
+### **Reportes y Exportación**
+- **CSV Detallado**: Exportación completa de métricas
+- **Reportes Ejecutivos**: Resúmenes para gerencia
+- **Análisis de ROI**: Medición del impacto en productividad
 
-### Example Kubernetes Configuration
+---
 
+## 🔧 **Configuración Avanzada**
+
+### **Variables de Entorno**
+
+#### **Configuración Básica**
+```bash
+# Token de GitHub (requerido)
+NUXT_GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx
+
+# Password de sesión (mínimo 32 caracteres)
+NUXT_SESSION_PASSWORD=HDI-Copilot-Metrics-2025-Super-Secret-Password-32-Chars-Minimum
+
+# Organización HDI
+NUXT_PUBLIC_GITHUB_ORG=hdicl
+NUXT_PUBLIC_SCOPE=organization
+```
+
+#### **Autenticación OAuth (Opcional)**
+```bash
+# Habilitar autenticación GitHub
+NUXT_PUBLIC_USING_GITHUB_AUTH=true
+
+# Credenciales OAuth App
+NUXT_OAUTH_GITHUB_CLIENT_ID=tu_client_id
+NUXT_OAUTH_GITHUB_CLIENT_SECRET=tu_client_secret
+```
+
+### **Configuración de Nginx (Producción)**
+```nginx
+server {
+    listen 80;
+    server_name copilot-metrics.hdi.cl;
+    
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+```
+
+---
+
+## 📈 **Métricas y KPIs**
+
+### **Métricas de Adopción**
+- **Tasa de Aceptación**: % de sugerencias aceptadas
+- **Usuarios Activos**: Número de desarrolladores usando Copilot
+- **Frecuencia de Uso**: Promedio de interacciones por usuario
+
+### **Métricas de Productividad**
+- **Líneas Generadas**: Volumen de código creado por IA
+- **Tiempo Ahorrado**: Estimación de tiempo de desarrollo
+- **Calidad del Código**: Análisis de aceptación por lenguaje
+
+### **Métricas de ROI**
+- **Costo por Línea**: Eficiencia de la inversión
+- **Adopción por Equipo**: Distribución del uso
+- **Tendencias Temporales**: Evolución del uso
+
+---
+
+## 🚨 **Monitoreo y Health Checks**
+
+### **Endpoints de Salud**
+- **`/api/health`** - Estado general de la aplicación
+- **`/api/ready`** - Verificación de disponibilidad
+- **`/api/live`** - Verificación de vida del proceso
+
+### **Configuración Kubernetes**
 ```yaml
 livenessProbe:
   httpGet:
@@ -340,16 +242,142 @@ readinessProbe:
   periodSeconds: 5
 ```
 
-## License
+---
 
-This project is licensed under the terms of the MIT open source license. Please refer to [MIT](./LICENSE.txt) for the full terms.
+## 🔒 **Seguridad y Compliance**
 
-## Maintainers
+### **Medidas de Seguridad Implementadas**
+- **Autenticación OAuth**: Verificación de identidad GitHub
+- **Encriptación de Sesiones**: Passwords seguros de 32+ caracteres
+- **Validación de API Keys**: Verificación automática de credenciales
+- **Middleware de Seguridad**: Protección de rutas sensibles
+- **Logs de Auditoría**: Registro de accesos y acciones
 
-[@martedesco](https://github.com/martedesco) & [@karpikpl](https://github.com/karpikpl)
+### **Cumplimiento HDI**
+- **Acceso Restringido**: Solo usuarios autorizados de HDI
+- **Datos Corporativos**: Información confidencial protegida
+- **Auditoría**: Trazabilidad completa de accesos
+- **Backup**: Respaldo automático de configuraciones
 
-## Support
+---
 
-This project is independently developed and maintained, and is not an official GitHub product. It thrives through the dedicated efforts of ([@martedesco](https://github.com/martedesco)), ([@karpikpl](https://github.com/karpikpl)) and our wonderful contributors. A heartfelt thanks to all our contributors! ✨
+## 📞 **Soporte y Mantenimiento**
 
-I aim to provide support through [GitHub Issues](https://github.com/github-copilot-resources/copilot-metrics-viewer/issues). While I strive to stay responsive, I can't guarantee immediate responses. For critical issues, please include "CRITICAL" in the title for quicker attention. 🙏🏼
+### **Equipo de Desarrollo**
+- **Desarrollador Principal**: Mauro Castro (HDI Seguros)
+- **Arquitectura**: DevOps & Analytics Team
+- **Soporte**: Equipo de TI HDI
+
+### **Canales de Soporte**
+- **Issues GitHub**: Para reportar bugs y solicitar features
+- **Email Interno**: Para soporte crítico
+- **Documentación**: README y comentarios en código
+
+### **Mantenimiento Programado**
+- **Actualizaciones**: Mensuales de dependencias
+- **Backups**: Diarios de configuraciones
+- **Monitoreo**: 24/7 de disponibilidad
+- **Reportes**: Semanales de métricas
+
+---
+
+## 📄 **Licencia y Términos**
+
+Este proyecto es propiedad de **HDI Seguros Chile** y está desarrollado específicamente para uso interno corporativo. 
+
+**© 2025 HDI Seguros Chile - Todos los derechos reservados**
+
+---
+
+## 🛠️ **Scripts de Mantenimiento y DevOps**
+
+### **Scripts Disponibles**
+
+#### **Despliegue**
+```bash
+# Despliegue automático
+./deploy-hdi.sh
+
+# Instalación completa en Linux
+./install-hdi-linux.sh
+
+# Despliegue con PowerShell (Windows)
+./deploy-hdi.ps1
+```
+
+#### **Mantenimiento**
+```bash
+# Mantenimiento completo
+./scripts/maintenance.sh full
+
+# Limpieza de logs
+./scripts/maintenance.sh clean-logs
+
+# Verificación de salud
+./scripts/maintenance.sh health-check
+
+# Optimización de rendimiento
+./scripts/maintenance.sh optimize
+```
+
+#### **Backup y Restauración**
+```bash
+# Crear backup completo
+./scripts/backup.sh backup
+
+# Restaurar desde backup
+./scripts/backup.sh restore /backup/copilot-metrics-backup-20250109_120000.tar.gz
+
+# Listar backups disponibles
+./scripts/backup.sh list
+```
+
+### **Monitoreo y Observabilidad**
+
+#### **Servicios de Monitoreo**
+- **Prometheus**: Métricas de aplicación y sistema
+- **Grafana**: Dashboards y visualizaciones
+- **Redis**: Cache de sesiones y datos
+- **Nginx**: Proxy reverso con métricas
+
+#### **Health Checks**
+- **`/api/health`** - Estado general de la aplicación
+- **`/api/ready`** - Verificación de disponibilidad
+- **`/api/live`** - Verificación de vida del proceso
+
+#### **Logs Estructurados**
+- **Aplicación**: Logs JSON con niveles configurables
+- **Nginx**: Logs de acceso y errores
+- **Docker**: Logs de contenedores
+- **Sistema**: Logs del sistema operativo
+
+## 🎯 **Roadmap Futuro**
+
+### **Q1 2025**
+- [x] **Configuración completa de DevOps** ✅
+- [x] **Scripts de mantenimiento automatizado** ✅
+- [x] **Monitoreo con Prometheus y Grafana** ✅
+- [x] **Sistema de backup y restauración** ✅
+- [ ] Integración con Azure DevOps
+- [ ] Reportes automáticos por email
+- [ ] Dashboard móvil responsive
+
+### **Q2 2025**
+- [ ] Análisis predictivo de adopción
+- [ ] Integración con Jira/Confluence
+- [ ] API REST para integraciones
+- [ ] Alertas automáticas de métricas
+
+### **Q3 2025**
+- [ ] Machine Learning para optimización
+- [ ] Integración con Power BI
+- [ ] Análisis de costos y ROI
+- [ ] Integración con sistemas de ticketing
+
+---
+
+<p align="center">
+  <strong>🚀 Desarrollado con ❤️ para HDI Seguros Chile</strong>
+  <br>
+  <em>Maximizando el potencial de GitHub Copilot en la organización</em>
+</p>

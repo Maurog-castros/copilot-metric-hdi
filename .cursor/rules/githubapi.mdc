@@ -1,0 +1,14 @@
+---
+description: |
+  Rules for GitHub API integrations in Copilot Metrics Viewer and related projects.
+GitHub API rules:
+ - Default repo: Maurog-castros/copilot-metric-hdi
+ - PAT scopes required: repo, workflow, read:org
+ - Always handle API errors
+ - Fetch only the last commit per repo when populating DB
+ - Validate if user or branch already exists before creating
+globs:
+  - '**/*'
+alwaysApply: true
+---
+

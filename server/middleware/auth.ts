@@ -1,25 +1,5 @@
 import { authenticateAndGetGitHubHeaders } from '../modules/authentication';
 
-// Mock getUserSession para cuando la autenticación está deshabilitada
-async function getUserSession(event: any) {
-    const config = useRuntimeConfig(event);
-    
-    // Si la autenticación GitHub está deshabilitada, devolver sesión mock
-    if (!config.public.usingGithubAuth) {
-        return {
-            secure: {
-                tokens: {
-                    access_token: 'mock-token'
-                },
-                expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 horas desde ahora
-            }
-        };
-    }
-    
-    // Si la autenticación está habilitada pero no hay implementación real, lanzar error
-    throw new Error('GitHub authentication is enabled but getUserSession is not properly configured');
-}
-
 /**
  * Middleware de autenticación para proteger rutas específicas
  * Verifica si el usuario está autenticado antes de permitir el acceso
@@ -44,8 +24,9 @@ export default defineEventHandler(async (event) => {
     // Si la autenticación GitHub está habilitada, verificar sesión
     if (config.public.usingGithubAuth) {
         try {
-            // Verificar si hay una sesión de usuario válida
-            const { secure } = await getUserSession(event);
+            // Verificar si hay una sesión de usuario válida usando getUserSession de nuxt-auth-utils
+            const session = await getUserSession(event);
+            const secure = session?.secure;
             
             if (!secure?.tokens?.access_token) {
                 throw createError({
@@ -87,5 +68,8 @@ export default defineEventHandler(async (event) => {
                 }
             });
         }
+    } else {
+        // Si la autenticación está deshabilitada, permitir acceso sin verificación
+        console.log('GitHub authentication is disabled, allowing access to protected routes');
     }
 });

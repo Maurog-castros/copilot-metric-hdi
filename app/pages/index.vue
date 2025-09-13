@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useRoute } from 'vue-router';
+// useRoute is auto-imported by Nuxt
 import './assets/global.css';
 
 const route = useRoute();
