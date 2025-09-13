@@ -1,6 +1,6 @@
 export default defineNuxtPlugin(() => {
   const currentOrg = ref('hdicl');
-  const availableOrgs = ['hdicl', 'HDISeguros-cl'];
+  const availableOrgs = ['hdicl']; // Solo hdicl tiene Copilot habilitado
 
   const changeOrganization = (org: string) => {
     if (availableOrgs.includes(org)) {

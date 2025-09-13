@@ -325,9 +325,9 @@ import AgentModeViewer from './AgentModeViewer.vue'
 import DateRangeSelector from './DateRangeSelector.vue'
 import OrganizationSelector from './OrganizationSelector.vue'
 import { Options } from '@/model/Options';
-import { useRoute } from 'vue-router';
+// useRoute is auto-imported by Nuxt
 import { useOrganizations } from '../composables/useOrganizations';
-import { useUserSession } from '../composables/useUserSession';
+// useUserSession is auto-imported by nuxt-auth-utils
 
 export default defineNuxtComponent({
   name: 'MainComponent',

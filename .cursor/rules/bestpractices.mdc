@@ -1,0 +1,14 @@
+---
+description: |
+  General development best practices for HDI and personal projects.
+Best practices:
+ - Write clean, modular, and well-documented code
+ - Always declare explicit TypeScript types
+ - Prefer reusable components in React and Blazor
+ - Implement proper logging/observability (e.g., Serilog in .NET, structured logs in Node.js)
+globs:
+  - '**/*'
+alwaysApply: true
+---
+
+ 

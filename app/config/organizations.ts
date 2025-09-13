@@ -14,25 +14,15 @@ export const ORGANIZATIONS: Record<string, Organization> = {
   'hdicl': {
     value: 'hdicl',
     title: 'HDI Chile (hdicl)',
-    description: 'Organización principal de HDI Chile con repositorios corporativos',
+    description: 'Organización principal de HDI Chile con repositorios corporativos y Copilot habilitado',
     repos: 25,
     members: 45,
     color: 'success',
     icon: 'mdi-office-building',
     githubOrg: 'hdicl',
     scope: 'organization'
-  },
-  'HDISeguros-cl': {
-    value: 'HDISeguros-cl',
-    title: 'HDI Seguros Chile (HDISeguros-cl)',
-    description: 'Organización de seguros de HDI Chile con proyectos especializados',
-    repos: 18,
-    members: 32,
-    color: 'primary',
-    icon: 'mdi-shield-check',
-    githubOrg: 'HDISeguros-cl',
-    scope: 'organization'
   }
+  // HDISeguros-cl removido porque no tiene Copilot habilitado
 };
 
 export const getOrganization = (value: string): Organization | undefined => {

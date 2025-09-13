@@ -1,0 +1,213 @@
+# Docker Compose para HDI Copilot Metrics Viewer
+# Configuración optimizada para producción corporativa
+
+version: "3.9"
+
+services:
+  # Aplicación principal
+  copilot-metrics-viewer:
+    build:
+      context: .
+      dockerfile: Dockerfile.hdi
+    container_name: copilot-metrics-hdi
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      # Configuración de Node.js
+      NODE_ENV: production
+      NITRO_PORT: 3000
+      NITRO_HOST: 0.0.0.0
+      
+      # Configuración de GitHub
+      NUXT_PUBLIC_SCOPE: organization
+      NUXT_PUBLIC_GITHUB_ORG: hdicl
+      NUXT_PUBLIC_IS_DATA_MOCKED: "false"
+      NUXT_PUBLIC_USING_GITHUB_AUTH: "true"
+      
+      # Token de GitHub
+      NUXT_GITHUB_TOKEN: ${GITHUB_TOKEN}
+      NUXT_SESSION_PASSWORD: ${SESSION_PASSWORD}
+      NUXT_OAUTH_GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
+      NUXT_OAUTH_GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
+      
+      # Configuración de logging
+      LOG_LEVEL: info
+      LOG_FORMAT: json
+      
+    volumes:
+      - ./logs:/app/logs
+      - copilot-public:/app/public
+      - copilot-sessions:/app/sessions
+      
+    networks:
+      - copilot-network
+      
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+      
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '0.5'
+        reservations:
+          memory: 512M
+          cpus: '0.25'
+
+  # Nginx como proxy reverso
+  nginx:
+    image: nginx:1.29-alpine
+    container_name: nginx-copilot-metrics
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/certs:/etc/nginx/certs:ro
+      - copilot-public:/app/public:ro
+      - nginx-logs:/var/log/nginx
+    depends_on:
+      - copilot-metrics-viewer
+    networks:
+      - copilot-network
+      - jenkins_proxy_net
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.25'
+        reservations:
+          memory: 128M
+          cpus: '0.1'
+
+  # Redis para sesiones (opcional)
+  redis:
+    image: redis:7-alpine
+    container_name: redis-copilot-metrics
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - copilot-network
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-defaultpassword}
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.25'
+        reservations:
+          memory: 128M
+          cpus: '0.1'
+
+  # Monitoreo con Prometheus (opcional)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus-copilot-metrics
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    networks:
+      - copilot-network
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+
+  # Grafana para dashboards (opcional)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana-copilot-metrics
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    networks:
+      - copilot-network
+    depends_on:
+      - prometheus
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+
+networks:
+  copilot-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+  jenkins_proxy_net:
+    external: true
+    name: jenkinsdevops_proxy-net
+
+volumes:
+  # Logs de la aplicación
+  logs:
+    driver: local
+    
+  # Archivos públicos
+  copilot-public:
+    driver: local
+    
+  # Sesiones de usuario
+  copilot-sessions:
+    driver: local
+    
+  # Logs de Nginx
+  nginx-logs:
+    driver: local
+    
+  # Datos de Redis
+  redis-data:
+    driver: local
+    
+  # Datos de Prometheus
+  prometheus-data:
+    driver: local
+    
+  # Datos de Grafana
+  grafana-data:
+    driver: local

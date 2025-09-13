@@ -1,0 +1,15 @@
+# Configuración de dashboards para Grafana
+# Configuración automática de dashboards
+
+apiVersion: 1
+
+providers:
+  - name: 'HDI Copilot Metrics'
+    orgId: 1
+    folder: 'HDI Copilot Metrics'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 10
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards
