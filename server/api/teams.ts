@@ -21,9 +21,7 @@ function parseLinkHeader(linkHeader: string | null): Record<string, string> {
         const match = section.match(/^<([^>]+)>;\s*rel="([^"]+)"/)
         if (match) {
             const [, url, rel] = match
-            if (rel && url) {
-                links[rel] = url
-            }
+            links[rel] = url
         }
     }
     return links
@@ -50,13 +48,6 @@ export async function getTeams(event: H3Event<EventHandlerRequest>): Promise<Tea
     const query = getQuery(event)
     const options = Options.fromQuery(query)
     const config = useRuntimeConfig()
-
-    // Check if organization parameter is provided in query
-    const githubOrg = query.githubOrg as string
-    if (githubOrg) {
-        logger.info(`Using organization from query parameter: ${githubOrg}`)
-        options.githubOrg = githubOrg
-    }
 
     // Fill missing scope/context from runtime config
     if (!options.scope && config.public.scope) options.scope = config.public.scope as Scope

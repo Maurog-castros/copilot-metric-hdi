@@ -1,71 +1,27 @@
-version: "3.9"
+version: '3.8'
 
 services:
-  copilot-metrics-viewer:
-    build:
-      context: .
-      dockerfile: Dockerfile.hdi
+  copilot-metrics:
+    image: copilot-metrics-hdi:latest
     container_name: copilot-metrics-hdi
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "3000:80"
     environment:
-      NODE_ENV: production
-      NITRO_PORT: 3000
-      NITRO_HOST: 0.0.0.0
-
-      # Configuración de GitHub
-      NUXT_PUBLIC_SCOPE: organization
-      NUXT_PUBLIC_GITHUB_ORG: hdicl
-      NUXT_PUBLIC_IS_DATA_MOCKED: "false"
-
-      # Token de GitHub
-      NUXT_GITHUB_TOKEN: ${GITHUB_TOKEN}
-      NUXT_SESSION_PASSWORD: ${SESSION_PASSWORD}
-      NUXT_OAUTH_GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
-      NUXT_OAUTH_GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
-
+      - NODE_ENV=production
+    env_file:
+      - .env
     volumes:
       - ./logs:/app/logs
-      - copilot-public:/app/public
-
     networks:
       - copilot-network
-
     healthcheck:
-      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
+      test: ["CMD", "curl", "-f", "http://localhost:80/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
 
-  nginx:
-    image: nginx:1.29
-    container_name: nginx
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./nginx/certs:/etc/nginx/certs:ro
-      - copilot-public:/app/public:ro
-    depends_on:
-      - copilot-metrics-viewer   # corregido
-    networks:
-      - copilot-network
-      - jenkins_proxy_net
-
 networks:
   copilot-network:
     driver: bridge
-
-  jenkins_proxy_net:
-    external: true
-    name: jenkinsdevops_proxy-net
-
-volumes:
-  logs:
-    driver: local
-  copilot-public:
-

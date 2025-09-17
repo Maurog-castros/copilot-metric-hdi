@@ -655,7 +655,27 @@ describe('Options', () => {
   })
 
   describe('validate', () => {
-    test('validates organization scopes require github organization', () => {
+    test('validates team scopes require github team', () => {
+      const options1 = new Options({
+        scope: 'team-organization',
+        githubOrg: 'test-org'
+      })
+      
+      const options2 = new Options({
+        scope: 'team-enterprise',
+        githubEnt: 'test-ent'
+      })
+      
+      const result1 = options1.validate()
+      const result2 = options2.validate()
+      
+      expect(result1.isValid).toBe(false)
+      expect(result1.errors).toContain('GitHub team must be set for team scopes')
+      expect(result2.isValid).toBe(false)
+      expect(result2.errors).toContain('GitHub team must be set for team scopes')
+    })
+
+    test('validates organization scopes require github org', () => {
       const options1 = new Options({
         scope: 'organization'
       })
@@ -704,7 +724,7 @@ describe('Options', () => {
       const result = options.validate()
       
       expect(result.isValid).toBe(false)
-      expect(result.errors).toContain('La fecha de inicio debe ser anterior a la fecha de fin')
+      expect(result.errors).toContain('Since date must be before until date')
     })
 
     test('validates correctly configured options', () => {
@@ -732,86 +752,10 @@ describe('Options', () => {
       const result = options.validate()
       
       expect(result.isValid).toBe(false)
+      expect(result.errors).toHaveLength(3)
       expect(result.errors).toContain('GitHub organization must be set for organization scopes')
       expect(result.errors).toContain('GitHub team must be set for team scopes')
-      expect(result.errors).toContain('La fecha de inicio debe ser anterior a la fecha de fin')
-    })
-
-    test('validates date range limits for GitHub Copilot API', () => {
-      const today = new Date()
-      const maxDate = new Date(today.getTime() - 99 * 24 * 60 * 60 * 1000) // 99 días atrás
-      const tooOldDate = new Date(today.getTime() - 400 * 24 * 60 * 60 * 1000) // 400 días atrás
-      
-      const options1 = new Options({
-        scope: 'organization',
-        githubOrg: 'test-org',
-        since: maxDate.toISOString().split('T')[0],
-        until: today.toISOString().split('T')[0]
-      })
-      
-      const options2 = new Options({
-        scope: 'organization',
-        githubOrg: 'test-org',
-        since: tooOldDate.toISOString().split('T')[0],
-        until: today.toISOString().split('T')[0]
-      })
-      
-      const result1 = options1.validate()
-      const result2 = options2.validate()
-      
-      expect(result1.isValid).toBe(true)
-      expect(result2.isValid).toBe(false)
-      expect(result2.errors.some(error => error.includes('no puede ser anterior')))
-    })
-  })
-
-  describe('validateDateRange', () => {
-    test('validates date range specifically for GitHub Copilot API', () => {
-      const today = new Date()
-      const validDate = new Date(today.getTime() - 28 * 24 * 60 * 60 * 1000)
-      
-      const options = new Options({
-        scope: 'organization',
-        githubOrg: 'test-org',
-        since: validDate.toISOString().split('T')[0],
-        until: today.toISOString().split('T')[0]
-      })
-      
-      const result = options.validateDateRange()
-      
-      expect(result.isValid).toBe(true)
-      expect(result.errors).toHaveLength(0)
-    })
-
-    test('returns error when dates are missing', () => {
-      const options = new Options({
-        scope: 'organization',
-        githubOrg: 'test-org'
-      })
-      
-      const result = options.validateDateRange()
-      
-      expect(result.isValid).toBe(false)
-      expect(result.errors).toContain('Both since and until dates are required')
-    })
-  })
-
-  describe('getDateRangeValidationWithSuggestions', () => {
-    test('provides suggestions for date range adjustments', () => {
-      const today = new Date()
-      const veryOldDate = new Date(today.getTime() - 500 * 24 * 60 * 60 * 1000) // 500 días atrás
-      
-      const options = new Options({
-        scope: 'organization',
-        githubOrg: 'test-org',
-        since: veryOldDate.toISOString().split('T')[0],
-        until: today.toISOString().split('T')[0]
-      })
-      
-      const result = options.getDateRangeValidationWithSuggestions()
-      
-      expect(result.isValid).toBe(false)
-      expect(result.warnings.some(warning => warning.includes('muy antigua')))
+      expect(result.errors).toContain('Since date must be before until date')
     })
   })
 
@@ -862,4 +806,3 @@ describe('Options', () => {
     })
   })
 })
-

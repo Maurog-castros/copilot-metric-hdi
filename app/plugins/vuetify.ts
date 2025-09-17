@@ -1,4 +1,8 @@
-export default defineNuxtPlugin(() => {
-  // Plugin simplificado para evitar conflictos de inicialización
-  // La configuración de Vuetify se maneja en nuxt.config.ts
+export default defineNuxtPlugin((nuxtApp) => {
+  // check https://vuetify-nuxt-module.netlify.app/guide/nuxt-runtime-hooks.html
+  nuxtApp.hook('vuetify:before-create', (_) => {
+    if (import.meta.client) {
+      // console.log('vuetify:before-create', options)
+    }
+  })
 })

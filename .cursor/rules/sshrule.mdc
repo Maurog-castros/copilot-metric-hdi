@@ -1,0 +1,8 @@
+---
+description: |
+  Usa siempre el alias configurado en ~/.ssh/config en vez de la IP o usuario directo.
+  Ejemplo: ssh hdi-server
+globs:
+  - '**/*'
+alwaysApply: true
+---

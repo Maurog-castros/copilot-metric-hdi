@@ -3,6 +3,5 @@
         "**/node_modules/**": true,
         "**/.git/**": true,
         "**/dist/**": true
-    },
-    "json.schemaDownload.enable": true
+    }
 }

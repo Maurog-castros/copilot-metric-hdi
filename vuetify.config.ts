@@ -20,24 +20,6 @@ export default defineVuetifyConfiguration({
           'surface-variant': '#F5F5F5',
         },
       },
-      dark: {
-        colors: {
-          // Dark theme colors with HDI corporate identity
-          primary: '#4FC3F7',
-          secondary: '#757575',
-          accent: '#64B5F6',
-          error: '#F44336',
-          info: '#29B6F6',
-          success: '#66BB6A',
-          warning: '#FFB74D',
-          // Dark surface colors
-          surface: '#121212',
-          'surface-variant': '#1E1E1E',
-          background: '#0D1117',
-          'on-background': '#F0F6FC',
-          'on-surface': '#F0F6FC',
-        },
-      },
     },
   },
 })

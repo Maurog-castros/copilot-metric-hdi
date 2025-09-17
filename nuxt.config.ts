@@ -1,48 +1,26 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-// Read package.json version at build time
-let version = '0.0.0';
-try {
-  const packageJson = await import('./package.json', { assert: { type: 'json' } });
-  version = packageJson.default.version;
-} catch (error) {
-  console.warn('Could not read package.json version:', error);
-}
+import { readFileSync } from 'fs';
+const packageJson = readFileSync('package.json', 'utf8');
+const version = JSON.parse(packageJson).version;
 
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
-  devtools: {
-    enabled: true,
-
-    timeline: {
-      enabled: true
-    }
-  },
+  devtools: { enabled: true },
 
   future: {
     compatibilityVersion: 4
   },
 
-  ssr: false,
+  ssr: true,
 
   app: {
-    // baseURL y assets desde .env
-    baseURL: process.env.NUXT_APP_BASE_URL || '/',
-    buildAssetsDir: process.env.NUXT_APP_BUILD_ASSETS_DIR || '/_nuxt/',
-
-
+    baseURL: '/',
     head: {
       link: [
-        {
-		rel: 'icon',
-		type: 'image/x-icon',
-	        href: `${process.env.NUXT_APP_BASE_URL || ''}favicon.svg`
-
-
-       	}
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.svg' }
       ]
     }
   },
-
   // when enabling ssr option you need to disable inlineStyles and maybe devLogs
   features: {
     inlineStyles: false,
@@ -60,7 +38,8 @@ export default defineNuxtConfig({
   },
 
   css: [
-    '@/assets/global.css'
+    '@/assets/global.css',
+    '@/assets/hdi-theme.css'
   ],
   modules: ['@nuxt/fonts', 'vuetify-nuxt-module', '@nuxt/eslint', 'nuxt-auth-utils'],
 
@@ -77,64 +56,56 @@ export default defineNuxtConfig({
         },
       },
 
+      // /* If customizing sass global variables ($utilities, $reset, $color-pack, $body-font-family, etc) */
+      // disableVuetifyStyles: true,
       styles: {
         configFile: 'assets/settings.scss',
-      },
-
-      // Configuración adicional para mejorar la hidratación
-    },
-
-    vuetifyOptions: {
-      defaults: {
-        VCard: {
-          elevation: 3,
-        },
-        VCardTitle: {
-          class: 'text-h6 pa-4 pb-2',
-        },
-        VCardText: {
-          class: 'pa-4 pt-0',
-        },
       },
     },
   },
 
-
+  // auth: {
+  //   github: {
+  //     enabled: true,
+  //     clientId: '',
+  //     clientSecret: ''
+  //   }
+  // },
   nitro: {
     plugins: [
       'plugins/http-agent',
     ],
-    preset: 'static',
-    prerender: {
-      routes: ['/']
+    routeRules: {
+      '/copilot-metrics-viewer-hdi/**': { 
+        headers: { 'cache-control': 's-maxage=60' } 
+      }
+    },
+    experimental: {
+      wasm: true
     }
   },
   runtimeConfig: {
-    githubToken: process.env.NUXT_GITHUB_TOKEN || '',
+    githubToken: '',
     session: {
       // set to 6h - same as the GitHub token
       maxAge: 60 * 60 * 6,
-      password: process.env.NUXT_SESSION_PASSWORD || '',
+      password: '',
     },
     oauth: {
       github: {
-        clientId: process.env.NUXT_OAUTH_GITHUB_CLIENT_ID || '',
-        clientSecret: process.env.NUXT_OAUTH_GITHUB_CLIENT_SECRET || ''
+        clientId: '',
+        clientSecret: ''
       }
     },
     public: {
-      isDataMocked: process.env.NUXT_PUBLIC_IS_DATA_MOCKED === 'true',
-      scope: process.env.NUXT_PUBLIC_SCOPE || 'organization',
-      githubOrg: process.env.NUXT_PUBLIC_GITHUB_ORG || '',
-      githubEnt: process.env.NUXT_PUBLIC_GITHUB_ENT || '',
-      githubTeam: process.env.NUXT_PUBLIC_GITHUB_TEAM || '',
-      usingGithubAuth: process.env.NUXT_PUBLIC_USING_GITHUB_AUTH === 'true',
+      isDataMocked: false,  // can be overridden by NUXT_PUBLIC_IS_DATA_MOCKED environment variable
+      scope: 'organization',  // can be overridden by NUXT_PUBLIC_SCOPE environment variable
+      githubOrg: '',
+      githubEnt: '',
+      githubTeam: '',
+      usingGithubAuth: false,
       version,
-      isPublicApp: false,
-  sessionPasswordLast4: (process.env.NUXT_SESSION_PASSWORD || '').slice(-4),
-  githubClientIdLast4: (process.env.NUXT_OAUTH_GITHUB_CLIENT_ID || '').slice(-4),
-  githubClientSecretLast4: (process.env.NUXT_OAUTH_GITHUB_CLIENT_SECRET || '').slice(-4)
+      isPublicApp: false
     }
   }
 })
-

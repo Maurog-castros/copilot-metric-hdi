@@ -18,28 +18,27 @@
     </v-card-title>
 
     <!-- Información sobre límites de la API -->
-    <client-only>
-      <v-expand-transition>
-        <div v-show="showLimitsInfo" class="px-4 mb-4">
-          <v-alert 
-            type="info" 
-            variant="tonal" 
-            density="compact"
-            class="mb-2"
-          >
-            <template #title>
-              <strong>Límites de GitHub Copilot API:</strong>
-            </template>
-            <ul class="mt-2 mb-0">
-              <li>📅 <strong>Máximo:</strong> 100 días de rango histórico</li>
-              <li>🚫 <strong>No permite:</strong> Fechas futuras</li>
-              <li>📊 <strong>Recomendado:</strong> Últimos 28 días</li>
-              <li>⚠️ <strong>Histórico:</strong> Datos limitados antes de 2022</li>
-            </ul>
-          </v-alert>
-        </div>
-      </v-expand-transition>
-    </client-only>
+    <v-expand-transition>
+      <div v-show="showLimitsInfo" class="px-4 mb-4">
+        <v-alert 
+          type="info" 
+          variant="tonal" 
+          density="compact"
+          class="mb-2 api-limits-alert"
+          color="info"
+        >
+          <template #title>
+            <strong class="alert-title">Límites de GitHub Copilot API:</strong>
+          </template>
+          <div class="mt-2 mb-0 alert-content">
+            <div class="alert-item">📅 <strong>Máximo:</strong> 100 días de rango histórico</div>
+            <div class="alert-item">🚫 <strong>No permite:</strong> Fechas futuras</div>
+            <div class="alert-item">📊 <strong>Recomendado:</strong> Últimos 28 días</div>
+            <div class="alert-item">⚠️ <strong>Histórico:</strong> Datos limitados antes de 2022</div>
+          </div>
+        </v-alert>
+      </div>
+    </v-expand-transition>
 
     <v-card-text class="pa-4 pt-0">
       <v-row align="end" class="g-0">
@@ -150,18 +149,19 @@
     </client-only>
     
     <v-card-text class="pt-2">
-      <span class="text-caption text-medium-emphasis">
+      <span class="text-caption text-medium-emphasis date-range-description">
         {{ dateRangeText }}
       </span>
-      <div v-if="daysDifference > 0" class="mt-1">
+      <div v-if="daysDifference > 0" class="mt-1 days-info">
         <v-chip 
           :color="getDaysChipColor()" 
           variant="tonal" 
           size="small"
+          class="days-chip"
         >
           {{ daysDifference }} días
         </v-chip>
-        <span class="text-caption text-medium-emphasis ml-2">
+        <span class="text-caption text-medium-emphasis ml-2 days-status">
           {{ getDaysStatusText() }}
         </span>
       </div>
@@ -561,6 +561,116 @@ onMounted(() => {
   .button-group .v-btn {
     min-width: 180px;
     font-size: 14px;
+  }
+}
+
+/* Estilos específicos para resolver problemas de contraste */
+.api-limits-alert {
+  background-color: #e3f2fd !important;
+  border: 1px solid #2196f3 !important;
+  color: #0d47a1 !important;
+  margin: 8px 0 !important;
+  padding: 12px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.api-limits-alert .alert-title {
+  color: #0d47a1 !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+}
+
+.api-limits-alert .alert-content {
+  color: #1565c0 !important;
+  line-height: 1.6 !important;
+}
+
+.api-limits-alert .alert-item {
+  color: #1565c0 !important;
+  margin-bottom: 6px !important;
+  font-size: 0.9rem !important;
+  display: flex !important;
+  align-items: flex-start !important;
+}
+
+.api-limits-alert .alert-item strong {
+  color: #0d47a1 !important;
+  font-weight: 600 !important;
+  margin-right: 4px !important;
+}
+
+/* Estilos para el chip de días */
+.days-chip {
+  font-weight: 600 !important;
+  text-transform: none !important;
+}
+
+.days-chip.v-chip--variant-tonal.v-chip--color-success {
+  background-color: #e8f5e8 !important;
+  color: #2e7d32 !important;
+  border: 1px solid #4caf50 !important;
+}
+
+.days-chip.v-chip--variant-tonal.v-chip--color-warning {
+  background-color: #fff3e0 !important;
+  color: #f57c00 !important;
+  border: 1px solid #ff9800 !important;
+}
+
+.days-chip.v-chip--variant-tonal.v-chip--color-info {
+  background-color: #e3f2fd !important;
+  color: #1976d2 !important;
+  border: 1px solid #2196f3 !important;
+}
+
+.days-chip.v-chip--variant-tonal.v-chip--color-error {
+  background-color: #ffebee !important;
+  color: #c62828 !important;
+  border: 1px solid #f44336 !important;
+}
+
+/* Estilos para el texto de descripción */
+.date-range-description {
+  color: #424242 !important;
+  font-weight: 500 !important;
+}
+
+.days-status {
+  color: #616161 !important;
+  font-weight: 500 !important;
+}
+
+/* Asegurar contraste en modo oscuro */
+@media (prefers-color-scheme: dark) {
+  .api-limits-alert {
+    background-color: #1e3a8a !important;
+    border: 1px solid #3b82f6 !important;
+    color: #dbeafe !important;
+  }
+  
+  .api-limits-alert .alert-title {
+    color: #dbeafe !important;
+  }
+  
+  .api-limits-alert .alert-content {
+    color: #bfdbfe !important;
+  }
+  
+  .api-limits-alert .alert-item {
+    color: #bfdbfe !important;
+  }
+  
+  .api-limits-alert .alert-item strong {
+    color: #dbeafe !important;
+  }
+  
+  .date-range-description {
+    color: #e0e0e0 !important;
+  }
+  
+  .days-status {
+    color: #b0b0b0 !important;
   }
 }
 </style>

@@ -4,14 +4,13 @@
 .dockerignore
 **/node_modules/
 api/public
-.dockerignore
 .git
 .gitignore
 node_modules/
-dist/
+
 .history/
 .github/
-Dockerfile
+
 *.md
 azure-deploy/
 infra/
@@ -26,6 +25,4 @@ test-results-docker-ent/
 test-results-docker-org/
 
 .nuxt/
-.output/
 .vscode/
-dist/

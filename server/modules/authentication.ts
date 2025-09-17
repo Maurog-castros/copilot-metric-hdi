@@ -2,26 +2,6 @@ import type { H3Event, EventHandlerRequest } from 'h3'
 
 // https://www.telerik.com/blogs/implementing-sso-vue-nuxt-auth-github-comprehensive-guide
 
-// Mock getUserSession para cuando la autenticación está deshabilitada
-async function getUserSession(event: H3Event<EventHandlerRequest>) {
-    const config = useRuntimeConfig(event);
-    
-    // Si la autenticación GitHub está deshabilitada, devolver sesión mock
-    if (!config.public.usingGithubAuth) {
-        return {
-            secure: {
-                tokens: {
-                    access_token: 'mock-token'
-                },
-                expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 horas desde ahora
-            }
-        };
-    }
-    
-    // Si la autenticación está habilitada pero no hay implementación real, lanzar error
-    throw new Error('GitHub authentication is enabled but getUserSession is not properly configured');
-}
-
 /**
  * Authenticates the user and retrieves GitHub headers.
  * 
@@ -66,22 +46,18 @@ export async function authenticateAndGetGitHubHeaders(event: H3Event<EventHandle
 
 function buildHeaders(token: string): Headers {
     if (!token) {
-        const errorMessage = `Authentication required but not provided.
+        throw new Error(
+            `Authentication required but not provided.
             This can happen when:
             1. First call to the API when client checks if user is authenticated - /api/_auth/session.
             2. When App is not configured correctly:
              - For PAT, set NUXT_GITHUB_TOKEN environment variable.
-             - For GitHub Auth - ensure NUXT_PUBLIC_USING_GITHUB_AUTH is set to true, NUXT_OAUTH_GITHUB_CLIENT_ID and NUXT_OAUTH_GITHUB_CLIENT_SECRET are provided and user is authenticated.
-            3. User session has expired or is invalid.`;
-        
-        console.error('Authentication Error:', errorMessage);
-        throw new Error(errorMessage);
+             - For GitHub Auth - ensure NUXT_PUBLIC_USING_GITHUB_AUTH is set to true, NUXT_OAUTH_GITHUB_CLIENT_ID and NUXT_OAUTH_GITHUB_CLIENT_SECRET are provided and user is authenticated.`);
     }
 
     return new Headers({
         Accept: "application/vnd.github+json",
         "X-GitHub-Api-Version": "2022-11-28",
-        Authorization: `token ${token}`,
-        "User-Agent": "HDI-Copilot-Metrics-Viewer/1.0"
+        Authorization: `token ${token}`
     });
 }

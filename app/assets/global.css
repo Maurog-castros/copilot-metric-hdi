@@ -1,9 +1,3 @@
-/* Importar tema corporativo de HDI */
-@import './hdi-theme.css';
-
-/* Importar estilos corporativos oficiales de HDI */
-@import './hdi-corporate-styles.css';
-
 /* App theme variables */
 :root {
   /* Use Vuetify primary as the single source of truth for accent */

@@ -30,4 +30,3 @@ playwright-logs
 # Test results
 test-results
 results.xml
-.cursor/

@@ -14,22 +14,22 @@
             <v-card-text>
               <v-row>
                 <v-col cols="12" md="8">
-                  <v-select
-v-model="selectedTeams" :items="availableTeams" item-value="slug"
-                    label="Select teams to compare" multiple chips clearable variant="outlined" :menu-props="{
+                  <v-autocomplete
+v-model="selectedTeams" :items="availableTeams" item-value="slug" item-title="name"
+                    label="Search and select teams to compare" multiple chips clearable variant="outlined" :menu-props="{
                       contentClass: 'teams-select-menu',
                       maxHeight: 360,
                       scrim: false,
                       closeOnContentClick: false,
                       offset: 8
-                    }" :hint="`Select multiple teams from your ${scopeType} to compare their metrics`" persistent-hint>
+                    }" :hint="`Type to filter and select multiple teams from your ${scopeType} to compare their metrics`" persistent-hint>
                     <template #item="{ props, item }">
                       <v-list-item v-bind="props" :title="item.raw.name" :subtitle="item.raw.description" />
                     </template>
                     <template #chip="{ props, item }">
                       <v-chip v-bind="props" class="select-chip" :text="item.raw.name" closable />
                     </template>
-                  </v-select>
+                  </v-autocomplete>
                 </v-col>
                 <v-col cols="12" md="4" class="d-flex align-center">
                   <v-btn
@@ -614,7 +614,7 @@ export default defineComponent({
                 let val: unknown = usageDay
                 for (const segment of path) {
                   // Dynamic traversal through nested objects using optional chaining
-                  val = (val as Record<string, unknown>)?.[segment]
+                  val = val?.[segment]
                   if (val == null) break
                 }
                 return (typeof val === 'number') ? val : 0
@@ -641,8 +641,8 @@ export default defineComponent({
           (m.breakdown || []).forEach((b) => {
             if (b.language) {
               if (!langAgg[b.language]) langAgg[b.language] = { suggestions: 0, acceptances: 0 }
-              langAgg[b.language]!.suggestions += b.suggestions_count || 0
-              langAgg[b.language]!.acceptances += b.acceptances_count || 0
+              langAgg[b.language].suggestions += b.suggestions_count || 0
+              langAgg[b.language].acceptances += b.acceptances_count || 0
             }
             if (b.editor) {
               editorAgg[b.editor] = (editorAgg[b.editor] || 0) + (b.active_users || 0)

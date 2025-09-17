@@ -8,7 +8,7 @@ elevation="4" color="white" variant="elevated" class="mx-auto my-4"
                     <div class="text-overline mb-1" style="visibility: hidden;">filler</div>
                     <v-tooltip location="bottom start" open-on-hover open-delay="200" close-delay="200">
                       <template #activator="{ props }">
-                        <div v-bind="props" class="text-h6 mb-1">Total Asignados</div>
+                        <div v-bind="props" class="text-h6 mb-1">Total Assigned  </div>
                       </template>
                       <v-card class="pa-2" style="background-color: #f0f0f0; max-width: 350px;">
                         <span class="text-caption" style="font-size: 10px !important;">This metric represents the total number of Copilot seats assigned {{ isTeamView ? `to team "${currentTeam}"` : 'within the current organization/enterprise' }}.</span>
@@ -30,7 +30,7 @@ elevation="4" color="white" variant="elevated" class="mx-auto my-3"
                     <div class="text-overline mb-1" style="visibility: hidden;">filler</div>
                     <v-tooltip location="bottom start" open-on-hover open-delay="200" close-delay="200">
                       <template #activator="{ props }">
-                        <div v-bind="props" class="text-h6 mb-1">Asignados Pero Nunca Usados</div>
+                        <div v-bind="props" class="text-h6 mb-1">Assigned But Never Used</div>
                       </template>
                       <v-card class="pa-2" style="background-color: #f0f0f0; max-width: 350px;">
                         <span class="text-caption" style="font-size: 10px !important;">This metric shows seats that were assigned but never used {{ isTeamView ? `within team "${currentTeam}"` : 'within the current organization/enterprise' }}. The assigned timestamp is also displayed in the chart.</span>
@@ -49,7 +49,7 @@ elevation="4" color="white" variant="elevated" class="mx-auto my-3"
                     <div class="text-overline mb-1" style="visibility: hidden;">filler</div>
                     <v-tooltip location="bottom start" open-on-hover open-delay="200" close-delay="200">
                       <template #activator="{ props }">
-                        <div v-bind="props" class="text-h6 mb-1">Sin Actividad en los Últimos 7 Días</div>
+                        <div v-bind="props" class="text-h6 mb-1">No Activity in the Last 7 days </div>
                       </template>
                       <v-card class="pa-2" style="background-color: #f0f0f0; max-width: 350px;">
                         <span class="text-caption" style="font-size: 10px !important;">Never used seats or seats used, but with no activity in the past 7 days.</span>
@@ -68,7 +68,7 @@ elevation="4" color="white" variant="elevated" class="mx-auto my-3"
                     <div class="text-overline mb-1" style="visibility: hidden;">filler</div>
                     <v-tooltip location="bottom start" open-on-hover open-delay="200" close-delay="200">
                       <template #activator="{ props }">
-                        <div v-bind="props" class="text-h6 mb-1">Sin Actividad en los Últimos 30 Días</div>
+                        <div v-bind="props" class="text-h6 mb-1">No Activity in the Last 30 days </div>
                       </template>
                       <v-card class="pa-2" style="background-color: #f0f0f0; max-width: 350px;">
                         <span class="text-caption" style="font-size: 10px !important;">This metric represents seats with no activity in the last 30 days, including those never used.</span>
@@ -87,7 +87,7 @@ elevation="4" color="white" variant="elevated" class="mx-auto my-3"
         <v-main class="p-1" style="min-height: 300px;">
             <v-container style="min-height: 300px;" class="px-4 elevation-2">
                 <br>
-                <h2>Todos los asientos asignados</h2>
+                <h2>All assigned seats </h2>
                 <br>
             <v-data-table :headers="headers" :items="totalSeats" :items-per-page="10" class="elevation-2">
                 <template #item="{ item, index }">

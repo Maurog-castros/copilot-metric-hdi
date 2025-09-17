@@ -9,8 +9,8 @@ export const useDynamicConfig = () => {
       loading.value = true
       error.value = null
       
-      // Cargar configuración desde archivo JSON estático
-      const data = await $fetch('/config.json')
+      // Cargar configuración desde endpoint de API
+      const data = await $fetch('/api/config')
       config.value = data
     } catch (err) {
       error.value = err

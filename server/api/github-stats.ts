@@ -15,8 +15,8 @@ interface GitHubStats {
   ideChatModels: any[];
   dotcomChatModels: any[];
   dotcomPRModels: any[];
-  agentModeChartData: any;
-  modelUsageChartData: any;
+  agentModeChartData: any[];
+  modelUsageChartData: any[];
 }
 
 export default defineEventHandler(async (event) => {

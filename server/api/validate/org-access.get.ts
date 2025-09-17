@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Accept': 'application/vnd.github.v3+json',
-        'User-Agent': 'Copilot-Metrics-Viewer'
+        'User-Agent': 'Copilot-Metrics-Viewer-HDI'
       }
     })
 
@@ -50,7 +50,7 @@ export default defineEventHandler(async (event) => {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Accept': 'application/vnd.github.v3+json',
-          'User-Agent': 'Copilot-Metrics-Viewer'
+          'User-Agent': 'Copilot-Metrics-Viewer-HDI'
         }
       })
 
