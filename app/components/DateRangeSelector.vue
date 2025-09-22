@@ -3,42 +3,47 @@
     <v-card-title class="text-h6 pa-4 pb-2">
       <div class="d-flex align-center">
         <v-icon start size="20" color="success" class="mr-2">mdi-calendar-range</v-icon>
-        Filtro de Rango de Fechas
-        <v-chip 
-          color="info" 
-          variant="tonal" 
-          size="small" 
-          class="ml-3"
-          @click="showLimitsInfo = !showLimitsInfo"
+  Filtro de Rango de Fechas
+        <button
+          class="important-info-button ml-3"
+          type="button"
+          @click="toggleInfoPanel"
         >
-          <v-icon start size="16">mdi-information</v-icon>
-          Límites API
-        </v-chip>
+          <v-icon size="16" class="mr-1">mdi-information</v-icon>
+          Leer
+        </button>
       </div>
     </v-card-title>
 
-    <!-- Información sobre límites de la API -->
-    <v-expand-transition>
-      <div v-show="showLimitsInfo" class="px-4 mb-4">
-        <v-alert 
-          type="info" 
-          variant="tonal" 
-          density="compact"
-          class="mb-2 api-limits-alert"
-          color="info"
-        >
-          <template #title>
-            <strong class="alert-title">Límites de GitHub Copilot API:</strong>
-          </template>
-          <div class="mt-2 mb-0 alert-content">
-            <div class="alert-item">📅 <strong>Máximo:</strong> 100 días de rango histórico</div>
-            <div class="alert-item">🚫 <strong>No permite:</strong> Fechas futuras</div>
-            <div class="alert-item">📊 <strong>Recomendado:</strong> Últimos 28 días</div>
-            <div class="alert-item">⚠️ <strong>Histórico:</strong> Datos limitados antes de 2022</div>
+
+    <div v-if="showInfoPanel" class="info-panel">
+      <div class="info-content">
+        <div class="info-item">
+          <v-icon size="16" class="info-icon">mdi-calendar-range</v-icon>
+          <span class="info-text">
+            <strong>Máximo:</strong> 100 días de rango histórico
+          </span>
+        </div>
+        <div class="info-item">
+          <v-icon size="16" class="info-icon">mdi-calendar-remove</v-icon>
+          <span class="info-text">
+            <strong>No permite:</strong> Fechas futuras
+          </span>
+        </div>
+        <div class="info-item">
+          <v-icon size="16" class="info-icon">mdi-calendar-check</v-icon>
+          <span class="info-text">
+            <strong>Recomendado:</strong> Últimos 28 días
+          </span>
+        </div>
+        <div class="info-item">
+          <v-icon size="16" class="info-icon">mdi-calendar-clock</v-icon>
+          <span class="info-text">
+            <strong>Histórico:</strong> Datos limitados antes de 2022
+          </span>
           </div>
-        </v-alert>
       </div>
-    </v-expand-transition>
+    </div>
 
     <v-card-text class="pa-4 pt-0">
       <v-row align="end" class="g-0">
@@ -114,9 +119,9 @@
     <client-only>
       <v-expand-transition>
         <div v-show="validationResult && (!validationResult.isValid || validationResult.warnings.length > 0)">
-          <v-alert 
-            :type="validationResult?.isValid ? 'warning' : 'error'" 
-            variant="tonal" 
+          <v-alert
+            :type="validationResult?.isValid ? 'warning' : 'error'"
+            variant="tonal"
             density="compact"
             class="mt-3"
           >
@@ -134,9 +139,9 @@
               </div>
             </div>
             <div v-if="validationResult && validationResult.adjustedDates" class="mt-2">
-              <v-btn 
-                size="small" 
-                color="primary" 
+              <v-btn
+                size="small"
+                color="primary"
                 variant="outlined"
                 @click="applyAdjustedDates"
               >
@@ -147,23 +152,19 @@
         </div>
       </v-expand-transition>
     </client-only>
-    
+
     <v-card-text class="pt-2">
-      <span class="text-caption text-medium-emphasis date-range-description">
-        {{ dateRangeText }}
-      </span>
-      <div v-if="daysDifference > 0" class="mt-1 days-info">
-        <v-chip 
-          :color="getDaysChipColor()" 
-          variant="tonal" 
-          size="small"
-          class="days-chip"
-        >
-          {{ daysDifference }} días
-        </v-chip>
-        <span class="text-caption text-medium-emphasis ml-2 days-status">
-          {{ getDaysStatusText() }}
+      <div class="date-range-description-container">
+        <span class="text-caption text-medium-emphasis date-range-description">
+          {{ dateRangeText }}
         </span>
+
+        <div v-if="daysDifference > 0" class="mt-3 days-warning" :class="getDaysInfoClass()">
+          <v-icon size="16" class="warning-icon">{{ getWarningIcon() }}</v-icon>
+          <span class="warning-text">
+            {{ getDaysStatusText() }}
+          </span>
+        </div>
       </div>
     </v-card-text>
   </v-card>
@@ -171,9 +172,9 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
-import { 
-  validateGitHubCopilotDateRange, 
-  getDefaultDateRange, 
+import {
+  validateGitHubCopilotDateRange,
+  getDefaultDateRange,
   getMaxAllowedDateRange,
   type DateValidationResult,
   type DateRange,
@@ -186,9 +187,9 @@ interface Props {
 }
 
 interface Emits {
-  (e: 'date-range-changed', value: { 
-    since?: string; 
-    until?: string; 
+  (e: 'date-range-changed', value: {
+    since?: string;
+    until?: string;
     description: string;
     excludeHolidays?: boolean;
   }): void
@@ -204,12 +205,12 @@ const emit = defineEmits<Emits>()
 const { isHydrated, isClient } = useClientHydration()
 
 // Estado del componente
-const showLimitsInfo = ref(false)
 const fromDate = ref('')
 const toDate = ref('')
 const excludeHolidays = ref(false)
 const validationResult = ref<DateValidationResult | null>(null)
 const validationErrors = ref({ from: '', to: '' })
+const showInfoPanel = ref(false)
 
 // Calcular fechas por defecto solo en el cliente
 onMounted(() => {
@@ -225,7 +226,7 @@ onMounted(() => {
 // Computed properties
 const daysDifference = computed(() => {
   if (!fromDate.value || !toDate.value) return 0
-  
+
   const from = new Date(fromDate.value + 'T00:00:00.000Z')
   const to = new Date(toDate.value + 'T00:00:00.000Z')
   const diffTime = to.getTime() - from.getTime()
@@ -238,19 +239,19 @@ const isDateRangeValid = computed(() => {
 
 const dateRangeText = computed(() => {
   if (!fromDate.value || !toDate.value) {
-    return 'Selecciona un rango de fechas'
+  return 'Selecciona un rango de fechas'
   }
-  
+
   const from = new Date(fromDate.value + 'T00:00:00.000Z')
   const to = new Date(toDate.value + 'T00:00:00.000Z')
   const withoutHolidays = excludeHolidays.value ? ' (excluyendo feriados)' : ''
 
   if (daysDifference.value === 1) {
-    return `Para ${formatDateForDisplay(from)}${withoutHolidays}`
+  return `Para ${formatDateForDisplay(from)}${withoutHolidays}`
   } else if (daysDifference.value <= 28 && isLast28Days()) {
-    return `Durante los últimos 28 días${withoutHolidays}`
+  return `Durante los últimos 28 días${withoutHolidays}`
   } else {
-    return `Desde ${formatDateForDisplay(from)} hasta ${formatDateForDisplay(to)} (${daysDifference.value} días)${withoutHolidays}`
+  return `Desde ${formatDateForDisplay(from)} hasta ${formatDateForDisplay(to)} (${daysDifference.value} días)${withoutHolidays}`
   }
 })
 
@@ -264,13 +265,13 @@ function formatDateForDisplay(date: Date): string {
 
 function isLast28Days(): boolean {
   if (!fromDate.value || !toDate.value) return false
-  
+
   const today = new Date()
   const expectedFromDate = new Date(today.getTime() - 27 * 24 * 60 * 60 * 1000)
-  
+
   const from = new Date(fromDate.value + 'T00:00:00.000Z')
   const to = new Date(toDate.value + 'T00:00:00.000Z')
-  
+
   return (
     from.toDateString() === expectedFromDate.toDateString() &&
     to.toDateString() === today.toDateString()
@@ -296,10 +297,29 @@ function getDaysChipColor(): string {
 }
 
 function getDaysStatusText(): string {
-  if (daysDifference.value <= 28) return 'Rango óptimo'
+  if (daysDifference.value <= 28) return 'Rango recomendado'
   if (daysDifference.value <= 60) return 'Rango aceptable'
-  if (daysDifference.value <= 100) return 'Rango máximo permitido'
-  return 'Rango excede límites'
+  if (daysDifference.value <= 100) return 'Rango máximo'
+  return '❌ Excede límites'
+}
+
+function getDaysInfoClass(): string {
+  if (daysDifference.value <= 28) return 'range-optimal'
+  if (daysDifference.value <= 60) return 'range-acceptable'
+  if (daysDifference.value <= 100) return 'range-maximum'
+  return 'range-exceeded'
+}
+
+function getWarningIcon(): string {
+  if (daysDifference.value <= 28) return 'mdi-check-circle'
+  if (daysDifference.value <= 60) return 'mdi-alert-circle'
+  if (daysDifference.value <= 100) return 'mdi-information'
+  return 'mdi-alert'
+}
+
+// Función para toggle del panel de información
+function toggleInfoPanel() {
+  showInfoPanel.value = !showInfoPanel.value
 }
 
 // Funciones de acción
@@ -316,8 +336,8 @@ function validateCurrentDateRange() {
 
   // Validar con modo estricto para mostrar errores
   validationResult.value = validateGitHubCopilotDateRange(
-    fromDate.value, 
-    toDate.value, 
+    fromDate.value,
+    toDate.value,
     { strictMode: true }
   )
 
@@ -342,6 +362,7 @@ function resetToDefault() {
   toDate.value = defaultRange.until
   excludeHolidays.value = false
   validateCurrentDateRange()
+  applyDateRange()
 }
 
 function setMaxRange() {
@@ -349,6 +370,7 @@ function setMaxRange() {
   fromDate.value = maxRange.since
   toDate.value = maxRange.until
   validateCurrentDateRange()
+  applyDateRange()
 }
 
 function applyAdjustedDates() {
@@ -363,11 +385,11 @@ function applyDateRange() {
   if (!fromDate.value || !toDate.value) {
     return
   }
-  
+
   // Validar antes de aplicar
   const validation = validateGitHubCopilotDateRange(
-    fromDate.value, 
-    toDate.value, 
+    fromDate.value,
+    toDate.value,
     { strictMode: false } // Modo no estricto para permitir ajustes
   )
 
@@ -542,12 +564,12 @@ onMounted(() => {
     flex-direction: column;
     align-items: center;
   }
-  
+
   .button-group .v-btn {
     margin: 4px 0 !important;
     min-width: 200px;
   }
-  
+
   .date-range-card-server .col-3,
   .date-range-card-server .col-2,
   .date-range-card-server .col-4 {
@@ -564,46 +586,192 @@ onMounted(() => {
   }
 }
 
-/* Estilos específicos para resolver problemas de contraste */
-.api-limits-alert {
-  background-color: #e3f2fd !important;
-  border: 1px solid #2196f3 !important;
-  color: #0d47a1 !important;
-  margin: 8px 0 !important;
-  padding: 12px !important;
-  border-radius: 8px !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+/* Estilos para el panel de información estático */
+.info-panel {
+  margin: 0 16px 16px 16px;
+  padding: 16px 20px;
+  background: white;
+  border: 2px solid var(--hdi-primary);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(101, 165, 24, 0.1);
 }
 
-.api-limits-alert .alert-title {
-  color: #0d47a1 !important;
-  font-weight: 600 !important;
-  font-size: 1rem !important;
+.info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.api-limits-alert .alert-content {
-  color: #1565c0 !important;
-  line-height: 1.6 !important;
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.api-limits-alert .alert-item {
-  color: #1565c0 !important;
-  margin-bottom: 6px !important;
-  font-size: 0.9rem !important;
-  display: flex !important;
-  align-items: flex-start !important;
+.info-icon {
+  color: var(--hdi-primary);
+  flex-shrink: 0;
 }
 
-.api-limits-alert .alert-item strong {
-  color: #0d47a1 !important;
-  font-weight: 600 !important;
-  margin-right: 4px !important;
+.info-text {
+  font-size: 14px !important;
+  color: #000000;
+  line-height: 1.4;
+  flex: 1;
 }
 
-/* Estilos para el chip de días */
-.days-chip {
-  font-weight: 600 !important;
-  text-transform: none !important;
+.info-text strong {
+  color: #000000;
+  font-weight: 700;
+}
+
+/* Modo oscuro para el panel */
+@media (prefers-color-scheme: dark) {
+  .info-panel {
+    background: #ffffff; /* Fondo blanco también en modo oscuro */
+    border: 2px solid var(--hdi-primary);
+  }
+
+  .info-icon {
+    color: var(--hdi-primary);
+  }
+
+  .info-text {
+    color: #000000; /* Texto negro para máxima legibilidad */
+  }
+
+  .info-text strong {
+    color: #000000;
+  }
+}
+
+.dark-mode .info-panel {
+  background: #ffffff; /* Mantener blanco cuando el usuario activa modo oscuro manual */
+  border: 2px solid var(--hdi-primary);
+}
+
+.dark-mode .info-icon {
+  color: var(--hdi-primary);
+}
+
+.dark-mode .info-text {
+  color: #000000;
+}
+
+.dark-mode .info-text strong {
+  color: #000000;
+}
+
+/* Estilos específicos para el botón "Leer Importante" */
+.important-info-button {
+  background: linear-gradient(135deg, var(--hdi-primary) 0%, var(--hdi-secondary) 100%);
+  color: white !important;
+  border: 2px solid var(--hdi-secondary);
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(101, 165, 24, 0.2);
+  min-height: 32px;
+  line-height: 1;
+}
+
+.important-info-button:hover {
+  background: linear-gradient(135deg, var(--hdi-secondary) 0%, #004d1a 100%);
+  border-color: #004d1a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(101, 165, 24, 0.3);
+}
+
+.important-info-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(101, 165, 24, 0.2);
+}
+
+.important-info-button .v-icon {
+  color: white !important;
+  margin-right: 4px;
+}
+
+.important-info-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(101, 165, 24, 0.3);
+}
+
+/* Estilos para la advertencia de días */
+.days-warning {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  border-left: 4px solid;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.warning-icon {
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+
+.warning-text {
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+/* Estilos dinámicos según el estado del rango */
+.days-warning.range-optimal {
+  background: rgba(40, 167, 69, 0.1);
+  border-left-color: #28a745;
+  color: #155724;
+}
+
+.days-warning.range-optimal .warning-icon {
+  color: #28a745;
+}
+
+.days-warning.range-optimal .warning-text {
+  color: #155724 !important;
+}
+
+.days-warning.range-acceptable {
+  background: rgba(255, 193, 7, 0.1);
+  border-left-color: #ffc107;
+  color: #856404;
+}
+
+.days-warning.range-acceptable .warning-icon {
+  color: #ffc107;
+}
+
+.days-warning.range-maximum {
+  background: rgba(23, 162, 184, 0.1);
+  border-left-color: #17a2b8;
+  color: #0c5460;
+}
+
+.days-warning.range-maximum .warning-icon {
+  color: #17a2b8;
+}
+
+.days-warning.range-exceeded {
+  background: rgba(220, 53, 69, 0.1);
+  border-left-color: #dc3545;
+  color: #721c24;
+}
+
+.days-warning.range-exceeded .warning-icon {
+  color: #dc3545;
 }
 
 .days-chip.v-chip--variant-tonal.v-chip--color-success {
@@ -630,10 +798,24 @@ onMounted(() => {
   border: 1px solid #f44336 !important;
 }
 
+/* Estilos para el contenedor de descripción */
+.date-range-description-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 /* Estilos para el texto de descripción */
 .date-range-description {
-  color: #424242 !important;
-  font-weight: 500 !important;
+  color: #212121 !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  line-height: 1.4;
+}
+
+/* Estilo más específico para sobrescribir Vuetify */
+.text-caption.text-medium-emphasis.date-range-description {
+  color: #212121 !important;
 }
 
 .days-status {
@@ -641,36 +823,167 @@ onMounted(() => {
   font-weight: 500 !important;
 }
 
-/* Asegurar contraste en modo oscuro */
+/* Estilos para modo oscuro automático */
 @media (prefers-color-scheme: dark) {
-  .api-limits-alert {
-    background-color: #1e3a8a !important;
-    border: 1px solid #3b82f6 !important;
-    color: #dbeafe !important;
+  .important-info-button {
+    background: linear-gradient(135deg, var(--hdi-primary) 0%, var(--hdi-secondary) 100%);
+    border-color: var(--hdi-secondary);
+    color: white !important;
   }
-  
-  .api-limits-alert .alert-title {
-    color: #dbeafe !important;
+
+  .important-info-button:hover {
+    background: linear-gradient(135deg, var(--hdi-secondary) 0%, #004d1a 100%);
+    border-color: #004d1a;
   }
-  
-  .api-limits-alert .alert-content {
-    color: #bfdbfe !important;
+
+  .important-info-button .v-icon {
+    color: white !important;
   }
-  
-  .api-limits-alert .alert-item {
-    color: #bfdbfe !important;
+
+  .days-warning {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(4px);
   }
-  
-  .api-limits-alert .alert-item strong {
-    color: #dbeafe !important;
+
+  .days-warning.range-optimal {
+    background: rgba(40, 167, 69, 0.2);
+    color: #90ee90;
   }
-  
+
+  .days-warning.range-acceptable {
+    background: rgba(255, 193, 7, 0.2);
+    color: #ffeb3b;
+  }
+
+  .days-warning.range-maximum {
+    background: rgba(23, 162, 184, 0.2);
+    color: #4fc3f7;
+  }
+
+  .days-warning.range-exceeded {
+    background: rgba(220, 53, 69, 0.2);
+    color: #f48fb1;
+  }
+
+  .tooltip-content {
+    background: linear-gradient(135deg, #1a2e1a 0%, #0f1f0f 100%);
+    border: 3px solid var(--hdi-primary);
+  }
+
+  .tooltip-title {
+    color: #ffffff;
+  }
+
+  .tooltip-header .v-icon {
+    color: var(--hdi-primary);
+  }
+
+  .tooltip-item {
+    background: rgba(255, 255, 255, 0.1);
+    border-left: 3px solid var(--hdi-primary);
+  }
+
+  .tooltip-text {
+    color: #ffffff;
+  }
+
+  .tooltip-text strong {
+    color: #ffffff;
+  }
+
+  .info-tooltip::after {
+    border-top-color: var(--hdi-primary);
+  }
+
   .date-range-description {
-    color: #e0e0e0 !important;
+    color: #000000 !important;
   }
-  
+
+  .text-caption.text-medium-emphasis.date-range-description {
+    color: #000000 !important;
+  }
+
   .days-status {
     color: #b0b0b0 !important;
   }
+}
+
+/* Estilos para modo oscuro manual (clase dark-mode) */
+.dark-mode .important-info-button {
+  background: linear-gradient(135deg, var(--hdi-primary) 0%, var(--hdi-secondary) 100%);
+  border-color: var(--hdi-secondary);
+  color: white !important;
+}
+
+.dark-mode .important-info-button:hover {
+  background: linear-gradient(135deg, var(--hdi-secondary) 0%, #004d1a 100%);
+  border-color: #004d1a;
+}
+
+.dark-mode .important-info-button .v-icon {
+  color: white !important;
+}
+
+.dark-mode .days-warning {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+}
+
+.dark-mode .days-warning.range-optimal {
+  background: rgba(40, 167, 69, 0.2);
+  color: #90ee90;
+}
+
+.dark-mode .days-warning.range-acceptable {
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffeb3b;
+}
+
+.dark-mode .days-warning.range-maximum {
+  background: rgba(23, 162, 184, 0.2);
+  color: #4fc3f7;
+}
+
+.dark-mode .days-warning.range-exceeded {
+  background: rgba(220, 53, 69, 0.2);
+  color: #f48fb1;
+}
+
+.dark-mode .tooltip-content {
+  background: linear-gradient(135deg, #1a2e1a 0%, #0f1f0f 100%);
+  border: 3px solid var(--hdi-primary);
+}
+
+.dark-mode .tooltip-title {
+  color: #ffffff;
+}
+
+.dark-mode .tooltip-header .v-icon {
+  color: var(--hdi-primary);
+}
+
+.dark-mode .tooltip-item {
+  background: rgba(255, 255, 255, 0.1);
+  border-left: 3px solid var(--hdi-primary);
+}
+
+.dark-mode .tooltip-text {
+  color: #ffffff;
+}
+
+.dark-mode .tooltip-text strong {
+  color: #ffffff;
+}
+
+.dark-mode .info-tooltip::after {
+  border-top-color: var(--hdi-primary);
+}
+
+.dark-mode .date-range-description {
+  color: #000000 !important;
+}
+
+.dark-mode .text-caption.text-medium-emphasis.date-range-description {
+  color: #000000 !important;
 }
 </style>

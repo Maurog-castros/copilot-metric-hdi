@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-main>
+    <v-main class="main-content">
       <slot />
     </v-main>
     <v-footer class="bg-indigo-lighten-1 text-center d-flex flex-column fixed-footer">
@@ -29,5 +29,28 @@ useHead({
 .fixed-footer {
   height: 50px;
   max-height: 50px;
+}
+
+.main-content {
+  padding: 0 16px 16px 16px;
+}
+
+/* Responsive margins */
+@media (min-width: 600px) {
+  .main-content {
+    padding: 0 24px 24px 24px;
+  }
+}
+
+@media (min-width: 960px) {
+  .main-content {
+    padding: 0 32px 32px 32px;
+  }
+}
+
+@media (min-width: 1264px) {
+  .main-content {
+    padding: 0 48px 48px 48px;
+  }
 }
 </style>

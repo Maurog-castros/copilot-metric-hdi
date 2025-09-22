@@ -1,6 +1,6 @@
 /**
  * GitHub Copilot API Date Validation Utilities
- * 
+ *
  * GitHub Copilot Metrics API tiene las siguientes restricciones:
  * - Máximo 100 días de rango histórico
  * - No permite fechas futuras
@@ -67,6 +67,7 @@ export function validateGitHubCopilotDateRange(
     // Validar orden de fechas
     if (sinceDate > untilDate) {
       errors.push('La fecha de inicio debe ser anterior a la fecha de fin');
+      errors.push('Since date must be before until date');
       return { isValid: false, errors, warnings };
     }
 
@@ -124,13 +125,13 @@ export function validateGitHubCopilotDateRange(
     if (!strictMode && diffDays > GITHUB_COPILOT_LIMITS.MAX_DAYS_RANGE) {
       const adjustedSinceDate = new Date(untilDate);
       adjustedSinceDate.setDate(untilDate.getDate() - GITHUB_COPILOT_LIMITS.MAX_DAYS_RANGE + 1);
-      
+
       const adjustedSince = adjustedSinceDate.toISOString().split('T')[0];
       adjustedDates = {
         since: adjustedSince || '',
         until: until
       };
-      
+
       warnings.push(`Rango ajustado automáticamente a ${GITHUB_COPILOT_LIMITS.MAX_DAYS_RANGE} días para cumplir con los límites de la API`);
     }
 
@@ -153,10 +154,10 @@ export function validateGitHubCopilotDateRange(
 export function getDefaultDateRange(): DateRange {
   const today = new Date();
   const defaultFromDate = new Date(today.getTime() - 27 * 24 * 60 * 60 * 1000);
-  
+
   const since = defaultFromDate.toISOString().split('T')[0] || '';
   const until = today.toISOString().split('T')[0] || '';
-  
+
   return {
     since,
     until
@@ -169,10 +170,10 @@ export function getDefaultDateRange(): DateRange {
 export function getMaxAllowedDateRange(): DateRange {
   const today = new Date();
   const maxFromDate = new Date(today.getTime() - 99 * 24 * 60 * 60 * 1000);
-  
+
   const since = maxFromDate.toISOString().split('T')[0] || '';
   const until = today.toISOString().split('T')[0] || '';
-  
+
   return {
     since,
     until
@@ -202,10 +203,10 @@ export function isDateWithinAPILimits(date: string): boolean {
     const targetDate = new Date(date + 'T00:00:00.000Z');
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     const maxHistoricalDate = new Date(today);
     maxHistoricalDate.setDate(today.getDate() - GITHUB_COPILOT_LIMITS.MAX_HISTORICAL_DAYS);
-    
+
     return targetDate >= maxHistoricalDate && targetDate <= today;
   } catch {
     return false;

@@ -20,9 +20,9 @@
       <div v-show="isAuthenticated" class="user-info">
         <v-menu>
           <template #activator="{ props }">
-            <v-chip 
-              color="success" 
-              variant="elevated" 
+            <v-chip
+              color="success"
+              variant="elevated"
               class="user-chip"
               v-bind="props"
               clickable
@@ -56,29 +56,41 @@
       </div>
 
       <template #extension>
-        <v-tabs 
-          v-model="tab" 
-          align-tabs="title"
-          class="tabs-container"
-        >
-          <v-tab 
-            v-for="item in tabItems" 
-            :key="item" 
-            :value="item"
-            class="tab-item"
+        <div class="d-flex align-center">
+          <v-tabs
+            v-model="tab"
+            align-tabs="title"
+            class="tabs-container"
           >
-            <div class="tab-content">
-              <v-icon class="tab-icon mr-2">{{ getTabIcon(item) }}</v-icon>
-              <span class="tab-text">{{ item }}</span>
-            </div>
-          </v-tab>
-        </v-tabs>
+            <v-tab
+              v-for="item in tabItems"
+              :key="item"
+              :value="item"
+              class="tab-item"
+            >
+              <div class="tab-content">
+                <v-icon class="tab-icon mr-2">{{ getTabIcon(item) }}</v-icon>
+                <span class="tab-text">{{ item }}</span>
+              </div>
+            </v-tab>
+          </v-tabs>
+
+          <!-- Botón de modo oscuro -->
+          <v-btn
+            :icon="isDarkMode ? 'mdi-weather-sunny' : 'mdi-weather-night'"
+            variant="text"
+            size="small"
+            class="dark-mode-toggle ml-4"
+            @click="toggleDarkMode"
+            :title="isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
+          />
+        </div>
       </template>
     </v-toolbar>
 
     <!-- Date Range Selector - Hidden for seats tab -->
-    <DateRangeSelector 
-      v-show="tab !== 'seat analysis' && !signInRequired" 
+    <DateRangeSelector
+      v-show="tab !== 'seat analysis' && !signInRequired"
       :loading="isLoading"
       @date-range-changed="handleDateRangeChange" />
 
@@ -112,21 +124,21 @@
       <v-window v-show="(metricsReady && metrics.length) || (seatsReady && tab === 'seat analysis')" v-model="tab">
         <v-window-item v-for="item in tabItems" :key="item" :value="item">
           <v-card flat>
-            <MetricsViewer v-if="item === getDisplayTabName(itemName)" :metrics="metrics" :date-range-description="dateRangeDescription" />
-            <TeamsComponent v-if="item === 'teams'" :date-range-description="dateRangeDescription" :date-range="dateRange" />
+            <MetricsViewer v-if="item === getDisplayTabName(itemName) || item === 'Organización' || item === 'Empresa' || item === 'Equipo'" :metrics="metrics" :date-range-description="dateRangeDescription" />
+            <TeamsComponent v-if="item === 'Equipos'" :date-range-description="dateRangeDescription" :date-range="dateRange" />
             <BreakdownComponent
-v-if="item === 'languages'" :metrics="metrics" :breakdown-key="'language'"
+              v-if="item === 'Lenguajes'" :metrics="metrics" :breakdown-key="'language'"
               :date-range-description="dateRangeDescription" />
             <BreakdownComponent
-v-if="item === 'editors'" :metrics="metrics" :breakdown-key="'editor'"
+              v-if="item === 'Editores'" :metrics="metrics" :breakdown-key="'editor'"
               :date-range-description="dateRangeDescription" />
             <CopilotChatViewer
-v-if="item === 'copilot chat'" :metrics="metrics"
+              v-if="item === 'Chat Copilot'" :metrics="metrics"
               :date-range-description="dateRangeDescription" />
-            <AgentModeViewer v-if="item === 'github.com'" :original-metrics="originalMetrics" :date-range="dateRange" :date-range-description="dateRangeDescription" />
-            <SeatsAnalysisViewer v-if="item === 'seat analysis'" :seats="seats" />
+            <AgentModeViewer v-if="item === 'GitHub.com'" :original-metrics="originalMetrics" :date-range="dateRange" :date-range-description="dateRangeDescription" />
+            <SeatsAnalysisViewer v-if="item === 'Análisis de asientos'" :seats="seats" />
             <ApiResponse
-v-if="item === 'api response'" :metrics="metrics" :original-metrics="originalMetrics"
+              v-if="item === 'Respuesta API'" :metrics="metrics" :original-metrics="originalMetrics"
               :seats="seats" />
           </v-card>
         </v-window-item>
@@ -177,6 +189,17 @@ export default defineNuxtComponent({
       this.seats = [];
       clear();
     },
+    toggleDarkMode() {
+      this.isDarkMode = !this.isDarkMode;
+      // Aplicar la clase dark-mode al body
+      if (this.isDarkMode) {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('darkMode', 'true');
+      } else {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('darkMode', 'false');
+      }
+    },
     getDisplayTabName(itemName: string): string {
       // Transform scope names to display names for tabs
       switch (itemName) {
@@ -216,9 +239,9 @@ export default defineNuxtComponent({
           return 'mdi-chart-line';
       }
     },
-    async handleDateRangeChange(newDateRange: { 
-      since?: string; 
-      until?: string; 
+    async handleDateRangeChange(newDateRange: {
+      since?: string;
+      until?: string;
       description: string;
       excludeHolidays?: boolean;
     }) {
@@ -247,12 +270,12 @@ export default defineNuxtComponent({
 
       try {
         const options = Options.fromRoute(this.route, this.dateRange.since, this.dateRange.until);
-        
+
         // Add holiday options if they're set
         if (this.holidayOptions?.excludeHolidays) {
           options.excludeHolidays = this.holidayOptions.excludeHolidays;
         }
-        
+
         const params = options.toParams();
 
         const queryString = new URLSearchParams(params).toString();
@@ -301,7 +324,7 @@ export default defineNuxtComponent({
 
   data() {
     return {
-      tabItems: ['languages', 'editors', 'copilot chat', 'github.com', 'seat analysis', 'api response'],
+  tabItems: ['Lenguajes', 'Editores', 'Chat Copilot', 'GitHub.com', 'Análisis de asientos', 'Respuesta API'],
       tab: null,
       dateRangeDescription: 'Over the last 28 days',
       isLoading: false,
@@ -314,20 +337,37 @@ export default defineNuxtComponent({
       config: null as ReturnType<typeof useRuntimeConfig> | null,
       holidayOptions: {
         excludeHolidays: false,
-      }
+      },
+      isDarkMode: false
     }
   },
   created() {
-    this.tabItems.unshift(this.getDisplayTabName(this.itemName));
-    
+    // Traducción de la pestaña principal
+    const tabNameMap: Record<string, string> = {
+      organization: 'Organización',
+      enterprise: 'Empresa',
+      team: 'Equipo',
+      'team-organization': 'Equipo',
+      'team-enterprise': 'Equipo'
+    };
+    const displayTab = tabNameMap[this.getDisplayTabName(this.itemName)] || this.getDisplayTabName(this.itemName);
+    this.tabItems.unshift(displayTab);
+
     // Add teams tab for organization and enterprise scopes to allow team comparison
     if (this.itemName === 'organization' || this.itemName === 'enterprise') {
-      this.tabItems.splice(1, 0, 'teams'); // Insert after the first tab
+      this.tabItems.splice(1, 0, 'Equipos'); // Insertar después de la pestaña principal
     }
-    
+
     this.config = useRuntimeConfig();
   },
   async mounted() {
+    // Cargar estado del modo oscuro desde localStorage
+    const savedDarkMode = localStorage.getItem('darkMode');
+    if (savedDarkMode === 'true') {
+      this.isDarkMode = true;
+      document.body.classList.add('dark-mode');
+    }
+
     // Load initial data
     try {
 
@@ -434,6 +474,21 @@ export default defineNuxtComponent({
   background-color: #444d56;
 }
 
+/* Estilos para el botón de modo oscuro */
+.dark-mode-toggle {
+  color: white !important;
+  transition: all 0.3s ease;
+}
+
+.dark-mode-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  transform: scale(1.1);
+}
+
+.dark-mode-toggle .v-icon {
+  color: white !important;
+}
+
 .github-login-button v-icon {
   margin-right: 8px;
 }
@@ -530,11 +585,11 @@ export default defineNuxtComponent({
   .main-title {
     font-size: 1.2rem;
   }
-  
+
   .subtitle {
     font-size: 0.8rem;
   }
-  
+
   .hdi-logo-svg {
     height: 32px;
   }

@@ -198,3 +198,257 @@
   .v-data-table .v-data-table-footer .v-btn:hover { 
     background-color: var(--app-accent-weak) !important; 
   }
+
+  /* Estilos para modo oscuro */
+  .dark-mode {
+    background-color: #121212 !important;
+    color: #ffffff !important;
+  }
+
+  .dark-mode .v-application {
+    background-color: #121212 !important;
+    color: #ffffff !important;
+  }
+
+  .dark-mode .v-card {
+    background-color: #1e1e1e !important;
+    color: #ffffff !important;
+    border-left: 4px solid var(--hdi-primary) !important;
+  }
+
+  .dark-mode .v-card-title {
+    color: #ffffff !important;
+  }
+
+  .dark-mode .v-toolbar {
+    background: linear-gradient(135deg, var(--hdi-primary) 0%, var(--hdi-secondary) 100%) !important;
+  }
+
+  .dark-mode .v-toolbar-title {
+    color: white !important;
+  }
+
+  .dark-mode .v-text-field .v-field {
+    background-color: #2d2d2d !important;
+    color: #ffffff !important;
+  }
+
+  .dark-mode .v-text-field .v-field__input {
+    color: #ffffff !important;
+  }
+
+  .dark-mode .v-text-field .v-label {
+    color: #b0b0b0 !important;
+  }
+
+  .dark-mode .v-btn {
+    background-color: #2d2d2d !important;
+    color: #ffffff !important;
+  }
+
+  .dark-mode .v-btn:hover {
+    background-color: #3d3d3d !important;
+  }
+
+  .dark-mode .v-btn--color-primary {
+    background-color: var(--hdi-primary) !important;
+    color: white !important;
+  }
+
+  .dark-mode .v-btn--color-primary:hover {
+    background-color: var(--hdi-secondary) !important;
+  }
+
+  .dark-mode .v-tab {
+    color: #b0b0b0 !important;
+  }
+
+  .dark-mode .v-tab--selected {
+    color: var(--hdi-primary) !important;
+  }
+
+  .dark-mode .v-tab--selected .v-tab__slider {
+    background-color: var(--hdi-primary) !important;
+  }
+
+  .dark-mode .v-data-table {
+    background-color: #1e1e1e !important;
+    color: #ffffff !important;
+  }
+
+  .dark-mode .v-data-table th {
+    background-color: var(--hdi-primary) !important;
+    color: white !important;
+  }
+
+  .dark-mode .v-data-table tr {
+    background-color: #1e1e1e !important;
+    color: #ffffff !important;
+  }
+
+  .dark-mode .v-data-table tr:nth-child(even) {
+    background-color: #2d2d2d !important;
+  }
+
+  .dark-mode .v-alert {
+    background-color: #2d2d2d !important;
+    color: #ffffff !important;
+  }
+
+  .dark-mode .v-alert--type-info {
+    background-color: #1e3a8a !important;
+    color: #dbeafe !important;
+  }
+
+  .dark-mode .v-alert--type-warning {
+    background-color: #92400e !important;
+    color: #fef3c7 !important;
+  }
+
+  .dark-mode .v-alert--type-error {
+    background-color: #dc2626 !important;
+    color: #fecaca !important;
+  }
+
+  .dark-mode .v-chip {
+    background-color: #2d2d2d !important;
+    color: #ffffff !important;
+  }
+
+  .dark-mode .v-chip--variant-tonal.v-chip--color-info {
+    background-color: #1e3a8a !important;
+    color: #dbeafe !important;
+    border: 1px solid #3b82f6 !important;
+  }
+
+  .dark-mode .v-chip--variant-tonal.v-chip--color-success {
+    background-color: #14532d !important;
+    color: #bbf7d0 !important;
+    border: 1px solid #22c55e !important;
+  }
+
+  .dark-mode .v-chip--variant-tonal.v-chip--color-warning {
+    background-color: #92400e !important;
+    color: #fef3c7 !important;
+    border: 1px solid #f59e0b !important;
+  }
+
+  .dark-mode .v-chip--variant-tonal.v-chip--color-error {
+    background-color: #7f1d1d !important;
+    color: #fecaca !important;
+    border: 1px solid #ef4444 !important;
+  }
+
+  .dark-mode .v-progress-linear {
+    background-color: #2d2d2d !important;
+  }
+
+  .dark-mode .v-progress-linear .v-progress-linear__determinate {
+    background-color: var(--hdi-primary) !important;
+  }
+
+  .dark-mode .v-progress-linear--indeterminate {
+    background-color: var(--hdi-primary) !important;
+  }
+
+  .dark-mode .v-checkbox .v-selection-control__input {
+    color: var(--hdi-primary) !important;
+  }
+
+  .dark-mode .v-checkbox .v-label {
+    color: #ffffff !important;
+  }
+
+  .dark-mode .v-list {
+    background-color: #1e1e1e !important;
+    color: #ffffff !important;
+  }
+
+  .dark-mode .v-list-item {
+    color: #ffffff !important;
+  }
+
+  .dark-mode .v-list-item:hover {
+    background-color: #2d2d2d !important;
+  }
+
+  .dark-mode .v-menu .v-list {
+    background-color: #1e1e1e !important;
+    color: #ffffff !important;
+  }
+
+  .dark-mode .v-overlay__content {
+    background-color: #1e1e1e !important;
+    color: #ffffff !important;
+  }
+
+  .dark-mode .v-overlay__content .v-list-item {
+    color: #ffffff !important;
+  }
+
+  .dark-mode .v-overlay__content .v-list-item:hover {
+    background-color: #2d2d2d !important;
+  }
+
+  .dark-mode pre {
+    background-color: #1e1e1e !important;
+    color: #ffffff !important;
+    border: 1px solid #2d2d2d !important;
+  }
+
+  .dark-mode .copy-message {
+    background-color: #2d2d2d !important;
+    color: #ffffff !important;
+  }
+
+  .dark-mode .copy-message.error {
+    background-color: #7f1d1d !important;
+    color: #fecaca !important;
+  }
+
+  /* Estilos específicos para el botón "Leer Importante" */
+  .important-info-button {
+    background: linear-gradient(135deg, var(--hdi-primary) 0%, var(--hdi-secondary) 100%);
+    color: white !important;
+    border: 2px solid var(--hdi-secondary);
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(101, 165, 24, 0.2);
+    min-height: 32px;
+    line-height: 1;
+  }
+
+  .important-info-button:hover {
+    background: linear-gradient(135deg, var(--hdi-secondary) 0%, #004d1a 100%);
+    border-color: #004d1a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(101, 165, 24, 0.3);
+  }
+
+  .important-info-button .v-icon {
+    color: white !important;
+    margin-right: 4px;
+  }
+
+  .dark-mode .important-info-button {
+    background: linear-gradient(135deg, var(--hdi-primary) 0%, var(--hdi-secondary) 100%);
+    border-color: var(--hdi-secondary);
+    color: white !important;
+  }
+
+  .dark-mode .important-info-button:hover {
+    background: linear-gradient(135deg, var(--hdi-secondary) 0%, #004d1a 100%);
+    border-color: #004d1a;
+  }
+
+  .dark-mode .important-info-button .v-icon {
+    color: white !important;
+  }

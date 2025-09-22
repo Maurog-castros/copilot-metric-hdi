@@ -336,7 +336,7 @@ export class Options {
                 throw new Error(`Invalid scope: ${this.scope}`);
         }
     }
-    
+
     /**
      * Get the Teams API URL based on scope and configuration
      */
@@ -432,41 +432,35 @@ export class Options {
         const errors: string[] = [];
         const warnings: string[] = [];
 
-        // Validate scope-specific requirements
-        if (this.scope === 'team-organization' || this.scope === 'team-enterprise') {
-            if (!this.githubTeam) {
-                errors.push('GitHub team must be set for team scopes');
-            }
+        // Validar requerimientos de scope
+        if ((this.scope === 'team-organization' || this.scope === 'team-enterprise') && !this.githubTeam) {
+            errors.push('GitHub team must be set for team scopes');
+        }
+        if ((this.scope === 'organization' || this.scope === 'team-organization') && !this.githubOrg) {
+            errors.push('GitHub organization must be set for organization scopes');
+        }
+        if ((this.scope === 'enterprise' || this.scope === 'team-enterprise') && !this.githubEnt) {
+            errors.push('GitHub enterprise must be set for enterprise scopes');
         }
 
-        if (this.scope === 'organization' || this.scope === 'team-organization') {
-            if (!this.githubOrg) {
-                errors.push('GitHub organization must be set for organization scopes');
-            }
-        }
-
-        if (this.scope === 'enterprise' || this.scope === 'team-enterprise') {
-            if (!this.githubEnt) {
-                errors.push('GitHub enterprise must be set for enterprise scopes');
-            }
-        }
-
-        // Validate date range using GitHub Copilot API limits
+        // Validar rango de fechas solo si ambos están presentes
         if (this.since && this.until) {
             const dateValidation = validateGitHubCopilotDateRange(this.since, this.until, {
                 strictMode: true,
                 allowFutureDates: false
             });
-
             if (!dateValidation.isValid) {
                 errors.push(...dateValidation.errors);
             }
-
             if (dateValidation.warnings.length > 0) {
                 warnings.push(...dateValidation.warnings);
             }
+        } else {
+            // Si falta alguna fecha, es inválido
+            errors.push('Both since and until dates are required');
         }
 
+        // Solo es válido si no hay errores
         return {
             isValid: errors.length === 0,
             errors,
