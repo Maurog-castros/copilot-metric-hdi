@@ -4,7 +4,7 @@
       <slot />
     </v-main>
     <v-footer class="bg-indigo-lighten-1 text-center d-flex flex-column fixed-footer">
-      <div class="px-20 py-2 text-center w-100 d-flex align-center justify-center">
+      <div class="text-center w-100 d-flex align-center justify-center">
         <span>
           2025 — Copilot Metrics Viewer — 3.0 - Fork powered by DevOps HDI
         </span>
