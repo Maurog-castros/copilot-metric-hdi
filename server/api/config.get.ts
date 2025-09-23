@@ -1,5 +1,5 @@
 // Endpoint para servir configuración dinámica
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async (_event) => {
   // Leer variables de entorno del servidor
   const config = {
     githubToken: process.env.NUXT_GITHUB_TOKEN || '',

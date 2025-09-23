@@ -47,20 +47,20 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     logger.error('Error validating GitHub token:', error)
     
-    if (error.status === 401) {
+    if ((error as any).status === 401) {
       return {
         valid: false,
         error: 'Token inválido o expirado'
       }
-    } else if (error.status === 403) {
+    } else if ((error as any).status === 403) {
       return {
         valid: false,
         error: 'Token sin permisos suficientes'
       }
-    } else if (error.status === 429) {
+    } else if ((error as any).status === 429) {
       return {
         valid: false,
         error: 'Límite de rate limit excedido'
@@ -68,7 +68,7 @@ export default defineEventHandler(async (event) => {
     } else {
       return {
         valid: false,
-        error: `Error de conexión: ${error.message || 'Error desconocido'}`
+        error: `Error de conexión: ${(error as any).message || 'Error desconocido'}`
       }
     }
   }

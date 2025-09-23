@@ -12,17 +12,12 @@ export default defineNitroPlugin((nitro) => {
       }
     } : {};
 
-    const proxyAgent = new ProxyAgent({
-      uri: process.env.HTTP_PROXY,
-      ...tlsOptions
-    });
+    const proxyAgent = new ProxyAgent(process.env.HTTP_PROXY!);
     
     setGlobalDispatcher(proxyAgent);
     
     const fetchWithProxy = ofetch.create({
-      dispatcher: proxyAgent,
-      httpsProxy: process.env.HTTP_PROXY,
-      proxy: false
+      dispatcher: proxyAgent
     });
 
     nitro.hooks.hook('request', (context) => {

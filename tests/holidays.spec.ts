@@ -37,9 +37,11 @@ describe('date-holidays integration', () => {
     
     expect(Array.isArray(result)).toBe(true)
     expect(result).toBeTruthy()
-    expect(result.length).toBeGreaterThan(0)
-    expect(result[0]).toHaveProperty('name')
-    expect(result[0].name).toContain('Christmas')
+    if (Array.isArray(result)) {
+      expect(result.length).toBeGreaterThan(0)
+      expect(result[0]).toHaveProperty('name')
+      expect(result[0]?.name).toContain('Christmas')
+    }
   })
 
   test('isHoliday returns false for non-holiday', () => {

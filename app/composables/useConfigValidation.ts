@@ -1,21 +1,28 @@
 // Composable para validar la configuración del servidor
+import type { 
+  ServerConfigValidation, 
+  GitHubTokenValidation, 
+  OrgAccessValidation, 
+  ValidationError 
+} from '~/types/validation'
+
 export const useConfigValidation = () => {
-  const serverConfig = ref(null)
-  const githubToken = ref(null)
-  const orgAccess = ref(null)
+  const serverConfig = ref<ServerConfigValidation | null>(null)
+  const githubToken = ref<GitHubTokenValidation | null>(null)
+  const orgAccess = ref<OrgAccessValidation | null>(null)
   const loading = ref(false)
-  const error = ref(null)
+  const error = ref<ValidationError | null>(null)
 
   const validateServerConfig = async () => {
     try {
       loading.value = true
       error.value = null
       
-      const response = await $fetch('/api/validate/server-config')
+      const response = await $fetch<ServerConfigValidation>('/api/validate/server-config')
       serverConfig.value = response
       return response
     } catch (err) {
-      error.value = err
+      error.value = err as ValidationError
       console.error('Error validating server config:', err)
       throw err
     } finally {
@@ -28,11 +35,11 @@ export const useConfigValidation = () => {
       loading.value = true
       error.value = null
       
-      const response = await $fetch('/api/validate/github-token')
+      const response = await $fetch<GitHubTokenValidation>('/api/validate/github-token')
       githubToken.value = response
       return response
     } catch (err) {
-      error.value = err
+      error.value = err as ValidationError
       console.error('Error validating GitHub token:', err)
       throw err
     } finally {
@@ -45,11 +52,11 @@ export const useConfigValidation = () => {
       loading.value = true
       error.value = null
       
-      const response = await $fetch('/api/validate/org-access')
+      const response = await $fetch<OrgAccessValidation>('/api/validate/org-access')
       orgAccess.value = response
       return response
     } catch (err) {
-      error.value = err
+      error.value = err as ValidationError
       console.error('Error validating organization access:', err)
       throw err
     } finally {
@@ -75,7 +82,7 @@ export const useConfigValidation = () => {
         allValid: serverResult.valid && tokenResult.valid && orgResult.valid
       }
     } catch (err) {
-      error.value = err
+      error.value = err as ValidationError
       console.error('Error validating all config:', err)
       throw err
     } finally {

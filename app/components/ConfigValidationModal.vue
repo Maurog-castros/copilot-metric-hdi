@@ -93,7 +93,7 @@
           </v-card>
 
           <v-alert v-if="error" type="error" class="mt-4">
-            Error durante la validación: {{ error.message }}
+            Error durante la validación: {{ error?.message || 'Error desconocido' }}
           </v-alert>
         </div>
       </v-card-text>

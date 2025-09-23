@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 // Stub Nuxt/h3 helper used at module import time so defineEventHandler calls in
 // the middleware file don't throw during tests.
-;(globalThis as any).defineEventHandler = (handler: any) => handler
+;(globalThis as any).defineEventHandler = (handler: unknown) => handler
 
 // Mock the authentication module so the middleware uses the mocked function.
 vi.mock('../server/modules/authentication', () => ({
@@ -12,8 +12,8 @@ vi.mock('../server/modules/authentication', () => ({
 // We'll import the mocked auth module and the middleware dynamically after the
 // defineEventHandler stub is installed (static imports are hoisted and would
 // otherwise attempt to evaluate the middleware file too early).
-let authenticateAndGetGitHubHeaders: any
-let middlewareHandler: any
+let authenticateAndGetGitHubHeaders: unknown
+let middlewareHandler: unknown
 
 beforeEach(async () => {
   vi.clearAllMocks()

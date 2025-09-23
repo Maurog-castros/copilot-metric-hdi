@@ -47,7 +47,7 @@ describe('Metrics Cache Key Generation', () => {
   })
 
   it('should handle undefined query values', () => {
-    const createCacheKey = (path: string, query: Record<string, any>) => {
+    const createCacheKey = (path: string, query: Record<string, unknown>) => {
       // Filter out undefined values before creating query string
       const filteredQuery = Object.fromEntries(
         Object.entries(query).filter(([_, value]) => value !== undefined)

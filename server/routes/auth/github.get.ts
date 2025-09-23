@@ -1,4 +1,4 @@
-import type { FetchError } from 'ofetch';
+// import type { FetchError } from 'ofetch';
 
 export default defineOAuthGitHubEventHandler({
   config: {
@@ -43,21 +43,21 @@ export default defineOAuthGitHubEventHandler({
 
         if (organizations.length === 0) {
           console.error('No organizations found for the user.');
-          return sendRedirect(event, '/copilot-metrics-viewer-hdi/?error=No organizations found for the user.');
+          return sendRedirect(event, '/?error=No organizations found for the user.');
         }
 
-        return sendRedirect(event, `/copilot-metrics-viewer-hdi/orgs/${organizations[0]}`);
+        return sendRedirect(event, `/orgs/${organizations[0]}`);
       }
-      catch (error: any) {
+      catch (error: unknown) {
         logger.error('Error fetching installations:', error);
       }
     }
 
-    return sendRedirect(event, '/copilot-metrics-viewer-hdi/')
+    return sendRedirect(event, '/')
   },
   // Optional, will return a json error and 401 status code by default
   onError(event, error) {
     console.error('GitHub OAuth error:', error)
-    return sendRedirect(event, '/copilot-metrics-viewer-hdi/')
+    return sendRedirect(event, '/')
   },
 })

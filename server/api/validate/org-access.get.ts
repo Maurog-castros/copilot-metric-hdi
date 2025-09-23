@@ -57,13 +57,13 @@ export default defineEventHandler(async (event) => {
       if (copilotResponse && copilotResponse.seats) {
         copilotSeats = copilotResponse.seats.length
       }
-    } catch (copilotError: any) {
-      if (copilotError.status === 404) {
+    } catch (copilotError: unknown) {
+      if ((copilotError as any).status === 404) {
         return {
           valid: false,
           error: `La organización ${orgName} no tiene Copilot habilitado`
         }
-      } else if (copilotError.status === 403) {
+      } else if ((copilotError as any).status === 403) {
         return {
           valid: false,
           error: `Sin permisos para acceder a datos de Copilot de ${orgName}`
@@ -71,7 +71,7 @@ export default defineEventHandler(async (event) => {
       } else {
         return {
           valid: false,
-          error: `Error accediendo a datos de Copilot: ${copilotError.message}`
+          error: `Error accediendo a datos de Copilot: ${(copilotError as any).message}`
         }
       }
     }
@@ -84,20 +84,20 @@ export default defineEventHandler(async (event) => {
       message: `Acceso confirmado a ${orgResponse.login}`
     }
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     logger.error('Error validating organization access:', error)
     
-    if (error.status === 404) {
+    if ((error as any).status === 404) {
       return {
         valid: false,
         error: 'Organización no encontrada'
       }
-    } else if (error.status === 403) {
+    } else if ((error as any).status === 403) {
       return {
         valid: false,
         error: 'Sin permisos para acceder a la organización'
       }
-    } else if (error.status === 401) {
+    } else if ((error as any).status === 401) {
       return {
         valid: false,
         error: 'Token inválido o expirado'
@@ -105,7 +105,7 @@ export default defineEventHandler(async (event) => {
     } else {
       return {
         valid: false,
-        error: `Error de conexión: ${error.message || 'Error desconocido'}`
+        error: `Error de conexión: ${(error as any).message || 'Error desconocido'}`
       }
     }
   }
