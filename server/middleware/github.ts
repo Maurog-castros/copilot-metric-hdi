@@ -30,6 +30,18 @@ export default defineEventHandler(async (event) => {
         return;
     }
 
+    // If GitHub OAuth is not enabled, use the configured token directly
+    if (!config.public.usingGithubAuth) {
+        if (config.githubToken) {
+            event.context.headers = new Headers({
+                Accept: "application/vnd.github+json",
+                "X-GitHub-Api-Version": "2022-11-28",
+                Authorization: `token ${config.githubToken}`
+            });
+            return;
+        }
+    }
+
     // get github headers - this also authenticates the user 
     // and throws exception when authentication is required but not provided
     event.context.headers = await authenticateAndGetGitHubHeaders(event);
