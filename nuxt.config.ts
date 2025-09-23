@@ -85,27 +85,27 @@ export default defineNuxtConfig({
     }
   },
   runtimeConfig: {
-    githubToken: '',
+    githubToken: process.env.NUXT_GITHUB_TOKEN || '',
     session: {
       // set to 6h - same as the GitHub token
       maxAge: 60 * 60 * 6,
-      password: '',
+      password: process.env.NUXT_SESSION_PASSWORD || '',
     },
     oauth: {
       github: {
-        clientId: '',
-        clientSecret: ''
+        clientId: process.env.NUXT_OAUTH_GITHUB_CLIENT_ID || '',
+        clientSecret: process.env.NUXT_OAUTH_GITHUB_CLIENT_SECRET || ''
       }
     },
     public: {
-      isDataMocked: false,  // can be overridden by NUXT_PUBLIC_IS_DATA_MOCKED environment variable
-      scope: 'organization',  // can be overridden by NUXT_PUBLIC_SCOPE environment variable
-      githubOrg: '',
-      githubEnt: '',
-      githubTeam: '',
-      usingGithubAuth: false,
+      isDataMocked: process.env.NUXT_PUBLIC_IS_DATA_MOCKED === 'true',
+      scope: process.env.NUXT_PUBLIC_SCOPE || 'organization',
+      githubOrg: process.env.NUXT_PUBLIC_GITHUB_ORG || '',
+      githubEnt: process.env.NUXT_PUBLIC_GITHUB_ENT || '',
+      githubTeam: process.env.NUXT_PUBLIC_GITHUB_TEAM || '',
+      usingGithubAuth: process.env.NUXT_PUBLIC_USING_GITHUB_AUTH === 'true',
       version,
-      isPublicApp: false
+      isPublicApp: process.env.NUXT_PUBLIC_IS_PUBLIC_APP === 'true'
     }
   }
 })
