@@ -108,9 +108,10 @@
     <AuthState>
       <template #default="{ loggedIn }">
         <div v-show="signInRequired" class="github-login-container">
-          <NuxtLink v-if="!loggedIn && signInRequired" to="/auth/github" class="github-login-button"> <v-icon
-              left>mdi-github</v-icon>
-            Sign in with GitHub</NuxtLink>
+          <a v-if="!loggedIn && signInRequired" href="auth/github" class="github-login-button">
+            <v-icon left>mdi-github</v-icon>
+            Sign in with GitHub
+          </a>
         </div>
       </template>
       <template #placeholder>
