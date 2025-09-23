@@ -108,7 +108,7 @@
     <AuthState>
       <template #default="{ loggedIn }">
         <div v-show="signInRequired" class="github-login-container">
-          <a v-if="!loggedIn && signInRequired" href="auth/github" class="github-login-button">
+          <a v-if="!loggedIn && signInRequired" :href="loginHref" class="github-login-button">
             <v-icon left>mdi-github</v-icon>
             Sign in with GitHub
           </a>
@@ -393,6 +393,16 @@ export default defineNuxtComponent({
   },
   async setup() {
     const { loggedIn, user } = useUserSession()
+    // Sidebase nuxt-auth es opcional: intentamos importar de forma perezosa
+    let auth: any | undefined
+    try {
+      // @ts-ignore
+      const mod = await import('#auth')
+      // @ts-ignore
+      auth = (mod.useAuth && mod.useAuth()) || undefined
+    } catch (_) {
+      auth = undefined
+    }
     const config = useRuntimeConfig();
     const showLogoutButton = computed(() => config.public.usingGithubAuth && loggedIn.value);
     const mockedDataMessage = computed(() => config.public.isDataMocked ? 'Using mock data - see README if unintended' : '');
@@ -420,6 +430,12 @@ export default defineNuxtComponent({
       })
     });
 
+    const loginHref = computed(() => {
+      // Si sidebase/nuxt-auth está presente, usa su ruta estándar; de lo contrario, fallback
+      const base = useRouter().options.history.base || '/'
+      return auth ? `${base}api/auth/signin/github` : `${base}auth/github`
+    })
+
     return {
       showLogoutButton,
       mockedDataMessage,
@@ -432,6 +448,7 @@ export default defineNuxtComponent({
       dateRange,
       isLoading,
       route,
+      loginHref,
     };
   },
 })

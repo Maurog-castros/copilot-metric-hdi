@@ -41,7 +41,7 @@ export default defineNuxtConfig({
     '@/assets/global.css',
     '@/assets/hdi-theme.css'
   ],
-  modules: ['@nuxt/fonts', 'vuetify-nuxt-module', '@nuxt/eslint', 'nuxt-auth-utils'],
+  modules: ['@nuxt/fonts', 'vuetify-nuxt-module', '@nuxt/eslint', 'nuxt-auth-utils', '@sidebase/nuxt-auth'],
 
   vuetify: {
     moduleOptions: {
@@ -85,6 +85,13 @@ export default defineNuxtConfig({
     }
   },
   runtimeConfig: {
+    auth: {
+      secret: process.env.NUXT_AUTH_SECRET || process.env.AUTH_SECRET || ''
+    },
+    github: {
+      clientId: process.env.GITHUB_CLIENT_ID || process.env.NUXT_OAUTH_GITHUB_CLIENT_ID || '',
+      clientSecret: process.env.GITHUB_CLIENT_SECRET || process.env.NUXT_OAUTH_GITHUB_CLIENT_SECRET || ''
+    },
     githubToken: process.env.NUXT_GITHUB_TOKEN || '',
     session: {
       // set to 6h - same as the GitHub token
