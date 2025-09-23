@@ -51,6 +51,7 @@ describe('Metrics Cache Key Generation', () => {
       // Filter out undefined values before creating query string
       const filteredQuery = Object.fromEntries(
         Object.entries(query).filter(([_, value]) => value !== undefined)
+          .map(([key, value]) => [key, String(value)])
       )
       const queryString = new URLSearchParams(filteredQuery).toString()
       return queryString ? `${path}?${queryString}` : path

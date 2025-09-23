@@ -34,10 +34,10 @@ describe('CSV Export Utils', () => {
 
     const csvOutput = convertMetricsToCSV([metrics]);
     
-    // Verify headers
-    expect(csvOutput).toContain('Date,Total Suggestions,Total Acceptances');
-    expect(csvOutput).toContain('Total Lines Suggested,Total Lines Accepted');
-    expect(csvOutput).toContain('Acceptance Rate by Count (%),Acceptance Rate by Lines (%)');
+    // Verify headers (español)
+    expect(csvOutput).toContain('Fecha,Sugerencias totales,Aceptaciones totales');
+    expect(csvOutput).toContain('Líneas sugeridas (total),Líneas aceptadas (total)');
+    expect(csvOutput).toContain('Tasa de aceptación por cantidad (%),Tasa de aceptación por líneas (%)');
     
     // Verify data
     expect(csvOutput).toContain('2024-01-01,100,80,500,400,5,10,15,3');
@@ -97,11 +97,11 @@ describe('CSV Export Utils', () => {
 
     const csvOutput = convertCopilotMetricsToCSV([copilotMetrics]);
     
-    // Verify headers
-    expect(csvOutput).toContain('Date,Total Active Users,Total Engaged Users,Feature Type');
-    expect(csvOutput).toContain('Editor Name,Model Name,Is Custom Model');
-    expect(csvOutput).toContain('Language Name,Feature Engaged Users');
-    expect(csvOutput).toContain('Suggestions Count,Acceptances Count');
+    // Verify headers (español)
+    expect(csvOutput).toContain('Fecha,Usuarios activos (total),Usuarios involucrados (total),Tipo de funcionalidad');
+    expect(csvOutput).toContain('Editor,Modelo,¿Modelo personalizado?');
+    expect(csvOutput).toContain('Lenguaje,Usuarios involucrados (funcionalidad)');
+    expect(csvOutput).toContain('Sugerencias,Aceptaciones');
     
     // Verify data
     expect(csvOutput).toContain('2024-01-01,10,8,IDE Code Completions');

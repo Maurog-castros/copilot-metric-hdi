@@ -31,17 +31,17 @@ export class DashboardPage {
         this.page = page;
 
         this.acceptanceRateByCountLabel = page.getByText(
-            "Acceptance Rate (by count)"
+            "Tasa de aceptación (por cantidad)"
         );
         this.totalCountOfSuggestionsLabel = page.getByText(
-            "Total count of Suggestions (Prompts)"
+            "Cantidad total de sugerencias (prompts)"
         );
         this.totalLinesSuggestedLabel = page.getByRole("heading", {
             name: "Total Lines Suggested | Total",
         });
         this.totalLinesSuggestedValue = page
             .locator(".v-card-item")
-            .filter({ has: page.getByText("Total Lines of code Suggested") })
+            .filter({ has: page.getByText("Líneas de código sugeridas (total)") })
             .locator(".text-h4");
         this.toolbarTitle = page.locator(".toolbar-title");
 

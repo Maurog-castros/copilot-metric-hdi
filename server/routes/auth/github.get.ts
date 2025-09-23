@@ -10,7 +10,7 @@ export default defineOAuthGitHubEventHandler({
 
     // Compute app base from current callback/login path to avoid hardcoding prefixes
     // e.g. /copilot-metrics-viewer-hdi/auth/github/callback -> /copilot-metrics-viewer-hdi/
-    const { pathname } = useRequestURL(event)
+    const { pathname } = getRequestURL(event)
     const base = (pathname.includes('/auth/') ? pathname.split('/auth/')[0] : '/') + (pathname.endsWith('/') ? '' : '/')
 
     await setUserSession(event, {
@@ -63,7 +63,7 @@ export default defineOAuthGitHubEventHandler({
   // Optional, will return a json error and 401 status code by default
   onError(event, error) {
     console.error('GitHub OAuth error:', error)
-    const { pathname } = useRequestURL(event)
+    const { pathname } = getRequestURL(event)
     const base = (pathname.includes('/auth/') ? pathname.split('/auth/')[0] : '/') + (pathname.endsWith('/') ? '' : '/')
     return sendRedirect(event, base)
   },

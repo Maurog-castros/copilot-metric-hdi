@@ -9,10 +9,10 @@
             <div class="spacing-25"/>
             <v-tooltip location="bottom start" open-on-hover open-delay="200" close-delay="200">
               <template #activator="{ props }">
-                <div v-bind="props" class="text-h6 mb-1">Acceptance Rate (by count)</div>
+                <div v-bind="props" class="text-h6 mb-1">Tasa de aceptación (por cantidad)</div>
               </template>
               <v-card class="pa-2" style="background-color: #f0f0f0; max-width: 350px;">
-                  <span class="text-caption" style="font-size: 10px !important;">This metric represents the ratio of accepted suggestions to the total suggestions made by GitHub Copilot. This rate indicates the relevance and usefulness of Copilot's suggestions based on the number of prompts, but should be used with caution as developers use Copilot in various ways (research, confirm, verify, etc., not always "inject").</span>
+                  <span class="text-caption" style="font-size: 10px !important;">Esta métrica representa la proporción de sugerencias aceptadas respecto del total de sugerencias realizadas por GitHub Copilot. Indica la relevancia y utilidad de las sugerencias según el número de prompts, pero debe usarse con cautela ya que los desarrolladores utilizan Copilot de distintas maneras (investigar, confirmar, verificar, etc., no siempre "inserción").</span>
               </v-card>
             </v-tooltip>
             <div class="text-caption">
@@ -29,10 +29,10 @@
             <div class="spacing-10"/>
             <v-tooltip location="bottom start" open-on-hover open-delay="200" close-delay="200">
               <template #activator="{ props }">
-                <div v-bind="props" class="text-h6 mb-1">Total count of Suggestions (Prompts)</div>
+                <div v-bind="props" class="text-h6 mb-1">Cantidad total de sugerencias (prompts)</div>
               </template>
               <v-card class="pa-2" style="background-color: #f0f0f0; max-width: 350px;">
-                <span class="text-caption" style="font-size: 10px !important;">This chart illustrates the total number of code suggestions made by GitHub Copilot. It offers a view of the tool's activity and its engagement with users over time.</span>
+                <span class="text-caption" style="font-size: 10px !important;">Este gráfico muestra el número total de sugerencias de código realizadas por GitHub Copilot. Ofrece una vista de la actividad de la herramienta y su interacción con los usuarios en el tiempo.</span>
               </v-card>
             </v-tooltip>
               <div class="text-caption">
@@ -49,10 +49,10 @@
             <div class="tiles-text">
               <v-tooltip location="bottom start" open-on-hover open-delay="200" close-delay="200">
                 <template #activator="{ props }">
-                  <div v-bind="props" class="text-h6 mb-1">Acceptance Rate (by lines)</div>
+                  <div v-bind="props" class="text-h6 mb-1">Tasa de aceptación (por líneas)</div>
                 </template>
                 <v-card class="pa-2" style="background-color: #f0f0f0; max-width: 350px;">
-                  <span class="text-caption" style="font-size: 10px !important;">This metric represents the ratio of accepted lines of code to the total lines suggested by GitHub Copilot. This rate indicates the relevance and usefulness of Copilot's suggestions based on the volume of code, but should be used with caution as developers use Copilot in various ways (research, confirm, verify, etc., not always "inject").</span>
+                  <span class="text-caption" style="font-size: 10px !important;">Esta métrica representa la proporción de líneas de código aceptadas respecto del total de líneas sugeridas por GitHub Copilot. Indica la relevancia y utilidad de las sugerencias según el volumen de código, pero debe usarse con cautela ya que los desarrolladores utilizan Copilot de distintas maneras (investigar, confirmar, verificar, etc., no siempre "inserción").</span>
                 </v-card>
               </v-tooltip>
               <div class="text-caption">
@@ -69,10 +69,10 @@
             <div class="spacing-10"/>
             <v-tooltip location="bottom start" open-on-hover open-delay="200" close-delay="200">
               <template #activator="{ props }">
-                <div v-bind="props" class="text-h6 mb-1">Total Lines of code Suggested</div>
+                <div v-bind="props" class="text-h6 mb-1">Líneas de código sugeridas (total)</div>
               </template>
               <v-card class="pa-2" style="background-color: #f0f0f0; max-width: 350px;">
-                <span class="text-caption" style="font-size: 10px !important;">Showcases the total number of lines of code suggested by GitHub Copilot. This gives an idea of the volume of code generation and assistance provided.</span>
+                <span class="text-caption" style="font-size: 10px !important;">Muestra el número total de líneas de código sugeridas por GitHub Copilot. Entrega una idea del volumen de generación de código y asistencia proporcionada.</span>
               </v-card>
             </v-tooltip>
             <div class="text-caption">
@@ -89,50 +89,50 @@
       <v-container style="min-height: 300px;" class="px-4 elevation-2">
       <v-tooltip location="bottom start" open-on-hover open-delay="200" close-delay="200">
         <template #activator="{ props }">
-          <h2 v-bind="props">Acceptance rate by count (%)</h2>
+          <h2 v-bind="props">Tasa de aceptación por cantidad (%)</h2>
         </template>
         <v-card class="pa-2" style="background-color: #f0f0f0; max-width: 350px;">
-          <span class="text-caption" style="font-size: 10px !important;">This metric represents the ratio of accepted suggestions to the total suggestions made by GitHub Copilot. This rate indicates the relevance and usefulness of Copilot's suggestions based on the number of prompts, but should be used with caution as developers use Copilot in various ways (research, confirm, verify, etc., not always "inject").</span>
+          <span class="text-caption" style="font-size: 10px !important;">Esta métrica representa la proporción de sugerencias aceptadas respecto del total de sugerencias realizadas por GitHub Copilot. Debe interpretarse con cautela.</span>
         </v-card>
       </v-tooltip>
       <Bar :data="acceptanceRateByCountChartData" :options="chartOptions" />
 
       <v-tooltip location="bottom start" open-on-hover open-delay="200" close-delay="200">
         <template #activator="{ props }">
-          <h2 v-bind="props" class="mb-1">Total Suggestions Count | Total Acceptances Count</h2>
+          <h2 v-bind="props" class="mb-1">Total de sugerencias | Total de aceptaciones</h2>
         </template>
         <v-card class="pa-2" style="background-color: #f0f0f0; max-width: 350px;">
-          <span class="text-caption" style="font-size: 10px !important;">This visualization focuses on the total number of suggestions accepted by users.</span>
+          <span class="text-caption" style="font-size: 10px !important;">Esta visualización se centra en el número total de sugerencias aceptadas por los usuarios.</span>
         </v-card>
       </v-tooltip>
       <Line :data="totalSuggestionsAndAcceptanceChartData" :options="chartOptions" />
 
       <v-tooltip location="bottom start" open-on-hover open-delay="200" close-delay="200">
         <template #activator="{ props }">
-          <h2 v-bind="props">Acceptance rate by lines (%)</h2>
+          <h2 v-bind="props">Tasa de aceptación por líneas (%)</h2>
         </template>
         <v-card class="pa-2" style="background-color: #f0f0f0; max-width: 350px;">
-          <span class="text-caption" style="font-size: 10px !important;">This metric represents the ratio of accepted lines of code to the total lines suggested by GitHub Copilot. This rate indicates the relevance and usefulness of Copilot's suggestions based on the volume of code, but should be used with caution as developers use Copilot in various ways (research, confirm, verify, etc., not always "inject").</span>
+          <span class="text-caption" style="font-size: 10px !important;">Esta métrica representa la proporción de líneas de código aceptadas respecto del total de líneas sugeridas por GitHub Copilot. Debe interpretarse con cautela.</span>
         </v-card>
       </v-tooltip>
       <Bar :data="acceptanceRateByLinesChartData" :options="chartOptions" />
 
       <v-tooltip location="bottom start" open-on-hover open-delay="200" close-delay="200">
         <template #activator="{ props }">
-          <h2 v-bind="props" class="mb-1">Total Lines Suggested | Total Lines Accepted</h2>
+          <h2 v-bind="props" class="mb-1">Líneas sugeridas | Líneas aceptadas</h2>
         </template>
         <v-card class="pa-2" style="background-color: #f0f0f0; max-width: 350px;">
-          <span class="text-caption" style="font-size: 10px !important;">As the name suggests, the total lines of code accepted by users (full acceptances) offering insights into how much of the suggested code is actually being utilized and incorporated into the codebase.</span>
+          <span class="text-caption" style="font-size: 10px !important;">Muestra las líneas de código sugeridas y aceptadas, para entender cuánto código sugerido se incorpora efectivamente a la base.</span>
         </v-card>
       </v-tooltip>
       <Line :data="chartData" :options="chartOptions" />
 
       <v-tooltip location="bottom start" open-on-hover open-delay="200" close-delay="200">
         <template #activator="{ props }">
-          <h2 v-bind="props" class="mb-1">Total Active Users</h2>
+          <h2 v-bind="props" class="mb-1">Usuarios activos (total)</h2>
         </template>
         <v-card class="pa-2" style="background-color: #f0f0f0; max-width: 350px;">
-          <span class="text-caption" style="font-size: 10px !important;">Represents the number of active users engaging with GitHub Copilot. This helps in understanding the user base growth and adoption rate.</span>
+          <span class="text-caption" style="font-size: 10px !important;">Representa el número de usuarios activos que interactúan con GitHub Copilot. Ayuda a comprender la adopción y crecimiento de la base de usuarios.</span>
         </v-card>
       </v-tooltip>
       <Bar :data="totalActiveUsersChartData" :options="totalActiveUsersChartOptions" />

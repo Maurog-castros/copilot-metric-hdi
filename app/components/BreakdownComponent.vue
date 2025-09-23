@@ -6,7 +6,7 @@
           <v-card-item>
             <div class="tiles-text">
               <div class="spacing-25"/>
-              <div class="text-h6 mb-1">Number of {{ breakdownDisplayNamePlural }}</div>
+              <div class="text-h6 mb-1">Cantidad de {{ breakdownDisplayNamePlural }}</div>
               <div class="text-caption">
                 {{ dateRangeDescription }}
               </div>
@@ -23,7 +23,7 @@
             <v-card>
               <v-card-item class="d-flex justify-center align-center">
                 <div class="spacing-25"/>
-                <div class="text-h6 mb-1">Top 5 {{ breakdownDisplayNamePlural }} by accepted suggestions (prompts)</div>
+                <div class="text-h6 mb-1">Top 5 {{ breakdownDisplayNamePlural }} por sugerencias aceptadas (prompts)</div>
                 <div style="width: 300px; height: 300px;">
                   <Pie :data="breakdownsChartDataTop5AcceptedPrompts" :options="chartOptions" />
                 </div>
@@ -35,7 +35,7 @@
             <v-card>
               <v-card-item class="d-flex justify-center align-center">
                 <div class="spacing-25"/>
-                <div class="text-h6 mb-1">Acceptance Rate (by count) for Top 5 {{ breakdownDisplayNamePlural }}</div>
+                <div class="text-h6 mb-1">Tasa de aceptación (por cantidad) Top 5 {{ breakdownDisplayNamePlural }}</div>
                 <div style="width: 300px; height: 300px;">
                   <Pie :data="breakdownsChartDataTop5AcceptedPromptsByCounts" :options="chartOptions" />
                 </div>
@@ -47,7 +47,7 @@
             <v-card>
               <v-card-item class="d-flex justify-center align-center">
                 <div class="spacing-25"/>
-                <div class="text-h6 mb-1">Acceptance Rate (by code lines) for Top 5 {{ breakdownDisplayNamePlural }}</div>
+                <div class="text-h6 mb-1">Tasa de aceptación (por líneas de código) Top 5 {{ breakdownDisplayNamePlural }}</div>
                 <div style="width: 300px; height: 300px;">
                   <Pie :data="breakdownsChartDataTop5AcceptedPromptsByLines" :options="chartOptions" />
                 </div>
@@ -57,7 +57,7 @@
         </v-row>
 
         <br>
-        <h2>{{ breakdownDisplayNamePlural }} Breakdown </h2>
+        <h2>Desglose por {{ breakdownDisplayNamePlural }} </h2>
         <br>
 
         <v-data-table :headers="headers" :items="breakdownList" class="elevation-2" style="padding-left: 100px; padding-right: 100px;">
@@ -255,13 +255,13 @@ export default defineComponent({
     },
     headers() {
       return [
-        { title: `${this.breakdownDisplayName} Name`, key: 'name' },
-        { title: 'Accepted Prompts', key: 'acceptedPrompts' },
-        { title: 'Suggested Prompts', key: 'suggestedPrompts' },
-        { title: 'Accepted Lines of Code', key: 'acceptedLinesOfCode' },
-        { title: 'Suggested Lines of Code', key: 'suggestedLinesOfCode' },
-        { title: 'Acceptance Rate by Count (%)', key: 'acceptanceRateByCount' },
-        { title: 'Acceptance Rate by Lines (%)', key: 'acceptanceRateByLines' },
+        { title: `Nombre de ${this.breakdownDisplayName}`, key: 'name' },
+        { title: 'Prompts aceptados', key: 'acceptedPrompts' },
+        { title: 'Prompts sugeridos', key: 'suggestedPrompts' },
+        { title: 'Líneas de código aceptadas', key: 'acceptedLinesOfCode' },
+        { title: 'Líneas de código sugeridas', key: 'suggestedLinesOfCode' },
+        { title: 'Tasa de aceptación por cantidad (%)', key: 'acceptanceRateByCount' },
+        { title: 'Tasa de aceptación por líneas (%)', key: 'acceptanceRateByLines' },
       ];
     },
   },

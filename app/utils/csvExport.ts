@@ -13,17 +13,17 @@ export function convertMetricsToCSV(metrics: Metrics[]): string {
 
   // Main metrics headers
   const mainHeaders = [
-    'Date',
-    'Total Suggestions',
-    'Total Acceptances',
-    'Total Lines Suggested',
-    'Total Lines Accepted',
-    'Total Active Users',
-    'Total Chat Acceptances',
-    'Total Chat Turns',
-    'Total Active Chat Users',
-    'Acceptance Rate by Count (%)',
-    'Acceptance Rate by Lines (%)'
+    'Fecha',
+    'Sugerencias totales',
+    'Aceptaciones totales',
+    'Líneas sugeridas (total)',
+    'Líneas aceptadas (total)',
+    'Usuarios activos (total)',
+    'Aceptaciones de chat (total)',
+    'Interacciones de chat (total)',
+    'Usuarios activos de chat (total)',
+    'Tasa de aceptación por cantidad (%)',
+    'Tasa de aceptación por líneas (%)'
   ];
 
   // Create CSV rows for main metrics
@@ -207,25 +207,25 @@ export function convertCopilotMetricsToCSV(metrics: CopilotMetrics[]): string {
 
   // Define headers for flattened CSV
   const headers = [
-    'Date',
-    'Total Active Users',
-    'Total Engaged Users',
-    'Feature Type',
-    'Editor Name',
-    'Model Name',
-    'Is Custom Model',
-    'Custom Model Training Date',
-    'Language Name',
-    'Feature Engaged Users',
-    'Suggestions Count',
-    'Acceptances Count',
-    'Lines Suggested',
-    'Lines Accepted',
+    'Fecha',
+    'Usuarios activos (total)',
+    'Usuarios involucrados (total)',
+    'Tipo de funcionalidad',
+    'Editor',
+    'Modelo',
+    '¿Modelo personalizado?',
+    'Fecha de entrenamiento del modelo',
+    'Lenguaje',
+    'Usuarios involucrados (funcionalidad)',
+    'Sugerencias',
+    'Aceptaciones',
+    'Líneas sugeridas',
+    'Líneas aceptadas',
     'Chats',
-    'Chat Insertion Events',
-    'Chat Copy Events',
-    'PR Summaries Created',
-    'Repository Name'
+    'Eventos de inserción de chat',
+    'Eventos de copia de chat',
+    'Resúmenes de PR creados',
+    'Repositorio'
   ];
 
   // Create CSV rows

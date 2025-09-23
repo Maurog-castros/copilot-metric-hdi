@@ -6,23 +6,23 @@
         <v-col cols="12">
           <v-card class="mb-4">
             <v-card-title class="text-h5">
-              Teams Comparison
+              Comparación de equipos
             </v-card-title>
             <v-card-subtitle>
-              Select teams to compare metrics across your {{ scopeType }}
+              Selecciona equipos para comparar métricas en tu {{ scopeType }}
             </v-card-subtitle>
             <v-card-text>
               <v-row>
                 <v-col cols="12" md="8">
                   <v-autocomplete
 v-model="selectedTeams" :items="availableTeams" item-value="slug" item-title="name"
-                    label="Search and select teams to compare" multiple chips clearable variant="outlined" :menu-props="{
+                    label="Buscar y seleccionar equipos a comparar" multiple chips clearable variant="outlined" :menu-props="{
                       contentClass: 'teams-select-menu',
                       maxHeight: 360,
                       scrim: false,
                       closeOnContentClick: false,
                       offset: 8
-                    }" :hint="`Type to filter and select multiple teams from your ${scopeType} to compare their metrics`" persistent-hint>
+                    }" :hint="`Escribe para filtrar y seleccionar múltiples equipos de tu ${scopeType} y comparar sus métricas`" persistent-hint>
                     <template #item="{ props, item }">
                       <v-list-item v-bind="props" :title="item.raw.name" :subtitle="item.raw.description" />
                     </template>
@@ -35,7 +35,7 @@ v-model="selectedTeams" :items="availableTeams" item-value="slug" item-title="na
                   <v-btn
 v-if="selectedTeams.length > 0" color="primary" variant="outlined" size="small"
                     @click="clearSelection">
-                    Clear All
+                    Limpiar selección
                   </v-btn>
                 </v-col>
               </v-row>
@@ -49,14 +49,14 @@ v-if="selectedTeams.length > 0" color="primary" variant="outlined" size="small"
     <v-container v-if="selectedTeamObjects.length > 0">
       <v-row>
         <v-col cols="12">
-          <v-card class="mb-4">
-            <v-card-title class="text-h6">Selected Teams</v-card-title>
+            <v-card class="mb-4">
+            <v-card-title class="text-h6">Equipos seleccionados</v-card-title>
             <v-card-text>
               <v-chip-group>
                 <v-chip
 v-for="team in selectedTeamObjects" :key="team.slug" :href="getTeamDetailUrl(team.slug)"
                   class="selected-team-chip" target="_blank" link>
-                  {{ team.name }} - View Details
+                  {{ team.name }} - Ver detalles
                   <v-icon end>mdi-open-in-new</v-icon>
                 </v-chip>
               </v-chip-group>
@@ -119,12 +119,10 @@ elevation="4" color="white" variant="elevated" class="mx-auto my-3"
           <!-- Acceptance Rate by Count Chart -->
           <v-tooltip location="bottom start" open-on-hover open-delay="200" close-delay="200">
             <template #activator="{ props }">
-              <h2 v-bind="props" class="mb-1">Acceptance Rate by Count (%)</h2>
+              <h2 v-bind="props" class="mb-1">Tasa de aceptación por cantidad (%)</h2>
             </template>
             <v-card class="pa-2" style="background-color: #f0f0f0; max-width: 350px;">
-              <span class="text-caption" style="font-size: 10px !important;">Comparison of acceptance rates across
-                selected
-                teams over time</span>
+              <span class="text-caption" style="font-size: 10px !important;">Comparación de tasas de aceptación entre los equipos seleccionados a lo largo del tiempo</span>
             </v-card>
           </v-tooltip>
           <LineChart :data="acceptanceRateCountChartData" :options="chartOptions" />
@@ -132,12 +130,10 @@ elevation="4" color="white" variant="elevated" class="mx-auto my-3"
           <!-- Total Suggestions and Acceptances Chart -->
           <v-tooltip location="bottom start" open-on-hover open-delay="200" close-delay="200">
             <template #activator="{ props }">
-              <h2 v-bind="props" class="mb-1">Total Suggestions Count | Total Acceptances Count</h2>
+              <h2 v-bind="props" class="mb-1">Total de sugerencias | Total de aceptaciones</h2>
             </template>
             <v-card class="pa-2" style="background-color: #f0f0f0; max-width: 350px;">
-              <span class="text-caption" style="font-size: 10px !important;">Total suggestions and acceptances count
-                over
-                time for selected teams</span>
+              <span class="text-caption" style="font-size: 10px !important;">Conteo de sugerencias y aceptaciones a lo largo del tiempo para los equipos seleccionados</span>
             </v-card>
           </v-tooltip>
           <LineChart :data="suggestionsAcceptancesChartData" :options="chartOptions" />
@@ -145,11 +141,10 @@ elevation="4" color="white" variant="elevated" class="mx-auto my-3"
           <!-- Acceptance Rate by Lines Chart -->
           <v-tooltip location="bottom start" open-on-hover open-delay="200" close-delay="200">
             <template #activator="{ props }">
-              <h2 v-bind="props" class="mb-1">Acceptance Rate by Lines (%)</h2>
+              <h2 v-bind="props" class="mb-1">Tasa de aceptación por líneas (%)</h2>
             </template>
             <v-card class="pa-2" style="background-color: #f0f0f0; max-width: 350px;">
-              <span class="text-caption" style="font-size: 10px !important;">Comparison of line-based acceptance rates
-                across selected teams</span>
+              <span class="text-caption" style="font-size: 10px !important;">Comparación de tasas de aceptación basadas en líneas entre equipos seleccionados</span>
             </v-card>
           </v-tooltip>
           <LineChart :data="acceptanceRateLinesChartData" :options="chartOptions" />
@@ -157,12 +152,10 @@ elevation="4" color="white" variant="elevated" class="mx-auto my-3"
           <!-- Total Lines Suggested and Accepted Chart -->
           <v-tooltip location="bottom start" open-on-hover open-delay="200" close-delay="200">
             <template #activator="{ props }">
-              <h2 v-bind="props" class="mb-1">Total Lines Suggested | Total Lines Accepted</h2>
+              <h2 v-bind="props" class="mb-1">Líneas sugeridas | Líneas aceptadas</h2>
             </template>
             <v-card class="pa-2" style="background-color: #f0f0f0; max-width: 350px;">
-              <span class="text-caption" style="font-size: 10px !important;">Total lines of code suggested and accepted
-                over
-                time for selected teams</span>
+              <span class="text-caption" style="font-size: 10px !important;">Líneas de código sugeridas y aceptadas en el tiempo para los equipos seleccionados</span>
             </v-card>
           </v-tooltip>
           <LineChart :data="linesSuggestedAcceptedChartData" :options="chartOptions" />
@@ -170,12 +163,10 @@ elevation="4" color="white" variant="elevated" class="mx-auto my-3"
           <!-- Active Users Chart -->
           <v-tooltip location="bottom start" open-on-hover open-delay="200" close-delay="200">
             <template #activator="{ props }">
-              <h2 v-bind="props" class="mb-1">Total Active Users</h2>
+              <h2 v-bind="props" class="mb-1">Usuarios activos (total)</h2>
             </template>
             <v-card class="pa-2" style="background-color: #f0f0f0; max-width: 350px;">
-              <span class="text-caption" style="font-size: 10px !important;">Number of active users over time for
-                selected
-                teams</span>
+              <span class="text-caption" style="font-size: 10px !important;">Número de usuarios activos a lo largo del tiempo para los equipos seleccionados</span>
             </v-card>
           </v-tooltip>
           <LineChart :data="activeUsersChartData" :options="chartOptions" />
@@ -183,46 +174,40 @@ elevation="4" color="white" variant="elevated" class="mx-auto my-3"
           <!-- Feature Usage Charts -->
           <v-tooltip location="bottom start" open-on-hover open-delay="200" close-delay="200">
             <template #activator="{ props }">
-              <h2 v-bind="props" class="mb-1">IDE Code Completions Usage</h2>
+              <h2 v-bind="props" class="mb-1">Uso de autocompletado en IDE</h2>
             </template>
             <v-card class="pa-2" style="background-color: #f0f0f0; max-width: 350px;">
-              <span class="text-caption" style="font-size: 10px !important;">Users with IDE code completions activity
-                across
-                selected teams</span>
+              <span class="text-caption" style="font-size: 10px !important;">Usuarios con actividad de autocompletado de código en IDE entre los equipos seleccionados</span>
             </v-card>
           </v-tooltip>
           <LineChart :data="ideCompletionsChartData" :options="chartOptions" />
 
           <v-tooltip location="bottom start" open-on-hover open-delay="200" close-delay="200">
             <template #activator="{ props }">
-              <h2 v-bind="props" class="mb-1">IDE Chat Usage</h2>
+              <h2 v-bind="props" class="mb-1">Uso de chat en IDE</h2>
             </template>
             <v-card class="pa-2" style="background-color: #f0f0f0; max-width: 350px;">
-              <span class="text-caption" style="font-size: 10px !important;">Users with IDE chat activity across
-                selected
-                teams</span>
+              <span class="text-caption" style="font-size: 10px !important;">Usuarios con actividad de chat en IDE entre los equipos seleccionados</span>
             </v-card>
           </v-tooltip>
           <LineChart :data="ideChatChartData" :options="chartOptions" />
 
           <v-tooltip location="bottom start" open-on-hover open-delay="200" close-delay="200">
             <template #activator="{ props }">
-              <h2 v-bind="props" class="mb-1">GitHub.com Chat Usage</h2>
+              <h2 v-bind="props" class="mb-1">Uso de chat en GitHub.com</h2>
             </template>
             <v-card class="pa-2" style="background-color: #f0f0f0; max-width: 350px;">
-              <span class="text-caption" style="font-size: 10px !important;">Users with GitHub.com chat activity across
-                selected teams</span>
+              <span class="text-caption" style="font-size: 10px !important;">Usuarios con actividad de chat en GitHub.com entre los equipos seleccionados</span>
             </v-card>
           </v-tooltip>
           <LineChart :data="githubChatChartData" :options="chartOptions" />
 
           <v-tooltip location="bottom start" open-on-hover open-delay="200" close-delay="200">
             <template #activator="{ props }">
-              <h2 v-bind="props" class="mb-1">GitHub.com PR Usage</h2>
+              <h2 v-bind="props" class="mb-1">Uso de PR en GitHub.com</h2>
             </template>
             <v-card class="pa-2" style="background-color: #f0f0f0; max-width: 350px;">
-              <span class="text-caption" style="font-size: 10px !important;">Users with GitHub.com PR activity across
-                selected teams</span>
+              <span class="text-caption" style="font-size: 10px !important;">Usuarios con actividad de PR en GitHub.com entre los equipos seleccionados</span>
             </v-card>
           </v-tooltip>
           <LineChart :data="githubPrChartData" :options="chartOptions" />
@@ -234,28 +219,28 @@ elevation="4" color="white" variant="elevated" class="mx-auto my-3"
         <v-row>
           <v-col cols="12" md="6">
             <v-card class="pa-4">
-              <v-card-title class="text-h6">Language Usage by Team</v-card-title>
+              <v-card-title class="text-h6">Uso de lenguajes por equipo</v-card-title>
               <v-card-text>
                 <div v-if="languageBarChartData.datasets.length > 0" class="bar-chart-container">
                   <BarChart :data="languageBarChartData" :options="barChartOptions" />
                 </div>
                 <div v-else class="text-center text-medium-emphasis py-8">
                   <v-icon size="48" color="grey-lighten-1">mdi-chart-bar</v-icon>
-                  <p class="mt-2">No language data available for selected teams</p>
+                  <p class="mt-2">No hay datos de lenguajes para los equipos seleccionados</p>
                 </div>
               </v-card-text>
             </v-card>
           </v-col>
           <v-col cols="12" md="6">
             <v-card class="pa-4">
-              <v-card-title class="text-h6">Editor Usage by Team</v-card-title>
+              <v-card-title class="text-h6">Uso de editores por equipo</v-card-title>
               <v-card-text>
                 <div v-if="editorBarChartData.datasets.length > 0" class="bar-chart-container">
                   <BarChart :data="editorBarChartData" :options="barChartOptions" />
                 </div>
                 <div v-else class="text-center text-medium-emphasis py-8">
                   <v-icon size="48" color="grey-lighten-1">mdi-chart-bar</v-icon>
-                  <p class="mt-2">No editor data available for selected teams</p>
+                  <p class="mt-2">No hay datos de editores para los equipos seleccionados</p>
                 </div>
               </v-card-text>
             </v-card>
@@ -271,9 +256,9 @@ elevation="4" color="white" variant="elevated" class="mx-auto my-3"
           <v-card class="text-center pa-8">
             <v-card-text>
               <v-icon size="64" color="grey-lighten-1">mdi-account-group-outline</v-icon>
-              <h3 class="text-h5 mt-4 mb-2">No Teams Selected</h3>
+              <h3 class="text-h5 mt-4 mb-2">No hay equipos seleccionados</h3>
               <p class="text-body-1 text-medium-emphasis">
-                Select one or more teams from the dropdown above to view and compare their metrics.
+                Selecciona uno o más equipos desde el selector superior para ver y comparar sus métricas.
               </p>
             </v-card-text>
           </v-card>
