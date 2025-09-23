@@ -108,7 +108,7 @@
     <AuthState>
       <template #default="{ loggedIn }">
         <div v-show="signInRequired" class="github-login-container">
-          <NuxtLink v-if="!loggedIn && signInRequired" to="/auth/github" external class="github-login-button"> <v-icon
+          <NuxtLink v-if="!loggedIn && signInRequired" to="/copilot-metrics-viewer-hdi/auth/github" external class="github-login-button"> <v-icon
               left>mdi-github</v-icon>
             Sign in with GitHub</NuxtLink>
         </div>
