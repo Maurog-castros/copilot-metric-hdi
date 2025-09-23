@@ -14,7 +14,7 @@ export default defineNuxtConfig({
   ssr: true,
 
   app: {
-    baseURL: '/',
+    baseURL: '/copilot-metrics-viewer-hdi/',
     head: {
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.svg' }
