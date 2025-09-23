@@ -1,26 +1,62 @@
 version: '3.8'
 
 services:
-  copilot-metrics:
-    image: copilot-metrics-hdi:latest
-    container_name: copilot-metrics-hdi
+  # Versión sin OAuth (token fijo)
+  copilot-metrics-viewer:
+    image: copilot-metrics-hdi
+    container_name: copilot-metrics-viewer
     restart: unless-stopped
-    ports:
-      - "3000:80"
-    environment:
-      - NODE_ENV=production
     env_file:
-      - .env
-    volumes:
-      - ./logs:/app/logs
+      - env.noauth
+    environment:
+      - NUXT_APP_BASE_URL=/copilot-metrics-viewer/
     networks:
       - copilot-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:80/api/health"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/copilot-metrics-viewer/"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
+
+  # Versión con OAuth GitHub
+  copilot-metrics-viewer-hdi:
+    image: copilot-metrics-hdi
+    container_name: copilot-metrics-viewer-hdi
+    restart: unless-stopped
+    env_file:
+      - env.oauth
+    environment:
+      - NUXT_APP_BASE_URL=/copilot-metrics-viewer-hdi/
+    networks:
+      - copilot-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/copilot-metrics-viewer-hdi/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Reverse Proxy Nginx
+  reverse-proxy:
+    image: nginx:alpine
+    container_name: reverse-proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/logs:/var/log/nginx
+    depends_on:
+      - copilot-metrics-viewer
+      - copilot-metrics-viewer-hdi
+    networks:
+      - copilot-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 networks:
   copilot-network:
