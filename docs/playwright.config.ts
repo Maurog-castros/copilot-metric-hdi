@@ -8,7 +8,7 @@ process.env.NUXT_PUBLIC_USING_GITHUB_AUTH = 'false'
 process.env.NUXT_PUBLIC_IS_DATA_MOCKED = 'true'
 
 export default defineConfig<ConfigOptions>({
-    testDir: 'e2e-tests',
+    testDir: 'testing/e2e-tests',
     /* Run tests in files in parallel */
     fullyParallel: true,
     /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -59,5 +59,5 @@ export default defineConfig<ConfigOptions>({
         command: process.env.RUN_COMMAND || 'npm run dev',
         url: 'http://localhost:3000',
         reuseExistingServer: true,
-      },
+    },
 })

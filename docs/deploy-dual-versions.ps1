@@ -19,8 +19,8 @@ docker compose down
 
 # 3. Crear directorios de logs si no existen
 Write-Host "3. Creando directorios de logs..." -ForegroundColor Yellow
-if (!(Test-Path "nginx/logs")) {
-    New-Item -ItemType Directory -Path "nginx/logs" -Force
+if (!(Test-Path "infrastructure/nginx/logs")) {
+    New-Item -ItemType Directory -Path "infrastructure/nginx/logs" -Force
 }
 
 # 4. Iniciar servicios

@@ -5,7 +5,7 @@ export default withNuxt(
   // Your custom configs here
   {
     ignores: [
-      'example-nextjs-github-oauth/**/*',
+      'examples/example-nextjs-github-oauth/**/*',
       '**/.next/**/*',
       '**/node_modules/**/*'
     ]

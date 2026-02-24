@@ -45,8 +45,8 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./nginx/logs:/var/log/nginx
+      - ../infrastructure/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ../infrastructure/nginx/logs:/var/log/nginx
     depends_on:
       - copilot-metrics-viewer
       - copilot-metrics-viewer-hdi
