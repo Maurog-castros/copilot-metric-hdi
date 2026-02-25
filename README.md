@@ -2,7 +2,7 @@
 
 <p align="center">
   
-  <img alt="HDI Seguros" src="[https://www.hdi.cl/media/100122/logo_hdi_solo.png](https://github.com/Maurog-castros/copilot-metric-hdi/blob/main/images/logo_hdi_solo.png?raw=true)" />
+  <img alt="HDI Seguros" src="https://github.com/Maurog-castros/copilot-metric-hdi/blob/main/images/logo_hdi_solo.png" />
 </p>
 
 ---
