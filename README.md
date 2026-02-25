@@ -1,7 +1,7 @@
 # 📊 GitHub Copilot Metrics Viewer (HDI Edition)
 
 <p align="center">
-  <img width="180" alt="HDI Seguros Logo" src="https://www.hdi.cl/media/100122/logo_hdi_solo.png">
+  <img alt="HDI Seguros" src="https://www.hdi.cl/media/100122/logo_hdi_solo.png" />
 </p>
 
 ---
